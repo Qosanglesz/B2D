@@ -21,6 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <NavBar name={"B2DVenture"}/>
         {children}
+        <Footer/>
       </body>
     </html>
   );
