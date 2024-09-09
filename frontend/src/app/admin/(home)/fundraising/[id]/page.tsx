@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { initialCampaigns, FundraisingCampaign } from '../../../components/FundraisingCampaigns';
 
 interface PageProps {
@@ -8,29 +8,44 @@ interface PageProps {
     id: string;
   };
 }
-export default function Page({ params }: PageProps) {
-  // Convert `params.id` to a number since campaign IDs are numbers
-  const campaignId = Number(params.id);
 
-  // Find the specific campaign based on the id from the params
-  const campaign = initialCampaigns.find((campaign: FundraisingCampaign) => campaign.id === campaignId);
-// console.log(`camepaign = ${campaign}`);
-//     console.log(`idpara = ${params.id}`);
+export default function Page({ params }: PageProps) {
+  const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>(initialCampaigns);
+
+  const campaignId = Number(params.id);
+  const campaign = campaigns.find((campaign: FundraisingCampaign) => campaign.id === campaignId);
+
+  const handleDelete = () => {
+    // Remove the campaign with the given id
+    const updatedCampaigns = campaigns.filter(c => c.id !== campaignId);
+    setCampaigns(updatedCampaigns);
+  };
+
   if (!campaign) {
-    return <div>Campaign not found</div>;
+    return <div>Campaign not found or has been deleted</div>;
   }
 
   return (
-    <div>
-      <h1>Fundraising Campaigns</h1>
-      <div key={campaign.id}>
-        <img src={campaign.urlPicture} alt={campaign.name} />
-        <h2>{campaign.name}</h2>
-        <p>{campaign.description}</p>
-        <p>Goal: {campaign.goal}</p>
-        <p>Raised: {campaign.raised}</p>
-        <p>Status: {campaign.status}</p>
-      </div>
+    <div className="p-8 bg-gray-50">
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto text-center">
+          <img src={campaign.urlPicture} alt={campaign.name} className="w-64 h-64 mx-auto object-cover mb-6 rounded-lg" />
+          <h2 className="text-4xl font-bold mb-4">{campaign.name}</h2>
+          <p className="text-lg mb-2">{campaign.description}</p>
+          <p className="text-xl font-semibold">Goal: {campaign.goal.toLocaleString()}</p>
+          <p className="text-xl font-semibold">Raised: {campaign.raised.toLocaleString()}</p>
+          <p className={`text-xl font-semibold mt-4 ${campaign.status === 'Active' ? 'text-green-600' : 'text-red-600'}`}>
+            Status: {campaign.status}
+          </p>
+          
+          {/* Add Delete Button */}
+          <button 
+            onClick={handleDelete} 
+            className="mt-6 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700">
+            Delete Campaign
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
