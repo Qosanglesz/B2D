@@ -22,12 +22,12 @@ const HeroSection = () => {
           Join B2D Venture to discover groundbreaking startups and fuel the next generation of entrepreneurs.
         </p>
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
-          <button className='bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-lg p-4 flex-shrink-0'>
+          <button className='bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-lg p-4 flex-shrink-0 rounded-full hover:bg-indigo-400 active:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-500'>
             <a href="/home" className="btn-primary">
               Start Investing
             </a>
           </button>
-          <button className='bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-lg p-4 flex-shrink-0'>
+          <button className='bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-lg p-4 flex-shrink-0 rounded-full hover:bg-indigo-400 active:bg-indigo-600 focus:outline-none focus:ring focus:ring-indigo-500'>
             <a href="/home" className="btn-secondary">
               Browse Startups
             </a>
