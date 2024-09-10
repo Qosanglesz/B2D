@@ -6,7 +6,7 @@ import UserManagement from "../components/UserManagement";
 import ReportsAndAnalytics from "../components/ReportAndAnalytics";
 export default function AdminLayout() {
   return (
-    <div>
+    <div className="">
         {/* Header Section */}
         <section className="text-center py-16">
           <h1 className="text-4xl font-bold mb-6">Stake your claim</h1>
