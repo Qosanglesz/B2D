@@ -11,6 +11,15 @@ import NavBar from "../../components/navAndFooter/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const links = {
+    home: "/home",
+    about: "https://github.com/Qosanglesz/B2D/wiki",
+    campaigns: "/campaign",
+    contact: "https://github.com/Qosanglesz/B2D",
+    register: "/register",
+    login: "/login",
+};
+
 export const metadata: Metadata = {
     title: "B2DVenture",
     description: "Created by FishermanFriends team",
@@ -20,7 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <html lang="en">
         <body className={inter.className}>
-        <NavBar name={"B2DVenture"}/>
+        <NavBar name={"B2DVenture"} links={links}/>
         {children}
         <Footer/>
         </body>
