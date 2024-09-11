@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import UserManagement from './UserManagement';
 
 const NavBar: React.FC = () => {
   return (
@@ -10,23 +11,23 @@ const NavBar: React.FC = () => {
         </Link>
         <ul className="flex space-x-6">
           <li>
-            <Link href="#">
-              <span className="hover:text-gray-400 cursor-pointer">Businesses</span>
+            <Link href="/admin/dashboard">
+              <span className="hover:text-gray-400 cursor-pointer">Dashboard</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link href="#">
               <span className="hover:text-gray-400 cursor-pointer">Investors</span>
             </Link>
-          </li>
+          </li> */}
           <li>
-            <Link href="#">
+            <Link href="/admin/fundraising">
               <span className="hover:text-gray-400 cursor-pointer">Fundraising</span>
             </Link>
           </li>
           <li>
-            <Link href="#">
-              <span className="hover:text-gray-400 cursor-pointer">Settings</span>
+            <Link href="/admin/user">
+              <span className="hover:text-gray-400 cursor-pointer">User Management</span>
             </Link>
           </li>
         </ul>

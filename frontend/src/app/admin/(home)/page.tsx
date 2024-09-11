@@ -1,6 +1,6 @@
 // app/admin/layout.tsx
 import React from "react";
-import AdminDashboard from "../components/Dashboard";
+import AdminDashboard from "../components/AdminDashboard";
 import FundraisingCampaigns from "../components/FundraisingCampaigns";
 import UserManagement from "../components/UserManagement";
 import ReportsAndAnalytics from "../components/ReportAndAnalytics";
@@ -55,9 +55,9 @@ export default function AdminLayout() {
             </div>
           </div>
         </section>
-        <AdminDashboard />
-        <FundraisingCampaigns />
-        <UserManagement />
+        {/* <AdminDashboard /> */}
+        {/* <FundraisingCampaigns /> */}
+        {/* <UserManagement /> */}
         <ReportsAndAnalytics />
     </div>
   ); 
