@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { mockCampaignsData } from '../TempCampaignData';
+import { mockCampaignsData } from './TempCampaignData';
 
 interface CampaignCardProps {
   campaign: mockCampaignsData[string];

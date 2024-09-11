@@ -1,5 +1,5 @@
 import React from 'react';
-import { CampaignData } from '../TempCampaignData'; // Assuming you've defined the interface in a separate file
+import { CampaignData } from './TempCampaignData'; // Assuming you've defined the interface in a separate file
 import CampaignCard from './CapaignCard'; // Assuming you've defined the CampaignCard component in a separate file
 
 interface CampaignListProps {

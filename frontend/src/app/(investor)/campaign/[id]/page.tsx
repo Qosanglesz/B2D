@@ -1,7 +1,7 @@
 import React from 'react';
-import IntroHeader from '../components/IntroHeader';
-import CompanyInformation from '../components/CompanyInformation';
-import {mockCampaignsData} from "@/app/campaign/components/TempCampaignData";
+import IntroHeader from '@/components/campaigncomponents/IntroHeader';
+import CompanyInformation from '@/components/campaigncomponents/CompanyInformation';
+import {mockCampaignsData} from "@/components/campaigncomponents/TempCampaignData";
 
 const campaign_example = {
   logo: "https://picsum.photos/200/300",
