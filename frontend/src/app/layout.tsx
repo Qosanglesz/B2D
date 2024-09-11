@@ -4,11 +4,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import 'tailwindcss/tailwind.css';
 
-import Header from "@/components/homeComponents/Header";
-import CampaignCardOld from "@/components/campaignComponents/CampaignCardOld";
-
-
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

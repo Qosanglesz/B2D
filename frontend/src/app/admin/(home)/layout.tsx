@@ -1,7 +1,7 @@
 import React from "react";
 import 'tailwindcss/tailwind.css';
-import AdminNavBar from "../components/NavBar";
-import AdminFooter from "../components/Footer";
+import AdminNavBar from "../../../components/adminComponents/adminNavAndFooter/NavBar";
+import AdminFooter from "../../../components/adminComponents/adminNavAndFooter/Footer";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (

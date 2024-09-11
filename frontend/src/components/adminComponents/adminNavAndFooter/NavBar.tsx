@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import UserManagement from './UserManagement';
+import UserManagement from '../adminUserManagement/UserManagement';
 
 const NavBar: React.FC = () => {
   return (

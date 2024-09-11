@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { initialCampaigns, FundraisingCampaign } from '../../../components/FundraisingCampaigns';
+import { initialCampaigns } from '../../../../../components/adminComponents/TempdataAdmin/initialCampaigns';
+import { FundraisingCampaign } from '../../../../../components/adminComponents/TempdataAdmin/FundraisingCampaign';
 import Link from 'next/link';
 
 interface PageProps {
@@ -45,11 +46,17 @@ export default function Page({ params }: PageProps) {
           <p className="text-lg">Founder Name: {campaign.founderName}</p>
           <p className="text-lg">Email: {campaign.email}</p>
           <p className="text-lg">LinkedIn Profile: {campaign.linkedInProfile}</p>
+          <p className="text-lg">Phone Number: {campaign.companyNumber}</p>
+          <p className="text-lg">Company Location: {campaign.location}</p>
+          <p className="text-lg">Company Vision: {campaign.companyVision}</p>
+          <p className="text-lg">Incorporation Date: {campaign.incorporationDate}</p>
+          <p className="text-lg">End In Date: {campaign.endInDate}</p>
           <p className="text-lg">Company Stage: {campaign.companyStage}</p>
           <p className="text-lg">Industry: {campaign.industry}</p>
           <p className="text-lg">Sector: {campaign.sector}</p>
           <p className="text-lg">Amount Raised: {campaign.amountRaised.toLocaleString()}</p>
           <p className="text-lg">Target Amount: {campaign.targetAmount.toLocaleString()}</p>
+          <p className="text-lg">Target Amount: {campaign.investors.length}</p>
           <p className="text-lg">Team Size: {campaign.teamSize}</p>
           <p className="text-lg">Headquarters Location: {campaign.headquartersLocation}</p>
           <p className="text-lg">Product Available: {campaign.productAvailable ? 'Yes' : 'No'}</p>

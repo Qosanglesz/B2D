@@ -1,4 +1,4 @@
-import FundraisingCampaigns from "../../components/FundraisingCampaigns";
+import FundraisingCampaigns from "../../../../components/adminComponents/adminFundraising/FundraisingCampaigns";
 
 export default function Page() {
     return (

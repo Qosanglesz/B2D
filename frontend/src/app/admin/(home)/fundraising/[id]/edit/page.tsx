@@ -2,18 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { initialCampaigns, FundraisingCampaign } from '../../../../components/FundraisingCampaigns';
-import CompanyInformation from '../components/CompanyInformation';
-import BusinessStageSector from '../components/BusinessStageSector';
-import FundraisingInformation from '../components/FundraisingInformation';
-import TeamInformation from '../components/TeamInformation';
-import ProductAvailability from '../components/ProductAvailability';
+import { initialCampaigns } from '../../../../../../components/adminComponents/TempdataAdmin/initialCampaigns';
+import { FundraisingCampaign } from '../../../../../../components/adminComponents/TempdataAdmin/FundraisingCampaign';
+import CompanyInformation from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/CompanyInformation';
+import BusinessStageSector from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/BusinessStageSector';
+import FundraisingInformation from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/FundraisingInformation';
+import TeamInformation from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/TeamInformation';
+import ProductAvailability from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/ProductAvailability';
 
 interface PageProps {
   params: {
     id: string;
   };
 }
+
+
 
 export default function EditPage({ params }: PageProps) {
   const router = useRouter();
@@ -57,7 +60,10 @@ export default function EditPage({ params }: PageProps) {
     <div className="p-8 bg-gray-50">
       <section className="py-16">
         <div className="max-w-4xl mx-auto text-center bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-6">Edit Campaign: {formData.name}</h2>
+          <h2 className="text-3xl font-bold mb-6">
+            Edit Campaign : 
+            <span className="font-medium"> {formData.name}</span>
+          </h2>
           <CompanyInformation formData={formData} handleInputChange={handleInputChange} />
           <BusinessStageSector formData={formData} handleInputChange={handleInputChange} />
           <FundraisingInformation formData={formData} handleInputChange={handleInputChange} />
