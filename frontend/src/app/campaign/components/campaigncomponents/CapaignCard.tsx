@@ -19,8 +19,6 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
       <div className="relative">
         <img src={campaign.logo} alt={campaign.companyName} className="w-full h-48 object-cover" />
         <div className="absolute top-2 left-2 flex space-x-2">
-          <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">TRENDING</span>
-          <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">NEW</span>
         </div>
         <div className="absolute top-2 right-2">
           <button className="text-white">
