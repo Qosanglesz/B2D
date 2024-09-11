@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { mockCampaignsData } from '../TempCampaignData';
+import { mockCampaignsData } from './TempCampaignData';
 
 interface CampaignCardProps {
   campaign: mockCampaignsData[string];
@@ -31,7 +31,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
       <div className="p-4">
         {/* Upper section - fixed content */}
         <div className="mb-4">
-          <h2 className="text-xl font-bold mb-2">{campaign.companyName}</h2>
+          <a href={`/campaign/${campaign.id}`} className="text-xl font-bold mb-2">{campaign.companyName}</a>
           <p className="text-gray-600">{campaign.description}</p>
         </div>
         

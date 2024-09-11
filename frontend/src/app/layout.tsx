@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import 'tailwindcss/tailwind.css';
 
-import Header from "@/components/Header";
-import Campaign from "@/components/Campaign";
+import Header from "@/components/homeComponents/Header";
+import CampaignCardOld from "@/components/campaignComponents/CampaignCardOld";
 
 
 

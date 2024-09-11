@@ -1,6 +1,6 @@
 // campaignsData.tsx
 
-// Define the Campaign interface
+// Define the CampaignCardOld interface
 export interface Campaign {
   id: number;
   logo: string;
@@ -22,7 +22,7 @@ export interface Campaign {
   };
 }
 
-// Define the CampaignsData interface (which is just an array of Campaign)
+// Define the CampaignsData interface (which is just an array of CampaignCardOld)
 export interface CampaignsData {
   campaigns: Campaign[];
 }

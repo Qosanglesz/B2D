@@ -5,7 +5,7 @@
 // const IntroStatistics: React.FC = () => {
 //   return (
 //     <div>
-//       <h2>Campaign Statistics</h2>
+//       <h2>CampaignCardOld Statistics</h2>
 //       {/* Add your statistics content here */}
 //     </div>
 //   );

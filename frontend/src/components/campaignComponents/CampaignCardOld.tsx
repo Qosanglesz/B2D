@@ -11,7 +11,7 @@ interface CampaignProps {
     location: string;
 }
 
-const Campaign: React.FC<CampaignProps> = ({
+const CampaignCardOld: React.FC<CampaignProps> = ({
                                                picture,
                                                logo,
                                                companyName,
@@ -52,4 +52,4 @@ const Campaign: React.FC<CampaignProps> = ({
     );
 };
 
-export default Campaign;
+export default CampaignCardOld;
