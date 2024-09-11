@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { initialCampaigns, FundraisingCampaign } from '../../../components/FundraisingCampaigns';
+import { initialCampaigns } from '../../../../../components/adminComponents/TempdataAdmin/initialCampaigns';
+import { FundraisingCampaign } from '../../../../../components/adminComponents/TempdataAdmin/FundraisingCampaign';
 import Link from 'next/link';
 
 interface PageProps {

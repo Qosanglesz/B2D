@@ -16,6 +16,7 @@ const CompanyInformation: React.FC<CompanyInformationProps> = ({ formData, handl
       className="block w-full mb-4 p-2 border rounded-lg"
       placeholder="Company Name"
     />
+
     <input
       type="text"
       name="website"

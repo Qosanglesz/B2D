@@ -1,6 +1,6 @@
 // app/admin/layout.tsx
 import React from "react";
-import ReportsAndAnalytics from "../components/ReportAndAnalytics";
+import ReportsAndAnalytics from "../../../components/adminComponents/adminMainPage/ReportAndAnalytics";
 
 export default function AdminLayout() {
   return (
