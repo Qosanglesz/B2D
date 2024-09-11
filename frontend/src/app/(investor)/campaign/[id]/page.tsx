@@ -1,7 +1,7 @@
 import React from 'react';
-import IntroHeader from '@/components/campaigncomponents/IntroHeader';
-import CompanyInformation from '@/components/campaigncomponents/CompanyInformation';
-import {mockCampaignsData} from "@/components/campaigncomponents/TempCampaignData";
+import IntroHeader from '@/components/campaignComponents/IntroHeader';
+import CompanyInformation from '@/components/campaignComponents/CompanyInformation';
+import {mockCampaignsData} from "@/components/campaignComponents/TempCampaignData";
 
 const campaign_example = {
   logo: "https://picsum.photos/200/300",
@@ -35,7 +35,7 @@ export default function home() {
             description={campaign.description}
         />
 
-        {/* Campaign Summary */}
+        {/* CampaignCardOld Summary */}
         <div className="grid grid-cols-2 gap-6 m-4">
           <div className="">
             <img
@@ -61,7 +61,7 @@ export default function home() {
           </div>
         </div>
 
-        {/* Campaign Details */}
+        {/* CampaignCardOld Details */}
         <div className="mt-12">
           <CompanyInformation campaign={campaign}/>
         </div>

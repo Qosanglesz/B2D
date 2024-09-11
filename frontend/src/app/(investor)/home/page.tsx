@@ -1,8 +1,8 @@
 
-import Header from "../../../components/Header";
-import CampaignCard from "@/components/campaigncomponents/CapaignCard";
+import Header from "../../../components/homeComponents/Header";
+import CampaignCard from "@/components/campaignComponents/CapaignCard";
 import React from "react";
-import {mockCampaignsData} from "@/components/campaigncomponents/TempCampaignData";
+import {mockCampaignsData} from "@/components/campaignComponents/TempCampaignData";
 
 export default function Home() {
   return(
