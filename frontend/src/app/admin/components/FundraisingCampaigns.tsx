@@ -193,7 +193,7 @@ const FundraisingCampaigns: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 min-h-screen">
       <h1 className="text-3xl font-bold mb-4">Fundraising Campaigns</h1>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200">
