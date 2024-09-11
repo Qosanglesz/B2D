@@ -4,7 +4,7 @@ import UserManagement from './UserManagement';
 
 const NavBar: React.FC = () => {
   return (
-    <nav className="bg-gray-800 text-white p-4 shadow-md">
+    <nav className="bg-slate-100 text-black p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/admin">
           <span className="text-2xl font-bold cursor-pointer">B2D VENTURE ADMIN</span>
