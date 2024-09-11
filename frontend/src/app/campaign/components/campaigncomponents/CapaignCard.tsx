@@ -1,10 +1,10 @@
 'use client'
 
 import React, { useState } from 'react';
-import { CampaignData } from '../TempCampaignData';
+import { mockCampaignsData } from '../TempCampaignData';
 
 interface CampaignCardProps {
-  campaign: CampaignData[string];
+  campaign: mockCampaignsData[string];
 }
 
 const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
@@ -39,23 +39,23 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
         <div className="relative" style={{ height: '80px' }}> {/* Adjust height as needed */}
           <div className={`absolute inset-0 transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
             <div className="flex flex-wrap gap-2 mb-2">
-              {campaign.campaignData.businessOverview.sectors.map((sector, index) => (
+              {campaign.businessOverview.sectors.split(", ").map((sector, index) => (
                 <span key={index} className="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">{sector}</span>
               ))}
             </div>
-            <p className="text-sm text-gray-500">{campaign.campaignData.businessOverview.location}</p>
+            <p className="text-sm text-gray-500">{campaign.businessOverview.location}</p>
           </div>
           <div className={`absolute inset-0 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
             <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-              <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${campaign.campaignData.progress}%` }}></div>
+              <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${80}%` }}></div>
             </div>
             <div className="flex justify-between text-sm mb-2">
-              <span>{campaign.campaignData.fundsRaised} raised</span>
-              <span>{campaign.campaignData.progress}%</span>
+              <span>{campaign.fundsRaised} raised</span>
+              <span>80 % mock!!!</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span>{campaign.campaignData.investors} investors</span>
-              <span>{campaign.campaignData.daysLeft} days left</span>
+              <span>{campaign.investors} investors</span>
+              <span>10000 days left</span>
             </div>
           </div>
         </div>

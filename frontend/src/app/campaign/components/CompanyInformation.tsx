@@ -7,9 +7,9 @@ interface CampaignDetailProps {
 const CompanyInformation: React.FC<CampaignDetailProps> = ({ campaign }) => {
     return (
         <div className="flex flex-col lg:flex-row gap-8 p-4">
-            <div className="flex-1 p-6 border border-gray-300 rounded-lg bg-gray-100">
+            <div className="flex-1 p-6 border border-gray-300 rounded-lg">
                 <h2 className="text-xl font-semibold mb-4">Company Detail</h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4 p-10">
                     <p><strong>Location:</strong> {campaign.businessOverview.location}</p>
                     <p><strong>Website:</strong> <a href={`https://${campaign.businessOverview.website}`}
                                                     target="_blank" rel="noopener noreferrer"

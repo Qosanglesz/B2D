@@ -1,16 +1,17 @@
 import React from 'react';
 import IntroHeader from '../components/IntroHeader';
 import CompanyInformation from '../components/CompanyInformation';
+import {mockCampaignsData} from "@/app/campaign/components/TempCampaignData";
 
-const campaign = {
+const campaign_example = {
   logo: "https://picsum.photos/200/300",
   photo: "https://picsum.photos/2000/2000",
   companyName: "Bower",
   description: "Bower runs a smartphone app where consumer brands reward their customers for recycling their packages.",
   startDate: "20 Feb 2024",
   endDate: "30 Feb 2024",
-  fundsRaised: "395,288",
-  targetAmount: "475,000",
+  fundsRaised: 395288,
+  targetAmount: 475000,
   investors: 258,
   businessOverview: {
     location: "Stockholm, Sweden",
@@ -22,9 +23,11 @@ const campaign = {
   }
 };
 
+const campaign = mockCampaignsData.campaigns[0];
+
 export default function home() {
   return (
-      <div className="min-h-screen bg-gray-100 p-8">
+      <div className="min-h-screen p-8 w-full">
         {/* Header Section */}
         <IntroHeader
             logo={campaign.logo}
@@ -42,19 +45,19 @@ export default function home() {
             />
           </div>
           <div className="text-right">
-            <p className="text-2xl font-semibold text-gray-800 mb-4">
+            <p className="text-3xl font-semibold text-gray-800 mb-4">
               Funds Raised: ${campaign.fundsRaised}
             </p>
-            <p className="text-xl text-gray-600 mb-2">
+            <p className="text-2xl text-gray-600 mb-2">
               Target: ${campaign.targetAmount}
             </p>
-            <p className="text-lg text-gray-500 mb-4">
+            <p className="text-xl text-gray-500 mb-4">
               {campaign.investors} Investors
             </p>
             <button className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-all">
               Invest Now
             </button>
-            <p className="text-lg text-gray-500 mt-8">End in {campaign.endDate}</p>
+            <p className="text-xl text-gray-500 mt-4">End in {campaign.endDate}</p>
           </div>
         </div>
 
