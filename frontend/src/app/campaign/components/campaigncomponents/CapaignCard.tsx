@@ -17,7 +17,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative">
-        <img src={campaign.logo} alt={campaign.companyName} className="w-full h-48 object-cover" />
+        <img src={campaign.photo} alt={campaign.companyName} className="w-full h-48 object-cover" />
         <div className="absolute top-2 left-2 flex space-x-2">
         </div>
         <div className="absolute top-2 right-2">

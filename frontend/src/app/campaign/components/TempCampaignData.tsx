@@ -2,6 +2,7 @@
 
 // Define the Campaign interface
 export interface Campaign {
+  id: number;
   logo: string;
   photo: string;
   companyName: string;
@@ -30,8 +31,9 @@ export interface CampaignsData {
 export const mockCampaignsData: CampaignsData = {
   campaigns: [
     {
+      id: 1,
       logo: "https://picsum.photos/200/300",
-      photo: "https://picsum.photos/2000/2000",
+      photo: "https://picsum.photos/1000/1000",
       companyName: "Tech Innovators Ltd.",
       description: "A cutting-edge technology company focused on AI solutions.",
       startDate: "2023-01-15",
@@ -49,8 +51,9 @@ export const mockCampaignsData: CampaignsData = {
       },
     },
     {
+      id: 2,
       logo: "https://picsum.photos/200/300",
-      photo: "https://picsum.photos/2000/2000",
+      photo: "https://picsum.photos/1000/1000",
       companyName: "EcoGreen Solutions",
       description: "A renewable energy company providing eco-friendly solutions.",
       startDate: "2023-04-01",
@@ -68,8 +71,9 @@ export const mockCampaignsData: CampaignsData = {
       },
     },
     {
+      id: 3,
       logo: "https://picsum.photos/200/300",
-      photo: "https://picsum.photos/2000/2000",
+      photo: "https://picsum.photos/1000/1000",
       companyName: "Health First Pharmaceuticals",
       description: "Developing life-saving pharmaceutical products.",
       startDate: "2023-05-10",
@@ -84,6 +88,26 @@ export const mockCampaignsData: CampaignsData = {
         companyNumber: "112233445",
         incorporationDate: "2012-11-25",
         vision: "Innovating medicine to improve lives worldwide.",
+      },
+    },
+    {
+      id: 4,
+      logo: "https://picsum.photos/200/300",
+      photo: "https://picsum.photos/1000/1000",
+      companyName: "Tech Innovators Ltd.",
+      description: "A cutting-edge technology company focused on AI solutions.",
+      startDate: "2023-01-15",
+      endDate: "2023-12-31",
+      fundsRaised: 1500000,
+      targetAmount: 3000000,
+      investors: 450,
+      businessOverview: {
+        location: "New York, USA",
+        website: "https://techinnovators.com",
+        sectors: "Technology, AI",
+        companyNumber: "123456789",
+        incorporationDate: "2015-06-10",
+        vision: "Revolutionizing the world with AI innovations.",
       },
     },
   ],
