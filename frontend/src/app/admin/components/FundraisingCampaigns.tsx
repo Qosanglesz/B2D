@@ -3,6 +3,15 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 
+// export interface FundraisingCampaign {
+//   id: number;
+//   name: string;
+//   goal: number;
+//   raised: number;
+//   status: string;
+//   description: string;
+//   urlPicture: string;
+// }
 export interface FundraisingCampaign {
   id: number;
   name: string;
@@ -11,6 +20,19 @@ export interface FundraisingCampaign {
   status: string;
   description: string;
   urlPicture: string;
+  companyName: string;
+  website: string;
+  founderName: string;
+  email: string;
+  linkedInProfile: string;
+  companyStage: string;
+  industry: string;
+  sector: string;
+  amountRaised: number;
+  targetAmount: number;
+  teamSize: number;
+  headquartersLocation: string;
+  productAvailable: boolean;
 }
 
 export const initialCampaigns: FundraisingCampaign[] = [
@@ -21,7 +43,20 @@ export const initialCampaigns: FundraisingCampaign[] = [
     raised: 200000,
     status: 'Active',
     description: 'A tech startup focused on innovation.',
-    urlPicture : "https://picsum.photos/200/300"
+    urlPicture: "https://picsum.photos/200/300",
+    companyName: 'Tech Innovators Inc.',
+    website: 'https://techinnovators.com',
+    founderName: 'Alice Smith',
+    email: 'alice@techinnovators.com',
+    linkedInProfile: 'https://linkedin.com/in/alicesmith',
+    companyStage: 'Growth',
+    industry: 'Technology',
+    sector: 'Software',
+    amountRaised: 200000,
+    targetAmount: 500000,
+    teamSize: 50,
+    headquartersLocation: 'San Francisco, CA',
+    productAvailable: true
   },
   {
     id: 2,
@@ -30,10 +65,21 @@ export const initialCampaigns: FundraisingCampaign[] = [
     raised: 150000,
     status: 'Active',
     description: 'A startup focused on renewable energy solutions.',
-    urlPicture : "https://picsum.photos/200/300"
+    urlPicture: "https://picsum.photos/200/300",
+    companyName: 'Green Energy Solutions',
+    website: 'https://greenenergy.com',
+    founderName: 'Bob Johnson',
+    email: 'bob@greenenergy.com',
+    linkedInProfile: 'https://linkedin.com/in/bobjohnson',
+    companyStage: 'Startup',
+    industry: 'Energy',
+    sector: 'Renewable',
+    amountRaised: 150000,
+    targetAmount: 300000,
+    teamSize: 30,
+    headquartersLocation: 'Austin, TX',
+    productAvailable: true
   },
-  // Add more sample campaigns as needed
-  // For demonstration purposes, add more than 5 to test pagination
   {
     id: 3,
     name: 'AI Startups',
@@ -41,7 +87,20 @@ export const initialCampaigns: FundraisingCampaign[] = [
     raised: 220000,
     status: 'Active',
     description: 'A startup focused on AI solutions.',
-    urlPicture : "https://picsum.photos/200/300"
+    urlPicture: "https://picsum.photos/200/300",
+    companyName: 'AI Innovators',
+    website: 'https://aiinnovators.com',
+    founderName: 'Charlie Brown',
+    email: 'charlie@aiinnovators.com',
+    linkedInProfile: 'https://linkedin.com/in/charliebrown',
+    companyStage: 'Seed',
+    industry: 'Artificial Intelligence',
+    sector: 'Machine Learning',
+    amountRaised: 220000,
+    targetAmount: 400000,
+    teamSize: 20,
+    headquartersLocation: 'New York, NY',
+    productAvailable: false
   },
   {
     id: 4,
@@ -50,7 +109,20 @@ export const initialCampaigns: FundraisingCampaign[] = [
     raised: 450000,
     status: 'Closed',
     description: 'A startup focused on financial technology solutions.',
-    urlPicture : "https://picsum.photos/200/300"
+    urlPicture: "https://picsum.photos/200/300",
+    companyName: 'FinTech Innovators',
+    website: 'https://fintechinnovators.com',
+    founderName: 'Dana White',
+    email: 'dana@fintechinnovators.com',
+    linkedInProfile: 'https://linkedin.com/in/danawhite',
+    companyStage: 'Expansion',
+    industry: 'Finance',
+    sector: 'FinTech',
+    amountRaised: 450000,
+    targetAmount: 600000,
+    teamSize: 100,
+    headquartersLocation: 'Chicago, IL',
+    productAvailable: true
   },
   {
     id: 5,
@@ -59,7 +131,20 @@ export const initialCampaigns: FundraisingCampaign[] = [
     raised: 320000,
     status: 'Active',
     description: 'A startup focused on online education platforms.',
-    urlPicture : "https://picsum.photos/200/300"
+    urlPicture: "https://picsum.photos/200/300",
+    companyName: 'EduTech Solutions',
+    website: 'https://edutech.com',
+    founderName: 'Eve Adams',
+    email: 'eve@edutech.com',
+    linkedInProfile: 'https://linkedin.com/in/evadams',
+    companyStage: 'Growth',
+    industry: 'Education',
+    sector: 'E-Learning',
+    amountRaised: 320000,
+    targetAmount: 500000,
+    teamSize: 40,
+    headquartersLocation: 'Boston, MA',
+    productAvailable: true
   },
   {
     id: 6,
@@ -68,8 +153,21 @@ export const initialCampaigns: FundraisingCampaign[] = [
     raised: 500000,
     status: 'Active',
     description: 'A startup focused on smart city solutions.',
-    urlPicture : "https://picsum.photos/200/300"
-  },
+    urlPicture: "https://picsum.photos/200/300",
+    companyName: 'Smart City Innovators',
+    website: 'https://smartcity.com',
+    founderName: 'Frank Green',
+    email: 'frank@smartcity.com',
+    linkedInProfile: 'https://linkedin.com/in/frankgreen',
+    companyStage: 'Mature',
+    industry: 'Urban Development',
+    sector: 'Smart Cities',
+    amountRaised: 500000,
+    targetAmount: 700000,
+    teamSize: 150,
+    headquartersLocation: 'Los Angeles, CA',
+    productAvailable: true
+  }
 ];
 
 const FundraisingCampaigns: React.FC = () => {
