@@ -16,6 +16,8 @@ interface PageProps {
   };
 }
 
+
+
 export default function EditPage({ params }: PageProps) {
   const router = useRouter();
   const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>(initialCampaigns);
@@ -58,7 +60,10 @@ export default function EditPage({ params }: PageProps) {
     <div className="p-8 bg-gray-50">
       <section className="py-16">
         <div className="max-w-4xl mx-auto text-center bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-6">Edit Campaign: {formData.name}</h2>
+          <h2 className="text-3xl font-bold mb-6">
+            Edit Campaign : 
+            <span className="font-medium"> {formData.name}</span>
+          </h2>
           <CompanyInformation formData={formData} handleInputChange={handleInputChange} />
           <BusinessStageSector formData={formData} handleInputChange={handleInputChange} />
           <FundraisingInformation formData={formData} handleInputChange={handleInputChange} />
