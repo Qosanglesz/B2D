@@ -4,7 +4,7 @@ import CompanyInformation from '../components/CompanyInformation';
 
 const campaign = {
   logo: "https://picsum.photos/200/300",
-  photo: "https://picsum.photos/1000/1000",
+  photo: "https://picsum.photos/2000/2000",
   companyName: "Bower",
   description: "Bower runs a smartphone app where consumer brands reward their customers for recycling their packages.",
   startDate: "20 Feb 2024",
@@ -15,15 +15,14 @@ const campaign = {
   businessOverview: {
     location: "Stockholm, Sweden",
     website: "getbower.com",
-    sectors: ["SaaS/PaaS", "Digital", "Mixed B2B/B2C"],
+    sectors: "Technologies",
     companyNumber: "559009-0378",
     incorporationDate: "27 Mar 2015",
     vision: "To revolutionize global recycling by empowering consumers and businesses with innovative, accessible technology—building a sustainable future where every package is responsibly recycled and rewarded."
   }
 };
 
-const CampaignPage: React.FC = () => {
-
+export default function home() {
   return (
       <div className="min-h-screen bg-gray-100 p-8">
         {/* Header Section */}
@@ -65,6 +64,4 @@ const CampaignPage: React.FC = () => {
         </div>
       </div>
   );
-};
-
-export default CampaignPage;
+}

@@ -15,7 +15,7 @@ const CompanyInformation: React.FC<CampaignDetailProps> = ({ campaign }) => {
                                                     target="_blank" rel="noopener noreferrer"
                                                     className="text-blue-500 hover:underline">{campaign.businessOverview.website}</a>
                     </p>
-                    <p><strong>Sectors:</strong> {campaign.businessOverview.sectors.join(", ")}</p>
+                    <p><strong>Sectors:</strong> {campaign.businessOverview.sectors}</p>
                     <p><strong>Company Number:</strong> {campaign.businessOverview.companyNumber}</p>
                     <p><strong>Incorporation Date:</strong> {campaign.businessOverview.incorporationDate}</p>
                     <p><strong>Company Vision:</strong> {campaign.businessOverview.vision}</p>
