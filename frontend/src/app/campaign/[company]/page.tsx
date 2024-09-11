@@ -1,9 +1,8 @@
-// frontend/src/app/campaign/[company]/page.tsx
-
 import React from 'react';
 import IntroHeader from '../components/IntroHeader';
 import CampaignDetail from '../components/BodyBusinessDetail';
 import BodyText from '../components/BodyText';
+// import {campaignData} from '../components/TempCampaignData';
 
 // Static mock json data from ChatGPT
 const campaignData = {
