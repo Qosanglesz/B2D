@@ -41,7 +41,7 @@ export default function AdminLayout() {
             <p className="text-md text-gray-800">Private ventures funded</p>
           </div>
           <div className="space-y-2">
-            <p className="text-4xl font-semibold text-blue-500">\$2.6B+</p>
+            <p className="text-4xl font-semibold text-blue-500">$2.6B+</p>
             <p className="text-md text-gray-800">Capital raised</p>
           </div>
           <div className="space-y-2">
