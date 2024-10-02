@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from "react";
+import {useUser} from "@auth0/nextjs-auth0/client";
 
 interface InvestmentStatement {
     id: number;
