@@ -2,17 +2,19 @@ import React from 'react';
 
 type NavBarProps = {
     name: string;
+    isAuth: boolean;
     links: {
         home: string,
         about: string,
         campaigns: string,
         contact: string,
-        register: string,
-        login: string,
+        signIn: string,
+        logout: string,
+        portfolio: string
     };
 };
 
-const NavBar: React.FC<NavBarProps> = ({name, links}) => {
+const NavBar: React.FC<NavBarProps> = ({name, isAuth, links}) => {
     return (
         <>
             <nav className="bg-gray-800 p-4">
@@ -34,10 +36,16 @@ const NavBar: React.FC<NavBarProps> = ({name, links}) => {
                         <a href={links.about} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">About</a>
                         <a href={links.campaigns} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">campaigns</a>
                         <a href={links.contact} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">Contact</a>
-                        <a href={links.register}
-                           className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md">Register</a>
-                        <a href={links.login}
-                           className="text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-md">Login</a>
+                        {/*<a href={links.register}*/}
+                        {/*   className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md">Register</a>*/}
+                        {isAuth ? (
+                            <>
+                                <a href={links.portfolio} className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md">Portfolio</a>
+                                <a href={links.logout} className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md">Logout</a>
+                            </>
+                        ) : (
+                            <a href={links.signIn} className="text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-md">Sign in</a>
+                        )}
                     </div>
                 </div>
             </nav>

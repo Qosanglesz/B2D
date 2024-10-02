@@ -1,38 +1,27 @@
+"use client";
 
-
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import 'tailwindcss/tailwind.css';
-
-import Footer from "../../components/navAndFooter/Footer";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import NavBar from "../../components/navAndFooter/NavBar";
-
-
-
-const inter = Inter({ subsets: ["latin"] });
+import Footer from "@/components/navAndFooter/Footer";
 
 const links = {
     home: "/home",
     about: "https://github.com/Qosanglesz/B2D/wiki",
     campaigns: "/campaign",
     contact: "https://github.com/Qosanglesz/B2D",
-    register: "/register",
-    login: "/login",
+    signIn: "/api/auth/login",
+    logout: "/api/auth/logout",
+    portfolio: "/portfolio",
 };
 
-export const metadata: Metadata = {
-    title: "B2DVenture",
-    description: "Created by FishermanFriends team",
-};
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+    const { user, error, isLoading } = useUser();
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode;}>) {
     return (
-        <html lang="en">
-        <body className={inter.className}>
-        <NavBar name={"B2DVenture"} links={links}/>
-        {children}
-        <Footer/>
-        </body>
-        </html>
+        <>
+            <NavBar name={"B2DVenture"} links={links} isAuth={!!user} />
+                {children}
+            <Footer />
+        </>
     );
 }
