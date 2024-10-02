@@ -130,3 +130,5 @@ dist
 .pnp.*
 
 .idea
+frontend/tests/config.js
+frontend/test-results
