@@ -15,7 +15,7 @@ const links = {
 };
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-    const { user, error, isLoading } = useUser();
+    const { user } = useUser();
 
     return (
         <>

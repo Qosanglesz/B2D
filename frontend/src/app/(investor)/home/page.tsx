@@ -5,7 +5,7 @@ import React from "react";
 import {mockCampaignsData} from "@/components/campaignComponents/TempCampaignData";
 
 const links = {
-    getStarted: "/register",
+    getStarted: "/api/auth/login",
     viewAll: "/campaign",
 }
 export default function Home() {
