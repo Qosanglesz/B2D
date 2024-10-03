@@ -1,7 +1,7 @@
 // page.tsx
 import React from 'react';
 import { mockCampaignsData } from '@/components/campaignComponents/TempCampaignData';
-import CampaignCard from '@/components/campaignComponents/CapaignCard';
+import CampaignCard from '@/components/campaignComponents/CampaignCard';
 
 export default function CampaignPage() {
   if (!mockCampaignsData) {
