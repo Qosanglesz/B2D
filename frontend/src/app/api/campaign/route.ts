@@ -2,47 +2,65 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { BusinessFormData } from '@/components/types/BusinessFormData';
+import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
 export async function POST(request: NextRequest) {
   try {
     const client = await clientPromise;
     const db = client.db("Campaign");
-    const collection = db.collection("fundraising_campaign");
+    const collection = db.collection<FundraisingCampaign>("fundraising_campaign");
 
     // Parse the request body
-    const formData: BusinessFormData = await request.json();
+    const formData: Partial<FundraisingCampaign> = await request.json();
 
     // Validate required fields
-    const requiredFields: (keyof BusinessFormData)[] = [
-      'companyName', 'website', 'founderName', 'email', 'linkedinProfile',
-      'companyStage', 'industry', 'sector', 'fundingDetails', 'teamSize',
-      'headquarters', 'productAvailable'
+    const requiredFields: (keyof FundraisingCampaign)[] = [
+      'companyName', 'website', 'founderName', 'email', 'linkedInProfile',
+      'companyStage', 'industry', 'sector', 'amountRaised', 'targetAmount',
+      'teamSize', 'headquartersLocation', 'productAvailable',
     ];
 
     for (const field of requiredFields) {
-      if (field === 'fundingDetails') {
-        if (!formData.fundingDetails?.amountRaised || !formData.fundingDetails?.targetAmount) {
-          return NextResponse.json({ error: `Missing required field: fundingDetails` }, { status: 400 });
-        }
-      } else if (!formData[field]) {
-        return NextResponse.json({ error: `Missing required field: ${String(field)}` }, { status: 400 });
+      if (!formData[field]) {
+        return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
       }
     }
-
-    // Prepare campaign data
-    const campaignData = {
-      ...formData,
-      status: 'Active',
-      createdAt: new Date().toISOString(),
-      amountRaised: formData.fundingDetails.amountRaised,
-      targetAmount: formData.fundingDetails.targetAmount,
-    };
 
     // Generate a new numeric id
     const lastCampaign = await collection.findOne({}, { sort: { id: -1 } });
     const newId = (lastCampaign?.id || 0) + 1;
-    campaignData.id = newId;
+
+    // Calculate end date (10 years from now)
+    const endDate = new Date();
+    endDate.setFullYear(endDate.getFullYear() + 10);
+
+    // Prepare campaign data
+    const campaignData: FundraisingCampaign = {
+      id: newId,
+      name: formData.companyName || '',
+      status: 'Active',
+      description: formData.description || '',
+      urlPicture: formData.urlPicture || '',
+      companyName: formData.companyName || '',
+      website: formData.website || '',
+      founderName: formData.founderName || '',
+      email: formData.email || '',
+      linkedInProfile: formData.linkedInProfile || '',
+      companyStage: formData.companyStage || '',
+      industry: formData.industry || '',
+      sector: formData.sector || '',
+      amountRaised: formData.amountRaised || 0,
+      targetAmount: formData.targetAmount || 0,
+      teamSize: formData.teamSize || 0,
+      headquartersLocation: formData.headquartersLocation || '',
+      productAvailable: formData.productAvailable || false,
+      location: formData.location || formData.headquartersLocation || '',
+      incorporationDate: formData.incorporationDate || new Date().toISOString(),
+      investors: formData.investors || [],
+      companyNumber: formData.companyNumber || '',
+      companyVision: formData.companyVision || '',
+      endInDate: endDate.toISOString(),
+    };
 
     // Insert the new campaign
     const result = await collection.insertOne(campaignData);

@@ -1,89 +1,99 @@
+// app/admin/fundraising/[id]/edit/page.tsx
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { initialCampaigns } from '../../../../../../components/adminComponents/TempdataAdmin/initialCampaigns';
-import { FundraisingCampaign } from '../../../../../../components/adminComponents/TempdataAdmin/FundraisingCampaign';
-import CompanyInformation from '@/components/adminComponents/adminFundraising/fundraisingSector/CompanyInformation';
-import BusinessStageSector from '@/components/adminComponents/adminFundraising/fundraisingSector/BusinessStageSector';
-import FundraisingInformation from '@/components/adminComponents/adminFundraising/fundraisingSector/FundraisingInformation';
-import TeamInformation from '@/components/adminComponents/adminFundraising/fundraisingSector/TeamInformation';
-import ProductAvailability  from '@/components/formComponnents/ProductAvailability';
+import Link from 'next/link';
+import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import EditCampaignForm from '@/components/adminComponents/adminFundraising/EditCampaignForm';
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-
-
-export default function EditPage({ params }: PageProps) {
+export default function EditCampaignPage({ params }: { params: { id: string } }) {
+  const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>(initialCampaigns);
-  const campaignId = Number(params.id);
-  const [formData, setFormData] = useState<FundraisingCampaign | null>(null);
 
   useEffect(() => {
-    const campaign = campaigns.find((campaign: FundraisingCampaign) => campaign.id === campaignId);
-    if (campaign) {
-      setFormData(campaign);
-    }
-  }, [campaignId, campaigns]);
+    const fetchCampaign = async () => {
+      try {
+        const response = await fetch(`/api/campaign/${params.id}`);
+        if (!response.ok) throw new Error('Failed to fetch campaign data');
+        const data: FundraisingCampaign = await response.json();
+        setCampaign(data);
+      } catch (err) {
+        setError('Error fetching campaign data');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    if (formData) {
-      const { name, value, type } = e.target;
-      const newValue = type === 'radio' ? value === 'true' : value;
-      setFormData({
-        ...formData,
-        [name]: newValue,
+    fetchCampaign();
+  }, [params.id]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setCampaign(prev => {
+      if (!prev) return null;
+      if (name === 'investors') {
+        return { ...prev, [name]: value.split(',').map(item => item.trim()) };
+      }
+      if (name === 'productAvailable') {
+        return { ...prev, [name]: value === 'true' };
+      }
+      if (name === 'amountRaised' || name === 'targetAmount' || name === 'teamSize') {
+        return { ...prev, [name]: Number(value) };
+      }
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!campaign) return;
+
+    try {
+      const response = await fetch(`/api/campaign/${params.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(campaign),
       });
+
+      if (!response.ok) throw new Error('Failed to update campaign');
+
+      router.push(`/admin/fundraising/${params.id}`);
+    } catch (err) {
+      setError('Error updating campaign');
+      console.error(err);
     }
   };
 
-  const handleSave = () => {
-    if (formData) {
-      const updatedCampaigns = campaigns.map(c =>
-        c.id === campaignId ? formData : c
-      );
-      setCampaigns(updatedCampaigns);
-      router.push(`/admin/fundraising/${campaignId}`);
-    }
-  };
-
-  if (!formData) {
-    return <div className="text-center text-red-500">Campaign not found or has been deleted</div>;
-  }
+  if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (error) return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
+  if (!campaign) return <div className="flex justify-center items-center h-screen">No campaign data found</div>;
 
   return (
-    <div className="p-8 bg-gray-50">
-      <section className="py-16">
-        <div className="max-w-4xl mx-auto text-center bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-6">
-            Edit Campaign : 
-            <span className="font-medium"> {formData.name}</span>
-          </h2>
-          <CompanyInformation formData={formData} handleInputChange={handleInputChange} />
-          <BusinessStageSector formData={formData} handleInputChange={handleInputChange} />
-          <FundraisingInformation formData={formData} handleInputChange={handleInputChange} />
-          <TeamInformation formData={formData} handleInputChange={handleInputChange} />
-          <ProductAvailability formData={formData} handleInputChange={handleInputChange} />
+    <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
+      <div className="bg-white shadow-xl rounded-lg p-8 max-w-4xl w-full">
+        <h1 className="text-3xl font-bold mb-6 text-center">Edit Campaign</h1>
+        
+        <EditCampaignForm 
+          campaign={campaign}
+          onSubmit={handleSubmit}
+          onChange={handleChange}
+        />
 
-          <button
-            onClick={handleSave}
-            className="mt-6 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
-          >
-            Save Changes
-          </button>
-          <button
-            onClick={() => router.push(`/admin/fundraising/${campaignId}`)}
-            className="mt-6 ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700"
-          >
-            Cancel
-          </button>
+        <div className="mt-4 text-center">
+          <Link href={`/admin/fundraising/${params.id}`}>
+            <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+              Cancel
+            </button>
+          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
