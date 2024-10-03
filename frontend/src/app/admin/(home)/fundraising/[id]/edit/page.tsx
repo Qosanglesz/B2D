@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { initialCampaigns } from '../../../../../../components/adminComponents/TempdataAdmin/initialCampaigns';
 import { FundraisingCampaign } from '../../../../../../components/adminComponents/TempdataAdmin/FundraisingCampaign';
-import CompanyInformation from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/CompanyInformation';
-import BusinessStageSector from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/BusinessStageSector';
-import FundraisingInformation from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/FundraisingInformation';
-import TeamInformation from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/TeamInformation';
-import ProductAvailability from '../../../../../../components/adminComponents/adminFundraising/fundraisingSector/ProductAvailability';
+import CompanyInformation from '@/components/campaignComponents/CompanyInformation';
+import BusinessStageSector from '@/components/adminComponents/adminFundraising/fundraisingSector/BusinessStageSector';
+import FundraisingInformation from '@/components/adminComponents/adminFundraising/fundraisingSector/FundraisingInformation';
+import TeamInformation from '@/components/adminComponents/adminFundraising/fundraisingSector/TeamInformation';
+import ProductAvailability  from '@/components/formComponnents/ProductAvailability';
 
 interface PageProps {
   params: {
