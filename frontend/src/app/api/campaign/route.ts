@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { BusinessFormData } from '../../../components/types/BusinessFormData';
+import { BusinessFormData } from '@/components/types/BusinessFormData';
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: `Missing required field: fundingDetails` }, { status: 400 });
         }
       } else if (!formData[field]) {
-        return NextResponse.json({ error: `Missing required field: ${field}` }, { status: 400 });
+        return NextResponse.json({ error: `Missing required field: ${String(field)}` }, { status: 400 });
       }
     }
 

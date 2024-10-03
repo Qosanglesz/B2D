@@ -1,4 +1,4 @@
-interface BusinessFormData {
+export interface BusinessFormData {
     companyName: string;
     website: string;
     founderName: string;
