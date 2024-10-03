@@ -26,5 +26,5 @@ export interface FundraisingCampaign {
     investors: string[];
     companyNumber: string;
     companyVision: string;
-    endInDate: string;
+    endInDate: string; 
 }

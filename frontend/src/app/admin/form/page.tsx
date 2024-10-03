@@ -12,6 +12,11 @@ interface BusinessFormProps {
   onSubmit: (data: BusinessFormData) => void;
 }
 
+interface FundingDetails {
+  amountRaised: number;
+  targetAmount: number;
+}
+
 interface BusinessFormData {
   companyName: string;
   website: string;
@@ -21,14 +26,10 @@ interface BusinessFormData {
   companyStage: string;
   industry: string;
   sector: string;
-  fundingDetails: {
-    amountRaised: number;
-    targetAmount: number;
-  };
+  fundingDetails: FundingDetails;
   teamSize: number;
   headquarters: string;
   productAvailable: boolean;
-  [key: string]: any;
 }
 
 const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
@@ -61,29 +62,24 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
         ...prevData,
         productAvailable: value === "true",
       }));
+    } else if (name.includes(".")) {
+      const [parentKey, childKey] = name.split(".") as [keyof BusinessFormData, keyof FundingDetails];
+      setFormData((prevData) => ({
+        ...prevData,
+        [parentKey]: {
+          ...prevData[parentKey] as FundingDetails,
+          [childKey]: type === "checkbox" ? checked : value,
+        },
+      }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name.includes(".") ? name.split(".")[0] : name]: name.includes(".")
-          ? {
-              ...prevData[name.split(".")[0]],
-              [name.split(".")[1]]: type === "checkbox" ? checked : value,
-            }
-          : type === "checkbox"
-          ? checked
-          : value,
+        [name as keyof BusinessFormData]: type === "checkbox" ? checked : value,
       }));
     }
   };
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   onSubmit(formData);
-  //   router.push('/home');
-  // };
-
   return (
-    // <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-semibold mb-4">Apply for Funding</h2>
       <div className="space-y-6">
