@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import CampaignCard from '@/components/campaignComponents/CampaignCard';
-import { useState, useEffect } from 'react';
 
 export default function CampaignPage() {
   const [campaigns, setCampaigns] = useState([]);
