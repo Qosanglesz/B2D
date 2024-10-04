@@ -73,7 +73,7 @@ export default function CampaignDetails({ params }: { params: { id: string } }) 
         {/* Company information */}
         <div className="space-y-2 mb-8">
           <p><strong>Description:</strong> {campaign.description}</p>
-          <p><strong>Status:</strong> {campaign.status}</p>
+          <p><strong>Status:</strong> {campaign.status ? 'Active' : 'Closed'}</p>
           <p><strong>Company Name:</strong> {campaign.companyName}</p>
           <p><strong>Website:</strong> <a href={campaign.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{campaign.website}</a></p>
           <p><strong>Founder:</strong> {campaign.founderName}</p>

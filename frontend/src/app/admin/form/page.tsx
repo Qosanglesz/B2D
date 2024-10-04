@@ -1,102 +1,84 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import CompanyInfo from '../../../components/formComponnents/CompanyInfo';
-import BusinessStageSector from '../../../components/formComponnents/BusinessStageSector';
-import FundraisingInfo from '../../../components/formComponnents/FundraisingInfo'
-import TeamInfo from '../../../components/formComponnents/TeamInfo';
-import ProductAvailability from '../../../components/formComponnents/ProductAvailability';
+import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import BasicInformation from '@/components/formComponents/BasicInformation';
+import CompanyDetails from '@/components/formComponents/CompanyDetails';
+import CampaignDetails from '@/components/formComponents/CampaignDetails';
+import AdditionalInformation from '@/components/formComponents/AdditionalInformation';
 
-interface BusinessFormProps {
-  onSubmit: (data: BusinessFormData) => void;
-}
-
-interface FundingDetails {
-  amountRaised: number;
-  targetAmount: number;
-}
-
-interface BusinessFormData {
-  companyName: string;
-  website: string;
-  founderName: string;
-  email: string;
-  linkedinProfile: string;
-  companyStage: string;
-  industry: string;
-  sector: string;
-  fundingDetails: FundingDetails;
-  teamSize: number;
-  headquarters: string;
-  productAvailable: boolean;
-}
-
-const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
-  const [formData, setFormData] = useState<BusinessFormData>({
-    companyName: "",
-    website: "",
-    founderName: "",
-    email: "",
-    linkedinProfile: "",
-    companyStage: "",
-    industry: "",
-    sector: "",
-    fundingDetails: {
-      amountRaised: 0,
-      targetAmount: 0,
-    },
-    teamSize: 0,
-    headquarters: "",
-    productAvailable: false,
-  });
-
+const FundraisingCampaignForm: React.FC = () => {
+  const [formData, setFormData] = useState<Partial<FundraisingCampaign>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target as HTMLInputElement;
-    const checked = (e.target as HTMLInputElement).checked;
+    const { name, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'number' ? Number(value) : value
+    }));
+  };
 
-    if (type === "radio") {
-      setFormData((prevData) => ({
-        ...prevData,
-        productAvailable: value === "true",
-      }));
-    } else if (name.includes(".")) {
-      const [parentKey, childKey] = name.split(".") as [keyof BusinessFormData, keyof FundingDetails];
-      setFormData((prevData) => ({
-        ...prevData,
-        [parentKey]: {
-          ...prevData[parentKey] as FundingDetails,
-          [childKey]: type === "checkbox" ? checked : value,
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
+  const handleInvestorsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFormData(prev => ({ ...prev, investors: value.split(', ') }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/campaign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name as keyof BusinessFormData]: type === "checkbox" ? checked : value,
-      }));
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error('Failed to save campaign');
+
+      router.push('/admin/form/success'); // Redirect to success page
+    } catch (err) {
+      setError('Error saving campaign');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">Apply for Funding</h2>
-      <div className="space-y-6">
-        <CompanyInfo formData={formData} handleChange={handleChange} />
-        <BusinessStageSector formData={formData} handleChange={handleChange} />
-        <FundraisingInfo formData={formData} handleChange={handleChange} />
-        <TeamInfo formData={formData} handleChange={handleChange} />
-        <ProductAvailability formData={formData} handleChange={handleChange} />
-        <button  onClick={() => router.push('form/success')}
-          type="submit"
-          className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">New Fundraising Campaign</h2>
+
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+
+      <BasicInformation formData={formData} handleChange={handleChange} />
+      <CompanyDetails formData={formData} handleChange={handleChange} handleCheckboxChange={handleCheckboxChange} />
+      <CampaignDetails formData={formData} handleChange={handleChange} />
+      <AdditionalInformation formData={formData} handleChange={handleChange} handleInvestorsChange={handleInvestorsChange} />
+
+      <div className="flex justify-center mt-6">
+        <button 
+          type="submit" 
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          disabled={isLoading}
         >
-          Submit
+          {isLoading ? 'Saving...' : 'Save Campaign'}
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
-export default BusinessForm;
+export default FundraisingCampaignForm;

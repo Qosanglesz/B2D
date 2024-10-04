@@ -8,7 +8,7 @@ const SuccessPage: React.FC = () => {
       <h2 className="text-2xl font-semibold mb-4">Success!</h2>
       <p className="text-lg">Your form has been submitted successfully. Thank you!</p>
       <div className="mt-4">
-        <a href="/home" className="text-blue-600 hover:underline">
+        <a href="/admin" className="text-blue-600 hover:underline">
           Return to Home
         </a>
       </div>
