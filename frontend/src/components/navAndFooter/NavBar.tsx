@@ -34,7 +34,7 @@ const NavBar: React.FC<NavBarProps> = ({name, isAuth, links}) => {
                     <div className="hidden md:flex items-center space-x-4">
                         <a href={links.home} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">Home</a>
                         <a href={links.about} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">About</a>
-                        <a href={links.campaigns} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">campaigns</a>
+                        <a href={links.campaigns} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">Campaigns</a>
                         <a href={links.contact} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">Contact</a>
                         {/*<a href={links.register}*/}
                         {/*   className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md">Register</a>*/}
