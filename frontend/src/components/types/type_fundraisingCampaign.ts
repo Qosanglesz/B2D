@@ -1,5 +1,7 @@
+import { ObjectId } from 'mongodb';
 
 export interface FundraisingCampaign {
+    _id?: ObjectId;
     // _id: string;  // Ensure this is a string
     id : number;
     name: string;
