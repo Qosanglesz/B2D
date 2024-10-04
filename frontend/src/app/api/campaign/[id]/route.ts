@@ -26,10 +26,7 @@ export async function GET(
   return NextResponse.json(campaign);
 }
 
-export async function PUT(
-    request: NextRequest,
-    { params }: { params: { id: string } }
-  ) {
+export async function PUT (request: NextRequest, { params }: { params: { id: string } }) {
     try {
       const id = parseInt(params.id, 10); // Convert string to number
       const updatedData: Partial<FundraisingCampaign> = await request.json();
@@ -54,6 +51,31 @@ export async function PUT(
       return NextResponse.json({ message: 'Campaign updated successfully' }, { status: 200 });
     } catch (error) {
       console.error("Error updating campaign:", error);
+      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+  }
+
+  export async function DELETE ( request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
+    try {
+      const id = parseInt(params.id, 10); // Convert string to number
+  
+      if (isNaN(id)) {
+        return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+      }
+  
+      const client = await clientPromise;
+      const db = client.db("Campaign");
+      const collection = db.collection<FundraisingCampaign>("fundraising_campaign");
+  
+      const result = await collection.deleteOne({ id: id });
+  
+      if (result.deletedCount === 0) {
+        return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+      }
+  
+      return NextResponse.json({ message: 'Campaign deleted successfully' }, { status: 200 });
+    } catch (error) {
+      console.error("Error deleting campaign:", error);
       return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
   }

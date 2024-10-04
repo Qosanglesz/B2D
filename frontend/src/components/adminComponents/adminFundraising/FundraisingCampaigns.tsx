@@ -18,7 +18,9 @@ const FundraisingCampaigns: React.FC = () => {
           throw new Error('Failed to fetch campaigns');
         }
         const data = await response.json();
-        setCampaigns(data);
+        // Sort campaigns by ID from less to more
+        const sortedCampaigns = data.sort((a: FundraisingCampaign, b: FundraisingCampaign) => a.id - b.id);
+        setCampaigns(sortedCampaigns);
       } catch (err) {
         setError('Error fetching campaigns. Please try again later.');
         console.error(err);
@@ -54,8 +56,8 @@ const FundraisingCampaigns: React.FC = () => {
                 <tr key={campaign.id}>
                   <td className="py-2 px-4 border-b text-center">{campaign.id}</td>
                   <td className="py-2 px-4 border-b text-center">{campaign.companyName}</td>
-                  <td className="py-2 px-4 border-b text-center">{campaign.targetAmount}</td>
-                  <td className="py-2 px-4 border-b text-center">{campaign.amountRaised}</td>
+                  <td className="py-2 px-4 border-b text-center">${campaign.targetAmount.toLocaleString()}</td>
+                  <td className="py-2 px-4 border-b text-center">${campaign.amountRaised.toLocaleString()}</td>
                   <td className="py-2 px-4 border-b text-center">{campaign.status}</td>
                   <td className="py-2 px-4 border-b text-center">
                     <Link href={`/admin/fundraising/${campaign.id}`}>

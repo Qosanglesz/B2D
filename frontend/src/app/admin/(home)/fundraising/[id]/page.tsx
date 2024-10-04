@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import {FundraisingCampaign} from '@/components/types/type_fundraisingCampaign';
-
+import { useRouter } from 'next/navigation';
+import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
 export default function CampaignDetails({ params }: { params: { id: string } }) {
   const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCampaign = async () => {
@@ -29,8 +30,26 @@ export default function CampaignDetails({ params }: { params: { id: string } }) 
   }, [params.id]);
 
   const handleDelete = async () => {
-    // Implement delete functionality here
-    console.log('Delete campaign');
+    if (!campaign) return;
+
+    const confirmDelete = window.confirm('Are you sure you want to delete this campaign?');
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`/api/campaign/${campaign.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete campaign');
+      }
+
+      // Campaign deleted successfully, redirect to the campaign list page
+      router.push('/admin/fundraising');
+    } catch (err) {
+      console.error('Error deleting campaign:', err);
+      setError('Failed to delete campaign. Please try again.');
+    }
   };
 
   if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
@@ -70,10 +89,10 @@ export default function CampaignDetails({ params }: { params: { id: string } }) 
           <p><strong>Product Available:</strong> {campaign.productAvailable ? 'Yes' : 'No'}</p>
           <p><strong>Location:</strong> {campaign.location}</p>
           <p><strong>Incorporation Date:</strong> {new Date(campaign.incorporationDate).toLocaleDateString()}</p>
+          <p><strong>Campaign End Date:</strong> {new Date(campaign.endInDate).toLocaleDateString()}</p>
           <p><strong>Investors:</strong> {campaign.investors.join(', ')}</p>
           <p><strong>Company Number:</strong> {campaign.companyNumber}</p>
           <p><strong>Company Vision:</strong> {campaign.companyVision}</p>
-          <p><strong>Campaign End Date:</strong> {new Date(campaign.endInDate).toLocaleDateString()}</p>
         </div>
         
         {/* Buttons */}
@@ -90,6 +109,13 @@ export default function CampaignDetails({ params }: { params: { id: string } }) 
             Delete
           </button>
         </div>
+
+        {/* Display error message if there's an error */}
+        {error && (
+          <div className="mt-4 text-red-500">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -65,6 +65,16 @@ const AdditionalInfoSection: React.FC<SectionProps> = ({ campaign, onChange }) =
         />
       </div>
       <div>
+        <label className="block mb-1">Company Vision:</label>
+        <input
+          type="date"
+          name="End In Date"
+          value={campaign.endInDate.split('T')[0]}
+          onChange={onChange}
+          className="w-full p-2 border rounded"
+        />
+      </div>
+      <div>
         <label className="block mb-1">Investors (comma-separated):</label>
         <input
           type="text"

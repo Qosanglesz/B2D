@@ -32,18 +32,21 @@ export default function EditCampaignPage({ params }: { params: { id: string } })
     fetchCampaign();
   }, [params.id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setCampaign(prev => {
+    setCampaign((prev) => {
       if (!prev) return null;
       if (name === 'investors') {
-        return { ...prev, [name]: value.split(',').map(item => item.trim()) };
+        return { ...prev, [name]: value.split(',').map((item) => item.trim()) };
       }
       if (name === 'productAvailable') {
         return { ...prev, [name]: value === 'true' };
       }
+      // Keep number fields as strings during input
       if (name === 'amountRaised' || name === 'targetAmount' || name === 'teamSize') {
-        return { ...prev, [name]: Number(value) };
+        return { ...prev, [name]: value };
       }
       return { ...prev, [name]: value };
     });
