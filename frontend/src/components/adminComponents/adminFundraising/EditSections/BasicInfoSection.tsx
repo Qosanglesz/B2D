@@ -5,7 +5,7 @@ import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign
 
 interface SectionProps {
   campaign: FundraisingCampaign;
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
 const BasicInfoSection: React.FC<SectionProps> = ({ campaign, onChange }) => {
@@ -41,7 +41,21 @@ const BasicInfoSection: React.FC<SectionProps> = ({ campaign, onChange }) => {
           className="w-full p-2 border rounded"
         />
       </div>
+      <div>
+        <label className="block mb-1">Status:</label>
+        <select
+          name="status"
+          value={campaign.status.toString()}
+          onChange={onChange}
+          className="w-full p-2 border rounded"
+        >
+          <option value="">Select Status</option>
+          <option value="true">Active</option>
+          <option value="false">Closed</option>
+        </select>
     </div>
+    </div>
+    
   );
 };
 
