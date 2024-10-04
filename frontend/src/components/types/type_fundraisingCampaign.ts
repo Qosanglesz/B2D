@@ -1,10 +1,10 @@
 
 export interface FundraisingCampaign {
-    _id: string;  // Ensure this is a string
+    // _id: string;  // Ensure this is a string
     id : number;
     name: string;
-    goal: number;
-    raised: number;
+    // goal: number;
+    // raised: number;
     status: string;
     description: string;
     urlPicture: string;
