@@ -9,14 +9,20 @@ type SortOrder = 'asc' | 'desc';
 
 const FundraisingCampaigns: React.FC = () => {
   const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
+  const [filteredCampaigns, setFilteredCampaigns] = useState<FundraisingCampaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>('id');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchCampaigns();
   }, []);
+
+  useEffect(() => {
+    filterCampaigns();
+  }, [campaigns, searchTerm]);
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
@@ -27,6 +33,7 @@ const FundraisingCampaigns: React.FC = () => {
       }
       const data = await response.json();
       setCampaigns(data);
+      setFilteredCampaigns(data);
     } catch (err) {
       setError('Error fetching campaigns. Please try again later.');
       console.error(err);
@@ -35,18 +42,25 @@ const FundraisingCampaigns: React.FC = () => {
     }
   };
 
+  const filterCampaigns = () => {
+    const filtered = campaigns.filter(campaign =>
+      campaign.companyName.toLowerCase().startsWith(searchTerm.toLowerCase())
+    );
+    setFilteredCampaigns(filtered);
+  };
+
   const sortCampaigns = (field: SortField) => {
     const newSortOrder = field === sortField && sortOrder === 'asc' ? 'desc' : 'asc';
     setSortField(field);
     setSortOrder(newSortOrder);
 
-    const sortedCampaigns = [...campaigns].sort((a, b) => {
+    const sortedCampaigns = [...filteredCampaigns].sort((a, b) => {
       if (a[field] < b[field]) return sortOrder === 'asc' ? -1 : 1;
       if (a[field] > b[field]) return sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
 
-    setCampaigns(sortedCampaigns);
+    setFilteredCampaigns(sortedCampaigns);
   };
 
   const getSortIcon = (field: SortField) => {
@@ -54,13 +68,39 @@ const FundraisingCampaigns: React.FC = () => {
     return sortOrder === 'asc' ? '↑' : '↓';
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
   return (
     <div className="p-6 min-h-screen">
-      <h1 className="text-3xl font-bold mb-4">Fundraising Campaigns</h1>
-      {campaigns.length > 0 ? (
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold">Fundraising Campaigns</h1>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search company"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="p-2 pl-8 border border-gray-300 rounded w-64"
+          />
+          <svg
+            className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </div>
+      {filteredCampaigns.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
             <thead>
@@ -82,7 +122,7 @@ const FundraisingCampaigns: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {campaigns.map((campaign) => (
+              {filteredCampaigns.map((campaign) => (
                 <tr key={campaign.id}>
                   <td className="py-2 px-4 border-b text-center">{campaign.id}</td>
                   <td className="py-2 px-4 border-b text-center">{campaign.companyName}</td>
