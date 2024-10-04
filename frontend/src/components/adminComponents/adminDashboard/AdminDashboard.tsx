@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import DashboardData from '../../types/DashboardData';
 
-interface DashboardData {
-  totalCompanies: number;
-  totalFundsRaised: number;
-}
+// interface DashboardData {
+//   totalCompanies: number;
+//   totalFundsRaised: number;
+// }
 
 const AdminDashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData>({
