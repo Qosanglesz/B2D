@@ -4,33 +4,55 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
+type SortField = 'id' | 'amountRaised' | 'targetAmount' | 'companyName';
+type SortOrder = 'asc' | 'desc';
+
 const FundraisingCampaigns: React.FC = () => {
   const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortField, setSortField] = useState<SortField>('id');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
   useEffect(() => {
-    const fetchCampaigns = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch('/api/campaigns');
-        if (!response.ok) {
-          throw new Error('Failed to fetch campaigns');
-        }
-        const data = await response.json();
-        // Sort campaigns by ID from less to more
-        const sortedCampaigns = data.sort((a: FundraisingCampaign, b: FundraisingCampaign) => a.id - b.id);
-        setCampaigns(sortedCampaigns);
-      } catch (err) {
-        setError('Error fetching campaigns. Please try again later.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchCampaigns();
   }, []);
+
+  const fetchCampaigns = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/campaigns');
+      if (!response.ok) {
+        throw new Error('Failed to fetch campaigns');
+      }
+      const data = await response.json();
+      setCampaigns(data);
+    } catch (err) {
+      setError('Error fetching campaigns. Please try again later.');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sortCampaigns = (field: SortField) => {
+    const newSortOrder = field === sortField && sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortField(field);
+    setSortOrder(newSortOrder);
+
+    const sortedCampaigns = [...campaigns].sort((a, b) => {
+      if (a[field] < b[field]) return sortOrder === 'asc' ? -1 : 1;
+      if (a[field] > b[field]) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    setCampaigns(sortedCampaigns);
+  };
+
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) return '↕️';
+    return sortOrder === 'asc' ? '↑' : '↓';
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -43,10 +65,18 @@ const FundraisingCampaigns: React.FC = () => {
           <table className="min-w-full bg-white border border-gray-200">
             <thead>
               <tr>
-                <th className="py-2 px-4 border-b text-center">ID</th>
-                <th className="py-2 px-4 border-b text-center">Company Name</th>
-                <th className="py-2 px-4 border-b text-center">Goal</th>
-                <th className="py-2 px-4 border-b text-center">Raised</th>
+                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('id')}>
+                  ID {getSortIcon('id')}
+                </th>
+                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('companyName')}>
+                  Company Name {getSortIcon('companyName')}
+                </th>
+                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('targetAmount')}>
+                  Goal {getSortIcon('targetAmount')}
+                </th>
+                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('amountRaised')}>
+                  Raised {getSortIcon('amountRaised')}
+                </th>
                 <th className="py-2 px-4 border-b text-center">Status</th>
                 <th className="py-2 px-4 border-b text-center">Actions</th>
               </tr>
