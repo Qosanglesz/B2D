@@ -41,7 +41,7 @@ test('test', async ({ page }) => {
     await page.getByLabel('Email or phone').click();
     await page.getByLabel('Email or phone').fill(testEnv.GOOGLE_ID);
     await page.getByRole('button', { name: 'Next' }).click();
-    await page.getByLabel('Enter your password').fill(testEnv.PASS);
+    await page.getByLabel('Enter your password').fill(testEnv.Pass);
     await page.getByRole('button', { name: 'Next' }).click();
     await page.goto('http://localhost:3000/admin');
 });
