@@ -10,10 +10,11 @@ export default withMiddlewareAuthRequired(async (req) => {
     if (!user) {
         return NextResponse.redirect("/api/auth/login");
     }
-
+    // console.log(user.accessToken);
+    console.log(user.accessToken)
     return res;
 });
 
 export const config = {
-    matcher: ["/admin/:path*", "/campaign/:path*"],
-};
+    matcher: ["/admin/:path*", "/campaign/:path*", '/profile/:path*'],
+}; 

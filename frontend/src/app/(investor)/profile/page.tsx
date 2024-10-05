@@ -1,10 +1,12 @@
 // app/profile/page.tsx
 import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { redirect } from 'next/navigation';
 import Image from 'next/image';
 
 export default withPageAuthRequired (
   async function Profile() {
     const session = await getSession();
+
     const user = session?.user;
 
     return (
@@ -40,5 +42,5 @@ export default withPageAuthRequired (
         )}
       </div>
     );
-  }
+  }, { returnTo: '/profile' }
 );
