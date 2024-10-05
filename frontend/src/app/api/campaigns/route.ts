@@ -12,7 +12,7 @@ export async function GET() {
     const collection = database.collection<FundraisingCampaign>("fundraising_campaign");
     
     const campaigns = await collection.find({}).toArray();
-    console.log("Fetched campaigns:", campaigns);
+    // console.log("Fetched campaigns:", campaigns);
     return NextResponse.json(campaigns);
   } catch (error) {
     console.error("Error fetching campaigns:", error);

@@ -9,7 +9,11 @@ const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign })
   const router = useRouter();
 
   const handleCardClick = () => {
-    router.push(`/campaign/${campaign.id}`);
+    if (campaign.id) {
+      router.push(`/campaign/${campaign.id}`);
+    } else {
+      console.error("Invalid campaign id:", campaign.id);
+    }
   };
 
   // Calculate the percentage raised and remaining days
