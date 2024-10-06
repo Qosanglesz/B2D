@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
+import { Input, Button } from '@nextui-org/react';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
 type SortField = 'id' | 'amountRaised' | 'targetAmount' | 'companyName';
@@ -79,25 +80,26 @@ const FundraisingCampaigns: React.FC = () => {
     <div className="p-6 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">Fundraising Campaigns</h1>
-        <div className="relative">
-          <input
-            type="text"
+        <div className="w-64">
+          <Input
+            clearable
+            contentLeft={<SearchIcon />}
+            contentLeftStyling={false}
+            css={{
+              w: "100%",
+              "@xsMax": {
+                mw: "300px",
+              },
+              "& .nextui-input-content--left": {
+                h: "100%",
+                ml: "\$4",
+                dflex: "center",
+              },
+            }}
             placeholder="Search company"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="p-2 pl-8 border border-gray-300 rounded w-64"
           />
-          <svg
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
         </div>
       </div>
       {filteredCampaigns.length > 0 ? (
@@ -131,7 +133,9 @@ const FundraisingCampaigns: React.FC = () => {
                   <td className="py-2 px-4 border-b text-center">{campaign.status ? 'Active' : 'Closed'}</td>
                   <td className="py-2 px-4 border-b text-center">
                     <Link href={`/admin/fundraising/${campaign.id}`}>
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded">View</button>
+                      <Button auto color="primary" size="sm">
+                        View
+                      </Button>
                     </Link>
                   </td>
                 </tr>
@@ -145,5 +149,19 @@ const FundraisingCampaigns: React.FC = () => {
     </div>
   );
 };
+
+const SearchIcon = () => (
+  <svg
+    className="w-5 h-5 text-gray-400"
+    fill="none"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+  </svg>
+);
 
 export default FundraisingCampaigns;
