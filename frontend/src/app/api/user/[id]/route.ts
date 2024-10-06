@@ -1,9 +1,11 @@
-// app/api/users/route.ts
-import { NextResponse } from 'next/server';
+// app/api/users/[id]/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const userId = params.id;
+
   try {
-    console.log('Attempting to get access token...');
+    console.log(`Attempting to get access token for user ID: ${userId}`);
     const tokenResponse = await fetch('https://dev-juzu8hcucbv4naz4.us.auth0.com/oauth/token', {
       method: 'POST',
       headers: {
@@ -27,21 +29,24 @@ export async function GET() {
     console.log('Access token obtained successfully');
     const accessToken = tokenData.access_token;
 
-    // Fetch users using the access token
-    const usersResponse = await fetch('https://dev-juzu8hcucbv4naz4.us.auth0.com/api/v2/users', {
+    // Fetch specific user using the access token
+    const userResponse = await fetch(`https://dev-juzu8hcucbv4naz4.us.auth0.com/api/v2/users/${userId}`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
       },
     });
 
-    if (!usersResponse.ok) {
-      throw new Error('Failed to fetch users');
+    if (!userResponse.ok) {
+      if (userResponse.status === 404) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      }
+      throw new Error('Failed to fetch user');
     }
 
-    const users = await usersResponse.json();
-    return NextResponse.json(users);
+    const user = await userResponse.json();
+    return NextResponse.json(user);
   } catch (error) {
-    console.error('Detailed error in /api/users:', error);
+    console.error(`Detailed error in /api/user/${userId}:`, error);
     return NextResponse.json({ error: 'Internal Server Error', details: (error as Error).message }, { status: 500 });
   }
 }

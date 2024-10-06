@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import 'tailwindcss/tailwind.css';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { NextUIProvider } from "@nextui-org/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,9 +15,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
         <UserProvider>
-            <body className={inter.className}>
-                {children}
-            </body>
+              <body className={inter.className}>
+                  {children}
+              </body>
         </UserProvider>
     </html>
   );
