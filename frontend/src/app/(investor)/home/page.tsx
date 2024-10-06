@@ -3,6 +3,7 @@
 import Header from "../../../components/homeComponents/Header";
 import CampaignCard from "@/components/campaignComponents/CampaignCard";
 import React, { useEffect, useState } from "react";
+import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
 const links = {
     getStarted: "/api/auth/login",
@@ -10,9 +11,9 @@ const links = {
 };
 
 export default function Home() {
-    const [campaigns, setCampaigns] = useState([]);
+    const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchCampaigns = async () => {
@@ -21,10 +22,14 @@ export default function Home() {
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaigns');
                 }
-                const data = await response.json();
-                setCampaigns(data); // Assuming the API response is an array of campaigns
-            } catch (err) {
-                setError(err.message);
+                const data: FundraisingCampaign[] = await response.json();
+                setCampaigns(data);
+            } catch (err: unknown) {
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError('An unknown error occurred');
+                }
             } finally {
                 setLoading(false);
             }
@@ -48,7 +53,7 @@ export default function Home() {
                 <h1 className="text-2xl font-bold ml-20 my-8">Fundraising Campaign</h1>
                 <div className="grid grid-cols-4 mx-5 gap-4">
                     {campaigns.map(campaign => (
-                        <CampaignCard key={campaign._id} campaign={campaign} />
+                        <CampaignCard key={campaign._id?.toString()} campaign={campaign} />
                     ))}
                 </div>
                 <div className="text-center py-10">

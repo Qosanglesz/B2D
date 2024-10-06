@@ -41,7 +41,7 @@ export default function EditCampaignPage({ params }: { params: { id: string } })
       if (name === 'investors') {
         return { ...prev, [name]: value.split(',').map((item) => item.trim()) };
       }
-      if (name === 'productAvailable') {
+      if (name === 'productAvailable' || name === 'status') {
         return { ...prev, [name]: value === 'true' };
       }
       // Keep number fields as strings during input

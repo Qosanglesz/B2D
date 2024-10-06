@@ -1,19 +1,34 @@
-import { NextResponse } from "next/server";
-import { withMiddlewareAuthRequired, getSession } from "@auth0/nextjs-auth0/edge";
+import { NextRequest, NextResponse } from "next/server";
+import { withMiddlewareAuthRequired, getSession, Session } from "@auth0/nextjs-auth0/edge";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
-export default withMiddlewareAuthRequired(async (req) => {
+interface CustomJwtPayload extends JwtPayload {
+  permissions?: string[];
+}
 
-    const res = NextResponse.next();
+export default withMiddlewareAuthRequired(async (req: NextRequest) => {
+  const res = NextResponse.next();
 
-    const user = await getSession(req, res);
+  const session: Session | null = (await getSession(req, res)) || null;
 
-    if (!user) {
-        return NextResponse.redirect("/api/auth/login");
-    }
+  // Check if the user is authenticated
+  if (!session) {
+    return NextResponse.redirect("/api/auth/login");
+  }
 
-    return res;
+  // Check if the user has the 'Admin' role when trying to access the admin path
+  const roles = session.user['https://localhost:3000/roles'] || [];
+  if (req.nextUrl.pathname.startsWith('/admin') && !roles.includes('Admin B2D')) {
+    return NextResponse.redirect(new URL('/home', req.url)); // Redirect to an unauthorized page
+  }
+
+  if (session.accessToken) {
+    const userPermissionData: CustomJwtPayload = jwtDecode(session.accessToken);
+  }
+
+  return res;
 });
 
 export const config = {
-    matcher: ["/admin/:path*", "/campaign/:path*"],
+  matcher: ["/admin/:path*", "/campaign/:path*", '/profile/:path*'],
 };

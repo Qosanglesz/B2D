@@ -1,12 +1,16 @@
 'use client';
 
 import CampaignCard from '@/components/campaignComponents/CampaignCard';
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
+=======
+import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+>>>>>>> 58ec6f0ca32df7e736a9e8810b03c99c5cf21699
 
 export default function CampaignPage() {
-  const [campaigns, setCampaigns] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -15,10 +19,14 @@ export default function CampaignPage() {
         if (!response.ok) {
           throw new Error('Failed to fetch campaigns');
         }
-        const data = await response.json();
-        setCampaigns(data); // Assuming the API response is an array of campaigns
-      } catch (err) {
-        setError(err.message);
+        const data: FundraisingCampaign[] = await response.json();
+        setCampaigns(data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }
@@ -40,7 +48,7 @@ export default function CampaignPage() {
       <h1 className="text-3xl font-bold mb-6">Live Opportunities</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {campaigns.map((campaign) => (
-          <CampaignCard key={campaign._id} campaign={campaign} /> // Ensure each card has a unique key
+          <CampaignCard key={campaign._id?.toString()} campaign={campaign} />
         ))}
       </div>
     </div>
