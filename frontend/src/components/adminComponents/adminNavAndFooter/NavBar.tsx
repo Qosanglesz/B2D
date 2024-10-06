@@ -18,14 +18,14 @@ const AdminNavBar: React.FC = () => {
         <Link href="/admin">
           <span className="text-2xl font-bold cursor-pointer">B2D VENTURE ADMIN</span>
         </Link>
-
+{/* 
         <div className="flex-1 mx-4">
           <input
             type="text"
             placeholder="Search..."
             className="bg-gray-200 text-black px-4 py-2 rounded-md w-full focus:outline-none focus:ring focus:border-blue-500"
           />
-        </div>
+        </div> */}
 
         <div className="flex items-center space-x-6">
           <Link href="/admin/dashboard">
