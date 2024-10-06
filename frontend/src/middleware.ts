@@ -3,25 +3,29 @@ import { withMiddlewareAuthRequired, getSession, Session } from "@auth0/nextjs-a
 import { jwtDecode, JwtPayload } from "jwt-decode";
 
 interface CustomJwtPayload extends JwtPayload {
-  // Add any custom fields you expect in your JWT payload
   permissions?: string[];
-  // Add other custom fields as needed
 }
 
 export default withMiddlewareAuthRequired(async (req: NextRequest) => {
   const res = NextResponse.next();
 
-  const user: Session | null = (await getSession(req, res)) || null;
+  const session: Session | null = (await getSession(req, res)) || null;
 
-  if (!user) {
+  // Check if the user is authenticated
+  if (!session) {
     return NextResponse.redirect("/api/auth/login");
   }
 
-  if (user.accessToken) {
-    const userPermissionData: CustomJwtPayload = jwtDecode(user.accessToken);
-    console.log('userPermissionData', userPermissionData.permissions);
+  // Check if the user has the 'Admin' role when trying to access the admin path
+  const roles = session.user['https://localhost:3000/roles'] || [];
+  if (req.nextUrl.pathname.startsWith('/admin') && !roles.includes('Admin B2D')) {
+    return NextResponse.redirect(new URL('/home', req.url)); // Redirect to an unauthorized page
   }
-  console.log('user [accessTokenScope]',user.accessTokenScope)
+
+  if (session.accessToken) {
+    const userPermissionData: CustomJwtPayload = jwtDecode(session.accessToken);
+  }
+
   return res;
 });
 
