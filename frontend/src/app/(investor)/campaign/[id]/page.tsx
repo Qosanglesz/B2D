@@ -1,19 +1,23 @@
+// frontend\src\app\campaign\[id]\page.tsx
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import IntroHeader from '@/components/campaignComponents/IntroHeader';
 import CompanyInformation from '@/components/campaignComponents/CompanyInformation';
+import IntroCarousel from '@/components/campaignComponents/IntroCarousel';
+import IntroStatistics from '@/components/campaignComponents/IntroStatistics';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
-interface HomeProps {
+interface CampaignProps {
   params: { id: string };
 }
 
-export default function Home({ params }: HomeProps) {
+export default function CampaignPage({ params }: CampaignProps) {
   const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const campaignId = params.id;
 
   useEffect(() => {
@@ -47,43 +51,29 @@ export default function Home({ params }: HomeProps) {
   if (!campaign) return <div className="flex justify-center items-center h-screen">No campaign data found</div>;
 
   return (
-    <div className="min-h-screen p-8 w-full">
-      {/* Header Section */}
-      <IntroHeader
-        logo={campaign.urlPicture}
-        companyName={campaign.companyName}
-        description={campaign.description}
-      />
+    <div className="min-h-screen flex justify-center">
+      <div className="w-full max-w-screen-xl p-0">
+        <div className="grid grid-cols-6">
+          {/* IntroHeader at the top */}
+          <div className="col-span-6 p-2">
+            <IntroHeader campaign={campaign} />
+          </div>
 
-      {/* Campaign Summary */}
-      <div className="grid grid-cols-2 gap-6 m-4">
-        <div className="">
-          <img
-            src={campaign.urlPicture}
-            alt="Company logo"
-            className="w-full h-48 lg:h-64 object-cover rounded-lg"
-          />
-        </div>
-        <div className="text-right">
-          <p className="text-3xl font-semibold text-gray-800 mb-4">
-            Funds Raised: ${campaign.amountRaised}
-          </p>
-          <p className="text-2xl text-gray-600 mb-2">
-            Target: ${campaign.targetAmount}
-          </p>
-          <p className="text-xl text-gray-500 mb-4">
-            {campaign.investors.length} Investors
-          </p>
-          <button className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-all">
-            Invest Now
-          </button>
-          <p className="text-xl text-gray-500 mt-4">End in {new Date(campaign.endInDate).toLocaleDateString()}</p>
-        </div>
-      </div>
+          {/* Carousel middle to the left */}
+          {/* p-3 aligned with Search in NavBar above */}
+          <div className="col-span-4 row-span-3 p-3">
+            <IntroCarousel campaign={campaign} />
+          </div>
 
-      {/* Campaign Details */}
-      <div className="mt-12">
-        <CompanyInformation campaign={campaign}/>
+          {/* Stats middle to the right */}
+          <div className="col-span-2 row-span-3 p-10">
+            <IntroStatistics campaign={campaign} />
+          </div>
+          {/* Company Information at the bottom */}
+          <div className="col-span-6 p-3 mt-6 mb-10 rounded-lg">
+            <CompanyInformation campaign={campaign} />
+          </div>
+        </div>
       </div>
     </div>
   );
