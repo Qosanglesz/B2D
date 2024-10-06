@@ -5,7 +5,7 @@ export const GET = handleAuth({
     login : handleLogin (
         {
             authorizationParams : {
-                audience : process.env.AUTH0_BASE_URL,
+                audience : process.env.AUTH0_AUDIENCE,
                 scope : 'openid profile email read:b2d-system'
             }
             ,returnTo: '/profile'
