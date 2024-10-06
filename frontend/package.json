@@ -10,19 +10,23 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
+    "@stripe/stripe-js": "^4.7.0",
     "dotenv": "^16.4.5",
     "jwt-decode": "^4.0.0",
     "mongodb": "^6.9.0",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "react-router-dom": "^6.26.1"
+    "react-router-dom": "^6.26.1",
+    "stripe": "^17.1.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.47.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "playwright": "^1.47.2",
