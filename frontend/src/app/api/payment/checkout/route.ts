@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
             amount: amount, // Store the amount in dollars
             session_id: session.id,
             date: new Date().toJSON(),
+            successAt: null,
             status: session.status,
         };
 
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
             message: "Checkout success.",
             id: session.id,
+            url: session.url,
             result,
         });
     } catch (error: any) {
