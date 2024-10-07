@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
                 },
             ],
             mode: 'payment',
-            success_url: 'http://localhost:3000/payment/success',
-            cancel_url: 'http://localhost:3000/payment/fail',
+            success_url: `http://localhost:3000/payment/success/${statementId}`,
+            cancel_url: `http://localhost:3000/payment/cancel/${statementId}`,
         });
 
         // Create the data object for the MongoDB statement collection
