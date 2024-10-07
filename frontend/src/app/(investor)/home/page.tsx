@@ -4,6 +4,7 @@ import Header from "../../../components/homeComponents/Header";
 import CampaignCard from "@/components/campaignComponents/CampaignCard";
 import React, { useEffect, useState } from "react";
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { getSession } from '@auth0/nextjs-auth0';
 
 const links = {
     getStarted: "/api/auth/login",

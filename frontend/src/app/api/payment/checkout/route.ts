@@ -53,8 +53,8 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({
             message: "Checkout success.",
-            id: session.id,
-            url: session.url,
+            sessionId: session.id,
+            sessionUrl: session.url,
             result,
         });
     } catch (error: any) {

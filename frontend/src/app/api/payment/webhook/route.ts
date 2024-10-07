@@ -51,6 +51,8 @@ export async function POST(req: NextRequest) {
                     { $set: { status: paymentStatus, successAt: new Date().toJSON() } } // Update the status and add updated timestamp
                 );
 
+                // TODO update Campaign object with new raised amount
+
                 console.log(`Payment status for session ${sessionId} updated in the database!`);
             } catch (dbError) {
                 console.error('Error updating payment status in database:', dbError.message);
