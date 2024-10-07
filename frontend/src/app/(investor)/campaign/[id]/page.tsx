@@ -8,6 +8,10 @@ import CompanyInformation from '@/components/campaignComponents/CompanyInformati
 import IntroCarousel from '@/components/campaignComponents/IntroCarousel';
 import IntroStatistics from '@/components/campaignComponents/IntroStatistics';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { useRouter } from 'next/navigation'
+import Stripe from 'stripe';
+import axios from "axios";
 
 interface CampaignProps {
   params: { id: string };
@@ -15,13 +19,36 @@ interface CampaignProps {
 
 export default function CampaignPage({ params }: CampaignProps) {
   const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<>(true);
   const [error, setError] = useState<string | null>(null);
 
   const campaignId = params.id;
 
+  const { user } = useUser();
+
+  const [investAmountInput, setInvestAmountInput] = useState<number>(0);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInvestAmountInput(Number(e.target.value));}
+
+  const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
+  const router = useRouter();
+
+  const handleInvestButton = async () => {
+
+    const bodyData = {
+      "user":user,
+      "campaign": campaign,
+      "amount": investAmountInput
+    }
+    const response = await axios.post("http://localhost:3000/api/payment/checkout", bodyData);
+    const sessionUrl = response.data.sessionUrl;
+    router.push(sessionUrl)
+  };
+
+
   useEffect(() => {
     const fetchCampaign = async () => {
+
       if (!campaignId) {
         setError('No campaign ID provided');
         setIsLoading(false);
@@ -67,7 +94,12 @@ export default function CampaignPage({ params }: CampaignProps) {
 
           {/* Stats middle to the right */}
           <div className="col-span-2 row-span-3 p-10">
-            <IntroStatistics campaign={campaign} />
+            <IntroStatistics
+                campaign={campaign}
+                handleInputChange={handleInputChange}
+                investmentAmountInput={investAmountInput}
+                handleInvestButton={handleInvestButton}
+            />
           </div>
           {/* Company Information at the bottom */}
           <div className="col-span-6 p-3 mt-6 mb-10 rounded-lg">
