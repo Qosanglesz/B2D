@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
             statement_id: statementId,
             user_id: user.sub,
             campaign_id: campaign.id,
+            campaignName: campaign.name,
             amount: amount, // Store the amount in dollars
             session_id: session.id,
             date: new Date().toJSON(),
