@@ -1,37 +1,33 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, {useEffect, useState} from "react";
 import {useUser} from "@auth0/nextjs-auth0/client";
+import {ObjectId} from "mongodb";
 
-interface InvestmentStatement {
-    id: number;
-    companyName: string;
+interface UserStatements {
+    _id?: ObjectId;
+    statement_id: string;
+    user_id: string;
+    campaign_id: string;
+    campaignName: string;
     amount: number;
+    session_id: string;
     date: string;
-    paymentMethod: string;
+    successAt: string;
+    status: string;
 }
-
-const investments: InvestmentStatement[] = [
-    { id: 1, companyName: "Startup Inc.", amount: 100, date: "2023-09-01", paymentMethod: "Credit Card" },
-    { id: 2, companyName: "Startup Inc.", amount: 50, date: "2023-08-15", paymentMethod: "Bank Transfer" },
-    { id: 3, companyName: "Startup Inc.", amount: 100, date: "2023-09-01", paymentMethod: "Credit Card" },
-    { id: 4, companyName: "Startup Inc.", amount: 50, date: "2023-08-15", paymentMethod: "Bank Transfer" },
-    { id: 5, companyName: "Startup Inc.", amount: 150, date: "2023-08-01", paymentMethod: "PayPal" },
-    { id: 6, companyName: "Startup Inc.", amount: 100, date: "2023-09-01", paymentMethod: "Credit Card" },
-    { id: 7, companyName: "Startup Inc.", amount: 50, date: "2023-08-15", paymentMethod: "Bank Transfer" },
-    { id: 8, companyName: "Startup Inc.", amount: 150, date: "2023-08-01", paymentMethod: "PayPal" },
-    { id: 9, companyName: "Startup Inc.", amount: 100, date: "2023-09-01", paymentMethod: "Credit Card" },
-    { id: 10, companyName: "Startup Inc.", amount: 50, date: "2023-08-15", paymentMethod: "Bank Transfer" },
-    { id: 11, companyName: "Startup Inc.", amount: 150, date: "2023-08-01", paymentMethod: "PayPal" },
-];
 
 const ITEMS_PER_PAGE = 10;
 
 export default function Home() {
+    const { user, isLoading: userLoading } = useUser(); // Fetch user data from Auth0
+    const [userStatements, setUserStatements] = useState<UserStatements[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const totalPages = Math.ceil(investments.length / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(userStatements.length / ITEMS_PER_PAGE);
 
-    const currentInvestments = investments.slice(
+    const currentInvestments = userStatements.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE
     );
@@ -40,47 +36,93 @@ export default function Home() {
         setCurrentPage(page);
     };
 
+    const formatDate = (isoDate: string) => {
+        const date = new Date(isoDate);
+        return date.toLocaleString('en-GB', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        }).replace(',', ''); // Removes the comma for cleaner formatting
+    };
+
+    useEffect(() => {
+        const fetchStatement = async () => {
+            if (!user || userLoading) return; // Wait until user is available
+
+            setLoading(true);
+            try {
+                console.log(user);
+                const user_id = user.sub; // Access user ID (sub) from Auth0
+                const response = await fetch(`/api/statement/byuserid/${user_id}`);
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch investment statements.");
+                }
+                const data: UserStatements[] = await response.json();
+                setUserStatements(data);
+            } catch (err: any) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStatement();
+    }, [user, userLoading]); // Depend on `user` and `userLoading`
+
+    if (loading || userLoading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+    const totalAmount = userStatements.reduce((sum, item) => sum + item.amount, 0);
+    const uniqueCampaigns = new Set(userStatements.map(item => item.campaignName));
+    const totalInvestedCampaigns = uniqueCampaigns.size;
+    const latestStatement = userStatements[userStatements.length-1]
+
     return (
         <div className="min-h-screen">
             <div>
-                <h1 className="text-3xl font-bold my-4 mx-3 ">User Investment Portfolio</h1>
+                <h1 className="text-3xl font-bold my-4 mx-3">User Investment Portfolio</h1>
 
                 <div className="grid grid-cols-3 gap-4 mx-3 my-3">
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-xl font-semibold">Total investment</h2>
-                        <p className="text-2xl">$200000</p>
+                        <p className="text-2xl">${totalAmount}</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow">
-                        <h2 className="text-xl font-semibold">Total invested companies</h2>
-                        <p className="text-2xl">11 companies</p>
+                        <h2 className="text-xl font-semibold">Total invested campaigns</h2>
+                        <p className="text-2xl">{totalInvestedCampaigns} Campaigns</p>
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-xl font-semibold">Latest investment</h2>
-                        <p className="text-2xl">$100 invested in Kasetsart University</p>
+                        <p className="text-2xl">{latestStatement.amount} invested in {latestStatement.campaignName}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="mx-3 my-14 ">
+            <div className="mx-3 my-14">
                 <h2 className="text-2xl font-semibold my-4">Investment Statements</h2>
                 <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                     <thead className="bg-gray-200">
                     <tr>
-                        <th className="py-2 px-4 text-left">ID</th>
+                        <th className="py-2 px-4 text-left">Statement ID</th>
                         <th className="py-2 px-4 text-left">Company Name</th>
                         <th className="py-2 px-4 text-left">Amount</th>
-                        <th className="py-2 px-4 text-left">Date</th>
-                        <th className="py-2 px-4 text-left">Payment Method</th>
+                        <th className="py-2 px-4 text-left">Release Date</th>
+                        <th className="py-2 px-4 text-left">Success Date</th>
+                        <th className="py-2 px-4 text-left">Status</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {currentInvestments.map((investment) => (
-                        <tr key={investment.id}>
-                        <td className="py-2 px-4 border-b">{investment.id}</td>
-                            <td className="py-2 px-4 border-b">{investment.companyName}</td>
-                            <td className="py-2 px-4 border-b">${investment.amount}</td>
-                            <td className="py-2 px-4 border-b">{investment.date}</td>
-                            <td className="py-2 px-4 border-b">{investment.paymentMethod}</td>
+                    {currentInvestments.map((userStatements) => (
+                        <tr key={userStatements._id?.toString()}>
+                            <td className="py-2 px-4 border-b">{userStatements.statement_id}</td>
+                            <td className="py-2 px-4 border-b">{userStatements.campaignName}</td>
+                            <td className="py-2 px-4 border-b">${userStatements.amount}</td>
+                            <td className="py-2 px-4 border-b">{formatDate(userStatements.date)}</td>
+                            <td className="py-2 px-4 border-b">{formatDate(userStatements.successAt)}</td>
+                            <td className="py-2 px-4 border-b">{userStatements.status}</td>
                         </tr>
                     ))}
                     </tbody>

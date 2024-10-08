@@ -35,8 +35,9 @@ export async function POST(req: NextRequest) {
         // Create the data object for the MongoDB statement collection
         const data = {
             statement_id: statementId,
-            user_sub: user.sub,
+            user_id: user.sub,
             campaign_id: campaign.id,
+            campaignName: campaign.name,
             amount: amount, // Store the amount in dollars
             session_id: session.id,
             date: new Date().toJSON(),

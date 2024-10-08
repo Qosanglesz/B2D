@@ -47,13 +47,17 @@ export default function Home() {
         return <div>Error: {error}</div>;
     }
 
+    const randomCampaigns = campaigns
+        .sort(() => Math.random() - 0.5)  // Shuffle array
+        .slice(0, 4);
+
     return (
         <>
             <Header registerLink={links.getStarted} />
             <div>
                 <h1 className="text-2xl font-bold ml-20 my-8">Fundraising Campaign</h1>
                 <div className="grid grid-cols-4 mx-5 gap-4">
-                    {campaigns.map(campaign => (
+                    {randomCampaigns.map(campaign => (
                         <CampaignCard key={campaign._id?.toString()} campaign={campaign} />
                     ))}
                 </div>
