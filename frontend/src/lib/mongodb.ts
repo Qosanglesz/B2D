@@ -1,9 +1,5 @@
-// lib/mongodb.ts
-
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
-// Remove this line
-// require('dotenv').config();
 
 const url = process.env.MONGODB_URL;
 
@@ -20,7 +16,6 @@ const client = new MongoClient(url, {
 });
 
 let clientPromise: Promise<MongoClient>;
-
 clientPromise = client.connect();
 
 export default clientPromise;
