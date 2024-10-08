@@ -3,11 +3,9 @@ import Stripe from 'stripe';
 import clientPromise from "@/lib/mongodb";
 
 
-const DATABASE_NAME = "payment"
-const COLLECTION_NAME = "statement"
-
-const DATABASE_NAME2 = "Campaign"
-const COLLECTION_NAME2 = "fundraising_campaign"
+const DATABASE_NAME = "B2DVentureProject"
+const COLLECTION_STATEMENTS = "Statements"
+const COLLECTION_CAMPAIGNS = "Campaigns"
 
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
@@ -50,7 +48,7 @@ export async function POST(req: NextRequest) {
             try {
                 let client = await clientPromise;
                 let db = client.db(DATABASE_NAME);
-                let collection = db.collection(COLLECTION_NAME);
+                let collection = db.collection(COLLECTION_STATEMENTS);
 
                 // Update the statement document where the session ID matches
                 const result = await collection.updateOne(
@@ -63,8 +61,8 @@ export async function POST(req: NextRequest) {
                 const {user_id, campaign_id} = statement;
 
                 // Connect to the fundraising campaign database
-                db = client.db(DATABASE_NAME2);
-                collection = db.collection(COLLECTION_NAME2);
+                db = client.db(DATABASE_NAME);
+                collection = db.collection(COLLECTION_CAMPAIGNS);
 
                 // Find the campaign document that the user is funding (add criteria to match the correct campaign)
                 const campaign = await collection.findOne({"id": campaign_id});

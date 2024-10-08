@@ -1,8 +1,8 @@
 import {NextRequest, NextResponse} from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
-const DATABASE_NAME = "payment"
-const COLLECTION_NAME = "statement"
+const DATABASE_NAME = "B2DVentureProject"
+const COLLECTION_NAME = "Statements"
 
 export async function GET(req: NextRequest, {params}: { params: { id: string } }) {
     try {

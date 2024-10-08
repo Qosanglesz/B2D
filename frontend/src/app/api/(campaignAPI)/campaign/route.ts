@@ -3,9 +3,8 @@ import clientPromise from '@/lib/mongodb';
 import {FundraisingCampaign} from '@/components/types/type_fundraisingCampaign';
 
 
-const DATABASE_NAME = "Campaign"
-const COLLECTION_NAME = "fundraising_campaign"
-
+const DATABASE_NAME = "B2DVentureProject"
+const COLLECTION_NAME = "Campaigns"
 
 export async function POST(request: NextRequest) {
     try {

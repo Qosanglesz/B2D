@@ -3,8 +3,8 @@ import Stripe from 'stripe';
 import clientPromise from "@/lib/mongodb";
 import {v4 as uuidv4} from "uuid";
 
-const DATABASE_NAME = "payment"
-const COLLECTION_NAME = "statement"
+const DATABASE_NAME = "B2DVentureProject"
+const COLLECTION_NAME = "Statements"
 
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);

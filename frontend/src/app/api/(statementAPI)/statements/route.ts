@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
 
-const DATABASE_NAME = "payment"
-const COLLECTION_NAME = "statement"
+const DATABASE_NAME = "B2DVentureProject"
+const COLLECTION_NAME = "Statements"
 
 export async function GET() {
     try {
@@ -13,6 +13,6 @@ export async function GET() {
         const statements = await collection.find({}).toArray();
         return NextResponse.json(statements);
     } catch (error: any) {
-        return NextResponse.json({ message: error.message }, { status: 500 });
+        return NextResponse.json({message: error.message}, {status: 500});
     }
 }
