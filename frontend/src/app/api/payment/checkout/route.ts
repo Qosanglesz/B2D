@@ -3,8 +3,12 @@ import Stripe from 'stripe';
 import clientPromise from "@/lib/mongodb";
 import { v4 as uuidv4 } from "uuid";
 
+const DATABASE_NAME ="payment"
+const COLLECTION_NAME ="statement"
+
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+
 
 export async function POST(req: NextRequest) {
     try {
@@ -28,8 +32,8 @@ export async function POST(req: NextRequest) {
                 },
             ],
             mode: 'payment',
-            success_url: `http://localhost:3000/payment/success/${statementId}`,
-            cancel_url: `http://localhost:3000/payment/cancel/${statementId}`,
+            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success/${statementId}`,
+            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${statementId}`,
         });
 
         // Create the data object for the MongoDB statement collection
@@ -47,8 +51,8 @@ export async function POST(req: NextRequest) {
 
         // Connect to MongoDB and insert the data
         const client = await clientPromise;
-        const db = client.db("payment"); // Make sure the 'payment' DB exists
-        const collection = db.collection("statement");
+        const db = client.db(DATABASE_NAME); // Make sure the 'payment' DB exists
+        const collection = db.collection(COLLECTION_NAME);
 
         const result = await collection.insertOne(data); // Insert the payment statement data
 
