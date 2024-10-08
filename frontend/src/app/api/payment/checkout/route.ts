@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import Stripe from 'stripe';
 import clientPromise from "@/lib/mongodb";
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 
-const DATABASE_NAME ="payment"
-const COLLECTION_NAME ="statement"
+const DATABASE_NAME = "payment"
+const COLLECTION_NAME = "statement"
 
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
@@ -13,7 +13,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 export async function POST(req: NextRequest) {
     try {
         // Parse the request body
-        const { user, campaign, amount } = await req.json();
+        const {user, campaign, amount} = await req.json();
         const statementId = uuidv4();
 
         // Create a payment session with Stripe Checkout
@@ -64,6 +64,6 @@ export async function POST(req: NextRequest) {
         });
     } catch (error: any) {
         console.error('Error creating payment intent:', error);
-        return NextResponse.json({ message: error.message }, { status: 500 });
+        return NextResponse.json({message: error.message}, {status: 500});
     }
 }
