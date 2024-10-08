@@ -41,9 +41,9 @@ export async function POST(req: NextRequest) {
 
             // Connecting to the database
             try {
-                const client = await clientPromise;
-                const db = client.db("payment");
-                const collection = db.collection("statement");
+                let client = await clientPromise;
+                let db = client.db("payment");
+                let collection = db.collection("statement");
 
                 // Update the statement document where the session ID matches
                 const result = await collection.updateOne(
@@ -51,9 +51,40 @@ export async function POST(req: NextRequest) {
                     { $set: { status: paymentStatus, successAt: new Date().toJSON() } } // Update the status and add updated timestamp
                 );
 
-                // TODO update Campaign object with new raised amount
+                // Retrieve user_sub related to the session
+                const statement = await collection.findOne({ session_id: sessionId });
+                const { user_id, campaign_id } = statement;
 
-                console.log(`Payment status for session ${sessionId} updated in the database!`);
+                // Connect to the fundraising campaign database
+                db = client.db("Campaign");
+                collection = db.collection("fundraising_campaign");
+
+                // Find the campaign document that the user is funding (add criteria to match the correct campaign)
+                const campaign = await collection.findOne({"id": campaign_id});
+
+                if (campaign) {
+                    // Check if the user has already invested
+                    const isInvestor = campaign.investors.includes(user_id);
+
+                    // Update the campaign's target and add user to investors if they are not already listed
+                    const updatedFields: any = {
+                        $inc: { amountRaised: (paymentData.amount_total/100) } // Increment the amountRaised by the payment amount
+                    };
+
+                    if (!isInvestor) {
+                        updatedFields.$addToSet = { investors: user_id }; // Add the user to the investors array if not already present
+                    }
+
+                    // Perform the update operation
+                    await collection.updateOne(
+                        { _id: campaign._id }, // Match the campaign by its ID
+                        updatedFields // Apply the updates
+                    );
+
+                    console.log(`Campaign for session ${sessionId} updated successfully!`);
+                } else {
+                    console.log(`No campaign found for session ${sessionId}`);
+                }
             } catch (dbError) {
                 console.error('Error updating payment status in database:', dbError.message);
             }
