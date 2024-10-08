@@ -1,7 +1,7 @@
 // app/api/campaigns/route.ts
 
 import { NextResponse } from 'next/server';
-import clientPromise from '../../../lib/mongodb';
+import clientPromise from '../../../../lib/mongodb';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
 
