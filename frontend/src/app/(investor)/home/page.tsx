@@ -1,10 +1,12 @@
 'use client';
 
-import Header from "../../../components/homeComponents/Header";
+
+import React, {useEffect, useState} from "react";
+
+import {FundraisingCampaign} from '@/components/types/type_fundraisingCampaign';
+import Header from "@/components/homeComponents/Header";
 import CampaignCard from "@/components/campaignComponents/CampaignCard";
-import React, { useEffect, useState } from "react";
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
-import { getSession } from '@auth0/nextjs-auth0';
+
 
 const links = {
     getStarted: "/api/auth/login",
@@ -53,16 +55,17 @@ export default function Home() {
 
     return (
         <>
-            <Header registerLink={links.getStarted} />
+            <Header registerLink={links.getStarted}/>
             <div>
                 <h1 className="text-2xl font-bold ml-20 my-8">Fundraising Campaign</h1>
                 <div className="grid grid-cols-4 mx-5 gap-4">
                     {randomCampaigns.map(campaign => (
-                        <CampaignCard key={campaign._id?.toString()} campaign={campaign} />
+                        <CampaignCard key={campaign._id?.toString()} campaign={campaign}/>
                     ))}
                 </div>
                 <div className="text-center py-10">
-                    <a href={links.viewAll} className="text-xl text-white bg-gray-800 hover:bg-gray-900 py-3 px-7 rounded-lg">View All</a>
+                    <a href={links.viewAll}
+                       className="text-xl text-white bg-gray-800 hover:bg-gray-900 py-3 px-7 rounded-lg">View All</a>
                 </div>
             </div>
         </>

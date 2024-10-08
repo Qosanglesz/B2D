@@ -40,7 +40,7 @@ const AdminNavBar: React.FC = () => {
 
           <div className="flex items-center space-x-2">
             {user && user.picture && (
-              <Link href="/admin/profile">
+              <Link href="/profile">
                 <Image
                   src={user.picture}
                   alt="Profile"
