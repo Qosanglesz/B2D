@@ -1,15 +1,15 @@
-// app/api/campaigns/route.ts
-
 import { NextResponse } from 'next/server';
-import clientPromise from '../../../../lib/mongodb';
+import clientPromise from '@/lib/mongodb';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
 
+const DATABASE_NAME = "Campaign"
+const COLLECTION_NAME = "fundraising_campaign"
 
 export async function GET() {
   try {
     const client = await clientPromise;
-    const database = client.db("Campaign");
-    const collection = database.collection<FundraisingCampaign>("fundraising_campaign");
+    const database = client.db(DATABASE_NAME);
+    const collection = database.collection<FundraisingCampaign>(COLLECTION_NAME);
     
     const campaigns = await collection.find({}).toArray();
     // console.log("Fetched campaigns:", campaigns);

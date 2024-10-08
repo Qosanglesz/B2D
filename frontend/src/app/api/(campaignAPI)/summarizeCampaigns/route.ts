@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
-import clientPromise from '../../../../lib/mongodb';
+import clientPromise from '@/lib/mongodb';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+
+
+const DATABASE_NAME = "Campaign"
+const COLLECTION_NAME = "fundraising_campaign"
 
 export async function GET() {
   try {
     const client = await clientPromise;
-    const database = client.db("Campaign");
-    const campaignCollection = database.collection<FundraisingCampaign>("fundraising_campaign");
+    const database = client.db(DATABASE_NAME);
+    const campaignCollection = database.collection<FundraisingCampaign>(COLLECTION_NAME);
     
     // Get total companies (assuming each campaign represents a unique company)
     const totalCompanies = await campaignCollection.countDocuments();
