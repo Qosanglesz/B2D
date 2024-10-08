@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
-import { ObjectId } from 'mongodb';
+
+
+const DATABASE_NAME = "Campaign"
+const COLLECTION_NAME = "fundraising_campaign"
 
 export async function GET(
   request: NextRequest,
@@ -14,8 +17,8 @@ export async function GET(
   }
 
   const client = await clientPromise;
-  const database = client.db("Campaign");
-  const collection = database.collection<FundraisingCampaign>("fundraising_campaign");
+  const database = client.db(DATABASE_NAME);
+  const collection = database.collection<FundraisingCampaign>(COLLECTION_NAME);
   
   const campaign = await collection.findOne({ id: id });
   
@@ -32,8 +35,8 @@ export async function PUT (request: NextRequest, { params }: { params: { id: str
       const updatedData: Partial<FundraisingCampaign> = await request.json();
   
       const client = await clientPromise;
-      const db = client.db("Campaign");
-      const collection = db.collection<FundraisingCampaign>("fundraising_campaign");
+      const db = client.db(DATABASE_NAME);
+      const collection = db.collection<FundraisingCampaign>(COLLECTION_NAME);
   
       // Remove _id from updatedData if it exists
       delete updatedData._id;
@@ -64,8 +67,8 @@ export async function PUT (request: NextRequest, { params }: { params: { id: str
       }
   
       const client = await clientPromise;
-      const db = client.db("Campaign");
-      const collection = db.collection<FundraisingCampaign>("fundraising_campaign");
+      const db = client.db(DATABASE_NAME);
+      const collection = db.collection<FundraisingCampaign>(COLLECTION_NAME);
   
       const result = await collection.deleteOne({ id: id });
   
