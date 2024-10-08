@@ -3,6 +3,6 @@ import AdminDashboard from '@/components/adminComponents/adminDashboard/AdminDas
 
 export default function Page() {
     return (
-        <AdminDashboard />
+        <AdminDashboard/>
     );
 }

@@ -2,6 +2,6 @@ import UserManagement from "@/components/adminComponents/adminUserManagement/Use
 
 export default function Page() {
     return (
-        <UserManagement />
+        <UserManagement/>
     );
 }

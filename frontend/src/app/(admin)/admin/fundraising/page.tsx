@@ -2,6 +2,6 @@ import FundraisingCampaigns from "@/components/adminComponents/adminFundraising/
 
 export default function Page() {
     return (
-        <FundraisingCampaigns />
+        <FundraisingCampaigns/>
     );
 }
