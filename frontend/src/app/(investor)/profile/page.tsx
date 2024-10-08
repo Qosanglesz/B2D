@@ -8,7 +8,7 @@ export default withPageAuthRequired(
         const user = session?.user;
 
         return (
-            <div className="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
+            <div className="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl min-h-screen">
                 <h1 className="text-3xl font-bold mb-6">User Profile</h1>
                 {user && (
                     <div className="flex flex-col items-center md:flex-row md:items-start">
