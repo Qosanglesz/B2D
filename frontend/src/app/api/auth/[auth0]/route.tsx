@@ -8,7 +8,7 @@ export const GET = handleAuth({
                 audience : process.env.AUTH0_AUDIENCE,
                 scope : 'openid profile email read:b2d-system'
             }
-            ,returnTo: '/profile'
+            ,returnTo: '/home'
         }
     )
 });
