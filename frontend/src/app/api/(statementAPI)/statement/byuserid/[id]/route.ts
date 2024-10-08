@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
+const DATABASE_NAME = "payment"
+const COLLECTION_NAME = "statement"
+
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     try {
         const { id } = params;
         const client = await clientPromise;
-        const db = client.db("payment");
-        const collection = db.collection("statement");
+        const db = client.db(DATABASE_NAME);
+        const collection = db.collection(COLLECTION_NAME);
         const statement = await collection.find({ user_id: id }).toArray();
 
         if (!statement) {
