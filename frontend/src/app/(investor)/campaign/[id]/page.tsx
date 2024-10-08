@@ -41,7 +41,7 @@ export default function CampaignPage({params}: CampaignProps) {
             "campaign": campaign,
             "amount": investAmountInput
         }
-        const response = await axios.post("http://localhost:3000/api/payment/checkout", bodyData);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/checkout`, bodyData);
         const sessionUrl = response.data.sessionUrl;
         router.push(sessionUrl)
     };
