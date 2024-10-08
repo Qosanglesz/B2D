@@ -1,4 +1,5 @@
 "use client";
+
 import React, {useEffect, useState} from "react";
 import {useUser} from "@auth0/nextjs-auth0/client";
 import {ObjectId} from "mongodb";
@@ -19,7 +20,7 @@ interface UserStatements {
 const ITEMS_PER_PAGE = 10;
 
 export default function Home() {
-    const { user, isLoading: userLoading } = useUser(); // Fetch user data from Auth0
+    const {user, isLoading: userLoading} = useUser(); // Fetch user data from Auth0
     const [userStatements, setUserStatements] = useState<UserStatements[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -78,7 +79,7 @@ export default function Home() {
     const totalAmount = userStatements.reduce((sum, item) => sum + item.amount, 0);
     const uniqueCampaigns = new Set(userStatements.map(item => item.campaignName));
     const totalInvestedCampaigns = uniqueCampaigns.size;
-    const latestStatement = userStatements[userStatements.length-1]
+    const latestStatement = userStatements[userStatements.length - 1]
 
     return (
         <div className="min-h-screen">
@@ -137,7 +138,7 @@ export default function Home() {
                         Previous
                     </button>
 
-                    {Array.from({ length: totalPages }, (_, index) => (
+                    {Array.from({length: totalPages}, (_, index) => (
                         <button
                             key={index + 1}
                             onClick={() => handlePageChange(index + 1)}

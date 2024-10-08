@@ -1,15 +1,15 @@
-// src/app/success/[id]/page.tsx
 'use client';
-import React, { useEffect, useState } from "react";
+
+import React, {useEffect, useState} from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 
 interface SuccessProps {
     params: { id: string };
 }
 
-const Success: React.FC<SuccessProps> = ({ params }) => {
-    const { id: statementId } = params;
+const Success: React.FC<SuccessProps> = ({params}) => {
+    const {id: statementId} = params;
     const router = useRouter();
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -19,15 +19,15 @@ const Success: React.FC<SuccessProps> = ({ params }) => {
                 const response = await axios.get(
                     `http://localhost:3000/api/payment/statement/${statementId}`
                 );
-                const { status } = response.data;
+                const {status} = response.data;
 
                 if (status !== "complete") {
                     router.push(`http://localhost:3000/payment/cancel/${statementId}`);
-                }else {
+                } else {
                     setLoading(false);
                 }
 
-            }catch (error) {
+            } catch (error) {
                 console.error("Failed to fetch payment status:", error);
                 router.push(`http://localhost:3000/home`); //redirect if cant fetch api
 

@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import React from "react";
+
 
 interface SuccessProps {
     params: { id: string };
 }
 
-const Success: React.FC<SuccessProps> = ({ params }) => {
-    const { id: statementId } = params;
+const Success: React.FC<SuccessProps> = ({params}) => {
+    const {id: statementId} = params;
 
     // TODO Delete Statement that status open at this page
 
