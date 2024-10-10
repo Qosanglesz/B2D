@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { v4 as uuidv4 } from "uuid";
 import { PaymentService } from './paymentService';
-import { StatementRepository, StatementData } from './statementRepository';
+import { StatementRepository, StatementData } from '@/components/apiComponents/statementAPI/statementRepository';
 import { CampaignRepository } from '@/components/apiComponents/campaignAPI/campaignRepository';
 import Stripe from 'stripe';
 
