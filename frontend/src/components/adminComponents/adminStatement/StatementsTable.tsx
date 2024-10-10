@@ -86,7 +86,7 @@ export default function StatementsTable({ initialStatements }: StatementsTablePr
   };
 
   return (
-    <>
+    <div className="p-6 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">All Statements</h1>
         <input
@@ -162,6 +162,6 @@ export default function StatementsTable({ initialStatements }: StatementsTablePr
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
