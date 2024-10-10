@@ -1,5 +1,3 @@
-// app/statement/page.tsx
-
 import { StatementController } from '@/components/apiComponents/statementAPI/statementController';
 import { StatementData } from '@/components/apiComponents/statementAPI/statementRepository';
 import { UserController } from '@/components/apiComponents/userAPI/userController';
@@ -42,17 +40,17 @@ async function getUserData(userId: string): Promise<UserData | null> {
 }
 
 export default async function StatementsPage() {
-    const statements = await getStatements();
-    const statementsWithUser: StatementWithUser[] = await Promise.all(
-      statements.map(async (statement) => {
-        const userData = await getUserData(statement.user_id);
-        return { ...statement, user: userData };
-      })
-    );
-  
-    return (
-      <div className="container mx-auto p-4">
-        <StatementsTable initialStatements={statementsWithUser} />
-      </div>
-    );
-  }
+  const statements = await getStatements();
+  const statementsWithUser: StatementWithUser[] = await Promise.all(
+    statements.map(async (statement) => {
+      const userData = await getUserData(statement.user_id);
+      return { ...statement, user: userData };
+    })
+  );
+
+  return (
+    <div className="container mx-auto p-4">
+      <StatementsTable initialStatements={statementsWithUser} />
+    </div>
+  );
+}

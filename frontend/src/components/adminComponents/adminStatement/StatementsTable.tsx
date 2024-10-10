@@ -1,9 +1,8 @@
-// app/statement/StatementsTable.tsx
-
 'use client';
 
 import React, { useState } from 'react';
 import { StatementData } from '@/components/apiComponents/statementAPI/statementRepository';
+import { Button } from "@nextui-org/react";
 
 interface UserData {
   email: string;
@@ -92,13 +91,13 @@ export default function StatementsTable({ initialStatements }: StatementsTablePr
         <h1 className="text-2xl font-bold">All Statements</h1>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search statement"
           className="p-2 border border-gray-300 rounded w-64"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto mb-6">
         <table className="min-w-full bg-white border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
@@ -140,25 +139,27 @@ export default function StatementsTable({ initialStatements }: StatementsTablePr
           </tbody>
         </table>
       </div>
-      <div className="mt-4 flex justify-between items-center">
+      <div className="mt-8 mb-16 flex justify-between items-center">
         <div>
           Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredStatements.length)} of {filteredStatements.length} entries
         </div>
         <div className="flex space-x-2">
-          <button
-            className="px-3 py-1 border rounded disabled:opacity-50"
+          <Button
+            auto
+            color="primary"
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
           >
             Previous
-          </button>
-          <button
-            className="px-3 py-1 border rounded disabled:opacity-50"
+          </Button>
+          <Button
+            auto
+            color="primary"
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
           >
             Next
-          </button>
+          </Button>
         </div>
       </div>
     </>
