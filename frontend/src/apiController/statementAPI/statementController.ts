@@ -1,3 +1,5 @@
+// src/components/apiComponents/statementAPI/statementController.ts
+
 import { NextResponse } from 'next/server';
 import { StatementRepository } from './statementRepository';
 
@@ -49,6 +51,37 @@ export class StatementController {
         }
     }
 
+    async getStatementCountLast7Days(): Promise<NextResponse> {
+        try {
+            const endDate = new Date();
+            const startDate = new Date(endDate);
+            startDate.setDate(startDate.getDate() - 6); // 7 days including today
+
+            const statements = await this.repository.findBetweenDates(startDate, endDate);
+
+            const dailyCounts = new Map<string, number>();
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                dailyCounts.set(date.toISOString().split('T')[0], 0);
+            }
+
+            statements.forEach(statement => {
+                const date = statement.date.split('T')[0];
+                const currentCount = dailyCounts.get(date) || 0;
+                dailyCounts.set(date, currentCount + 1);
+            });
+
+            const statementCountData = Array.from(dailyCounts, ([date, count]) => ({ date, count }));
+
+            return NextResponse.json(statementCountData);
+        } catch (error: any) {
+            console.error('Error in getStatementCountLast7Days:', error);
+            return NextResponse.json({ message: error.message }, { status: 500 });
+        }
+    }
+    
     async getInvestmentLast7Days(): Promise<NextResponse> {
         try {
             const endDate = new Date();
