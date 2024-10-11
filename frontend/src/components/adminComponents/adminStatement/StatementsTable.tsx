@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { StatementData } from '@/components/apiComponents/statementAPI/statementRepository';
+import { StatementData } from '@/apiController/statementAPI/statementRepository';
 import { Button } from "@nextui-org/react";
 
 interface UserData {
