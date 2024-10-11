@@ -48,4 +48,35 @@ export class StatementController {
             return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
         }
     }
+
+    async getInvestmentLast7Days(): Promise<NextResponse> {
+        try {
+            const endDate = new Date();
+            const startDate = new Date(endDate);
+            startDate.setDate(startDate.getDate() - 6); // 7 days including today
+
+            const statements = await this.repository.findBetweenDates(startDate, endDate);
+
+            const dailyTotals = new Map<string, number>();
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                dailyTotals.set(date.toISOString().split('T')[0], 0);
+            }
+
+            statements.forEach(statement => {
+                const date = statement.date.split('T')[0];
+                const currentTotal = dailyTotals.get(date) || 0;
+                dailyTotals.set(date, currentTotal + statement.amount);
+            });
+
+            const investmentData = Array.from(dailyTotals, ([date, amount]) => ({ date, amount }));
+
+            return NextResponse.json(investmentData);
+        } catch (error: any) {
+            console.error('Error in getInvestmentLast7Days:', error);
+            return NextResponse.json({ message: error.message }, { status: 500 });
+        }
+    }
 }

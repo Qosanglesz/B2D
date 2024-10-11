@@ -2,27 +2,28 @@
 
 import React, { useState, useEffect } from 'react';
 import DashboardData from '../../types/DashboardData';
+import InvestmentGraph from './InvestmentGraph';
 
-// interface DashboardData {
-//   totalCompanies: number;
-//   totalFundsRaised: number;
-// }
+interface InvestmentData {
+  date: string;
+  amount: number;
+}
 
 const AdminDashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData>({
     totalCompanies: 0,
     totalFundsRaised: 0,
-    // totalInvestments: 0,
   });
+  const [investmentData, setInvestmentData] = useState<InvestmentData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchDashboardData();
+    fetchInvestmentData();
   }, []);
 
   const fetchDashboardData = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch('/api/summarizeCampaigns');
       if (!response.ok) {
@@ -33,11 +34,24 @@ const AdminDashboard: React.FC = () => {
     } catch (err) {
       setError('Error fetching dashboard data. Please try again later.');
       console.error(err);
+    }
+  };
+
+  const fetchInvestmentData = async () => {
+    try {
+      const response = await fetch('/api/investment-last-7-days');
+      if (!response.ok) {
+        throw new Error('Failed to fetch investment data');
+      }
+      const data = await response.json();
+      setInvestmentData(data);
+    } catch (err) {
+      setError('Error fetching investment data. Please try again later.');
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
   };
-
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -51,15 +65,20 @@ const AdminDashboard: React.FC = () => {
           <h2 className="text-xl font-semibold">Total Companies</h2>
           <p className="text-2xl">{dashboardData.totalCompanies}</p>
         </div>
-        {/* <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-xl font-semibold">Total Investments</h2>
-          <p className="text-2xl">{dashboardData.totalInvestments}</p>
-        </div> */}
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-xl font-semibold">Total Funds Raised</h2>
           <p className="text-2xl">฿{dashboardData.totalFundsRaised.toLocaleString()}</p>
         </div>
       </div>
+
+      {/* Investment Chart */}
+      <section className="mt-6">
+        <h2 className="text-xl font-semibold mb-4">Investment Over Last 7 Days</h2>
+        <div className="bg-white p-4 rounded-lg shadow">
+          <InvestmentGraph data={investmentData} />
+        </div>
+      </section>
+
       {/* Recent Activity Section */}
       <section className="mt-6">
         <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
