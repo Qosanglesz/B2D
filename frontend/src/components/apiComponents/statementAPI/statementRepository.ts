@@ -1,4 +1,4 @@
-import { Collection, InsertOneResult, Document } from 'mongodb';
+import { Collection, InsertOneResult } from 'mongodb';
 import clientPromise from "@/lib/mongodb";
 
 const DATABASE_NAME = "B2DVentureProject";
@@ -17,10 +17,28 @@ export interface StatementData {
 }
 
 export class StatementRepository {
+    private collection: Collection<StatementData>;
+
+    constructor() {
+        // Initialize the collection in the constructor asynchronously
+        clientPromise
+            .then(client => {
+                const db = client.db(DATABASE_NAME);
+                this.collection = db.collection<StatementData>(COLLECTION_NAME);
+            })
+            .catch(err => {
+                console.error("Failed to initialize MongoDB collection", err);
+            });
+    }
+
+    // Wait for the collection to be initialized if needed
     private async getCollection(): Promise<Collection<StatementData>> {
-        const client = await clientPromise;
-        const db = client.db(DATABASE_NAME);
-        return db.collection<StatementData>(COLLECTION_NAME);
+        if (!this.collection) {
+            const client = await clientPromise;
+            const db = client.db(DATABASE_NAME);
+            this.collection = db.collection<StatementData>(COLLECTION_NAME);
+        }
+        return this.collection;
     }
 
     async insertStatement(data: StatementData): Promise<InsertOneResult<StatementData>> {
@@ -54,5 +72,17 @@ export class StatementRepository {
     async findAll(): Promise<StatementData[]> {
         const collection = await this.getCollection();
         return collection.find({}).toArray();
+    }
+
+    async delete(statementId: string): Promise<boolean> {
+        const collection = await this.getCollection();
+        const result = await collection.deleteOne({ statement_id: statementId });
+        return result.deletedCount > 0;
+    }
+
+    async isStatusOpen(statementId: string): Promise<boolean> {
+        const collection = await this.getCollection();
+        const statement = await collection.findOne({ statement_id: statementId });
+        return !!(statement && statement.status === "open");
     }
 }
