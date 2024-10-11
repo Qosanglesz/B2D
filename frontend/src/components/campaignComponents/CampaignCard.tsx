@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { FundraisingCampaign } from '@/components/types/Campaign';
 import { useRouter } from 'next/navigation';
 
 const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign }) => {

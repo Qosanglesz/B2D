@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
 
-import {FundraisingCampaign} from '@/components/types/type_fundraisingCampaign';
+import {FundraisingCampaign} from '@/components/types/Campaign';
 import BasicInformation from '@/components/formComponents/BasicInformation';
 import CompanyDetails from '@/components/formComponents/CompanyDetails';
 import CampaignDetails from '@/components/formComponents/CampaignDetails';

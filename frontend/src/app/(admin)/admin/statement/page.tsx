@@ -1,56 +1,56 @@
-import { StatementController } from '@/components/apiComponents/statementAPI/statementController';
-import { StatementData } from '@/components/apiComponents/statementAPI/statementRepository';
-import { UserController } from '@/components/apiComponents/userAPI/userController';
+"use client"
+
+
+import {useEffect, useState} from 'react';
 import StatementsTable from '@/components/adminComponents/adminStatement/StatementsTable';
+import {User} from "@/components/types/User";
+import {Statement} from "@/components/types/Statement";
 
-interface UserData {
-  email: string;
-  name: string;
-}
 
-interface StatementWithUser extends StatementData {
-  user: UserData | null;
-}
+export default function StatementsPage() {
+    // Define state for statements with user data
+    const [statementsWithUser, setStatementsWithUser] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-async function getStatements(): Promise<StatementData[]> {
-  const controller = new StatementController();
-  const response = await controller.getStatements();
-  
-  if (response.status === 200) {
-    return response.json();
-  } else {
-    throw new Error('Failed to fetch statements');
-  }
-}
+    // Fetch data from the API on component mount
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch both statements and users data
+                const [statementsRes, usersRes] = await Promise.all([
+                    fetch('/api/statements'),
+                    fetch('/api/users')
+                ]);
 
-async function getUserData(userId: string): Promise<UserData | null> {
-  const userController = new UserController();
-  const response = await userController.getUsers(userId);
+                const statements: Statement[] = await statementsRes.json();
+                const users: User[] = await usersRes.json();
 
-  if (response.status === 200) {
-    const userData = await response.json();
-    return {
-      email: userData.email,
-      name: userData.name
-    };
-  } else {
-    console.error(`Failed to fetch user data for userId: ${userId}`);
-    return null;
-  }
-}
+                // Combine statements with user data
+                const combinedStatements = statements.map(statement => {
+                    const user = users.find(u => u.user_id === statement.user_id) || null;
+                    return {...statement, user};
+                });
 
-export default async function StatementsPage() {
-  const statements = await getStatements();
-  const statementsWithUser: StatementWithUser[] = await Promise.all(
-    statements.map(async (statement) => {
-      const userData = await getUserData(statement.user_id);
-      return { ...statement, user: userData };
-    })
-  );
+                // Update state with combined data
+                setStatementsWithUser(combinedStatements);
+            } catch (err) {
+                // Handle errors
+                setError('Failed to load data');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  return (
-    <div className="container mx-auto p-4">
-      <StatementsTable initialStatements={statementsWithUser} />
-    </div>
-  );
+        fetchData();
+    }, []);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+
+    return (
+        <div className="container mx-auto p-4">
+            <StatementsTable initialStatements={statementsWithUser}/>
+        </div>
+    );
 }

@@ -1,5 +1,5 @@
 import clientPromise from '@/lib/mongodb';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { FundraisingCampaign } from '@/components/types/Campaign';
 
 const DATABASE_NAME = "B2DVentureProject";
 const COLLECTION_NAME = "Campaigns";

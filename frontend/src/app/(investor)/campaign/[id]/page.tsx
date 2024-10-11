@@ -10,7 +10,7 @@ import IntroHeader from '@/components/campaignComponents/IntroHeader';
 import CompanyInformation from '@/components/campaignComponents/CompanyInformation';
 import IntroCarousel from '@/components/campaignComponents/IntroCarousel';
 import IntroStatistics from '@/components/campaignComponents/IntroStatistics';
-import {FundraisingCampaign} from '@/components/types/type_fundraisingCampaign';
+import {FundraisingCampaign} from '@/components/types/Campaign';
 
 
 interface CampaignProps {

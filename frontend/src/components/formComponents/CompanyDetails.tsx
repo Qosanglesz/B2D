@@ -1,5 +1,5 @@
 import React from 'react';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { FundraisingCampaign } from '@/components/types/Campaign';
 
 interface CompanyDetailsProps {
   formData: Partial<FundraisingCampaign>;

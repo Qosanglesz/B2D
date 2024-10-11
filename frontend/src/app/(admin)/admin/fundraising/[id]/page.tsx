@@ -3,7 +3,7 @@
 import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import {useRouter} from 'next/navigation';
-import {FundraisingCampaign} from '@/components/types/type_fundraisingCampaign';
+import {FundraisingCampaign} from '@/components/types/Campaign';
 
 export default function CampaignDetails({params}: { params: { id: string } }) {
     const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null);
