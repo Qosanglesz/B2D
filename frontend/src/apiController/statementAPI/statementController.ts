@@ -25,4 +25,27 @@ export class StatementController {
             return NextResponse.json({ message: error.message }, { status: 500 });
         }
     }
+
+    async deleteStatement(id: string): Promise<NextResponse> {
+        try {
+            if (!id) {
+                return NextResponse.json({ error: 'Invalid StatementID' }, { status: 400 });
+            }
+
+            if (!await this.repository.isStatusOpen(id)) {
+                return NextResponse.json({ error: 'Cant delete complete statement' }, { status: 404 });
+            }
+
+            const result = await this.repository.delete(id);
+
+            if (!result) {
+                return NextResponse.json({ error: 'Statement not found' }, { status: 404 });
+            }
+
+            return NextResponse.json({ message: 'Statement deleted successfully' }, { status: 200 });
+        } catch (error) {
+            console.error("Error deleting Statement:", error);
+            return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        }
+    }
 }

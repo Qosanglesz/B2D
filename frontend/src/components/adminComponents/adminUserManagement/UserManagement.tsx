@@ -14,6 +14,8 @@ interface User {
 
 type SortKey = 'name' | 'email' | 'last_login';
 
+const USERS_PER_PAGE = 5;
+
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +23,7 @@ const UserManagement: React.FC = () => {
   const [sortKey, setSortKey] = useState<SortKey>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
 
   useEffect(() => {
@@ -66,6 +69,7 @@ const UserManagement: React.FC = () => {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+    setCurrentPage(1); // Reset to first page when searching
   };
 
   const filteredUsers = users.filter(user => 
@@ -78,6 +82,20 @@ const UserManagement: React.FC = () => {
     if (a[sortKey] > b[sortKey]) return sortDirection === 'asc' ? 1 : -1;
     return 0;
   });
+
+  const totalPages = Math.ceil(sortedAndFilteredUsers.length / USERS_PER_PAGE);
+  const paginatedUsers = sortedAndFilteredUsers.slice(
+    (currentPage - 1) * USERS_PER_PAGE,
+    currentPage * USERS_PER_PAGE
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   if (loading) {
     return <div className="p-6 min-h-screen">Loading...</div>;
@@ -98,7 +116,7 @@ const UserManagement: React.FC = () => {
             fullWidth
             color="primary"
             size="lg"
-            placeholder="Search by name or email"
+            placeholder="Search user"
             contentLeft={<SearchIcon />}
             value={searchTerm}
             onChange={handleSearch}
@@ -127,7 +145,7 @@ const UserManagement: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {sortedAndFilteredUsers.map(user => (
+            {paginatedUsers.map(user => (
               <tr key={user.user_id}>
                 <td className="py-2 px-4 border-b text-center">{user.name}</td>
                 <td className="py-2 px-4 border-b text-center">{user.email}</td>
@@ -145,6 +163,29 @@ const UserManagement: React.FC = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="mt-4 flex justify-between items-center">
+        <div>
+          Showing {((currentPage - 1) * USERS_PER_PAGE) + 1} to {Math.min(currentPage * USERS_PER_PAGE, sortedAndFilteredUsers.length)} of {sortedAndFilteredUsers.length} users
+        </div>
+        <div className="flex space-x-2">
+          <Button
+            auto
+            color="primary"
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <Button
+            auto
+            color="primary"
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );

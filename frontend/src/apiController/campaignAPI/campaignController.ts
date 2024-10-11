@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { CampaignRepository } from '@/components/apiComponents/campaignAPI/campaignRepository';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { CampaignRepository } from '@/apiController/campaignAPI/campaignRepository';
+import { FundraisingCampaign } from '@/components/types/Campaign';
 
 export class CampaignController {
     private repository: CampaignRepository;

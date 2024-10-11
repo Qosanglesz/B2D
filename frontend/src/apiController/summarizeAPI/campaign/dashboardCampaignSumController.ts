@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { CampaignSumRepository } from '@/components/apiComponents/summarizeAPI/campaign/campaignSumRepository';
-import { Campaign } from '../../../campaignComponents/TempCampaignData';
+import { CampaignSumRepository } from '@/apiController/summarizeAPI/campaign/campaignSumRepository';
+import { Campaign } from '../../../components/campaignComponents/TempCampaignData';
 
 export class DashboardCampaignSumController {
     private repository: CampaignSumRepository;

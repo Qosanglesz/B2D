@@ -1,5 +1,5 @@
 // app/admin/user/[id]/components/BackButton.tsx
-import { BackButtonProps } from '@/components/types/user';
+import { BackButtonProps } from '@/components/types/User';
 
 const BackButton: React.FC<BackButtonProps> = ({ onClick }) => (
   <button 

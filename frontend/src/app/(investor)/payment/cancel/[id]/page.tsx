@@ -1,4 +1,7 @@
-import React from "react";
+"use client"
+
+import React, {useEffect} from "react";
+import axios from "axios";
 
 
 interface SuccessProps {
@@ -8,7 +11,21 @@ interface SuccessProps {
 const Success: React.FC<SuccessProps> = ({params}) => {
     const {id: statementId} = params;
 
-    // TODO Delete Statement that status open at this page
+    useEffect(() => {
+        const deleteOpenStatus = async () => {
+            try {
+                const response = await axios.delete(
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/statement/${statementId}`
+                );
+
+            } catch (error) {
+                console.error("Failed to fetch payment status:", error);
+
+            }
+        };
+
+        deleteOpenStatus();
+    }, [statementId]);
 
     return (
         <div className="min-h-screen flex justify-center items-center">

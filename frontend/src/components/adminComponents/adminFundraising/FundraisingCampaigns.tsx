@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from '@nextui-org/react';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { FundraisingCampaign } from '@/components/types/Campaign';
 
 type SortField = 'id' | 'amountRaised' | 'targetAmount' | 'companyName';
 type SortOrder = 'asc' | 'desc';
+
+const ITEMS_PER_PAGE = 5;
 
 const FundraisingCampaigns: React.FC = () => {
   const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
@@ -16,6 +18,7 @@ const FundraisingCampaigns: React.FC = () => {
   const [sortField, setSortField] = useState<SortField>('id');
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchCampaigns();
@@ -48,6 +51,7 @@ const FundraisingCampaigns: React.FC = () => {
       campaign.companyName.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
     setFilteredCampaigns(filtered);
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
   const sortCampaigns = (field: SortField) => {
@@ -72,6 +76,12 @@ const FundraisingCampaigns: React.FC = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
+
+  const totalPages = Math.ceil(filteredCampaigns.length / ITEMS_PER_PAGE);
+  const paginatedCampaigns = filteredCampaigns.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -103,46 +113,71 @@ const FundraisingCampaigns: React.FC = () => {
         </div>
       </div>
       {filteredCampaigns.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('id')}>
-                  ID {getSortIcon('id')}
-                </th>
-                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('companyName')}>
-                  Company Name {getSortIcon('companyName')}
-                </th>
-                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('targetAmount')}>
-                  Goal {getSortIcon('targetAmount')}
-                </th>
-                <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('amountRaised')}>
-                  Raised {getSortIcon('amountRaised')}
-                </th>
-                <th className="py-2 px-4 border-b text-center">Status</th>
-                <th className="py-2 px-4 border-b text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCampaigns.map((campaign) => (
-                <tr key={campaign.id}>
-                  <td className="py-2 px-4 border-b text-center">{campaign.id}</td>
-                  <td className="py-2 px-4 border-b text-center">{campaign.companyName}</td>
-                  <td className="py-2 px-4 border-b text-center">${campaign.targetAmount.toLocaleString()}</td>
-                  <td className="py-2 px-4 border-b text-center">${campaign.amountRaised.toLocaleString()}</td>
-                  <td className="py-2 px-4 border-b text-center">{campaign.status ? 'Active' : 'Closed'}</td>
-                  <td className="py-2 px-4 border-b text-center">
-                    <Link href={`/admin/fundraising/${campaign.id}`}>
-                      <Button auto color="primary" size="sm">
-                        View
-                      </Button>
-                    </Link>
-                  </td>
+        <>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border border-gray-200">
+              <thead>
+                <tr>
+                  <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('id')}>
+                    ID {getSortIcon('id')}
+                  </th>
+                  <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('companyName')}>
+                    Company Name {getSortIcon('companyName')}
+                  </th>
+                  <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('targetAmount')}>
+                    Goal {getSortIcon('targetAmount')}
+                  </th>
+                  <th className="py-2 px-4 border-b text-center cursor-pointer" onClick={() => sortCampaigns('amountRaised')}>
+                    Raised {getSortIcon('amountRaised')}
+                  </th>
+                  <th className="py-2 px-4 border-b text-center">Status</th>
+                  <th className="py-2 px-4 border-b text-center">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {paginatedCampaigns.map((campaign) => (
+                  <tr key={campaign.id}>
+                    <td className="py-2 px-4 border-b text-center">{campaign.id}</td>
+                    <td className="py-2 px-4 border-b text-center">{campaign.companyName}</td>
+                    <td className="py-2 px-4 border-b text-center">${campaign.targetAmount.toLocaleString()}</td>
+                    <td className="py-2 px-4 border-b text-center">${campaign.amountRaised.toLocaleString()}</td>
+                    <td className="py-2 px-4 border-b text-center">{campaign.status ? 'Active' : 'Closed'}</td>
+                    <td className="py-2 px-4 border-b text-center">
+                      <Link href={`/admin/fundraising/${campaign.id}`}>
+                        <Button auto color="primary" size="sm">
+                          View
+                        </Button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="mt-4 flex justify-between items-center">
+            <div>
+              Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredCampaigns.length)} of {filteredCampaigns.length} entries
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                auto
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <Button
+                auto
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        </>
       ) : (
         <div>No campaigns found.</div>
       )}

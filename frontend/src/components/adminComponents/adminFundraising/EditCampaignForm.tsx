@@ -1,7 +1,7 @@
 // components/EditCampaignForm.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { FundraisingCampaign } from '@/components/types/Campaign';
 import BasicInfoSection from './EditSections/BasicInfoSection';
 import CompanyDetailsSection from './EditSections/CompanyDetailsSection';
 import FinancialInfoSection from './EditSections/FinancialInfoSection';

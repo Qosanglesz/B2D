@@ -68,7 +68,7 @@
 //     }
 // }
 import { NextRequest, NextResponse } from 'next/server';
-import { PaymentController } from '@/components/apiComponents/paymentAPI/paymentController';
+import { PaymentController } from '@/apiController/paymentAPI/paymentController';
 const paymentController = new PaymentController();
 
 export async function POST(req: NextRequest): Promise<NextResponse> {

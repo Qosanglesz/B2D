@@ -1,7 +1,7 @@
 // components/campaignComponents/IntroHeader.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign'; // Adjust the path as necessary
+import { FundraisingCampaign } from '@/components/types/Campaign'; // Adjust the path as necessary
 
 interface IntroHeaderProps {
   campaign: Pick<FundraisingCampaign, 'urlPicture' | 'companyName' | 'description'>;

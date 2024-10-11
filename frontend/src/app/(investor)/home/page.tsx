@@ -3,7 +3,7 @@
 
 import React, {useEffect, useState} from "react";
 
-import {FundraisingCampaign} from '@/components/types/type_fundraisingCampaign';
+import {FundraisingCampaign} from '@/components/types/Campaign';
 import Header from "@/components/homeComponents/Header";
 import CampaignCard from "@/components/campaignComponents/CampaignCard";
 

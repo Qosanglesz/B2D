@@ -1,4 +1,4 @@
-// app/types/user.ts
+// app/types/User.ts
 
 export interface User {
     user_id: string;

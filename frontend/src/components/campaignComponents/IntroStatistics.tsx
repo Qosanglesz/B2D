@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { FundraisingCampaign } from '@/components/types/type_fundraisingCampaign';
+import { FundraisingCampaign } from '@/components/types/Campaign';
 
 interface IntroStatisticsProps {
   campaign: Pick<FundraisingCampaign, 'amountRaised' | 'targetAmount' | 'investors' | 'endInDate' | 'companyName'>;
