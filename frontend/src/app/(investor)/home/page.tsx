@@ -1,12 +1,11 @@
+// src/app/(investor)/home/page.tsx
+
 'use client';
 
-
-import React, {useEffect, useState} from "react";
-
-import {FundraisingCampaign} from '@/components/types/Campaign';
+import React, { useEffect, useState } from "react";
+import { FundraisingCampaign } from '@/components/types/Campaign';
 import Header from "@/components/homeComponents/Header";
 import CampaignCard from "@/components/campaignComponents/CampaignCard";
-
 
 const links = {
     getStarted: "/api/auth/login",
@@ -51,18 +50,26 @@ export default function Home() {
 
     const randomCampaigns = campaigns
         .sort(() => Math.random() - 0.5)  // Shuffle array
-        .slice(0, 4);
+        .slice(0, 3);  // Limit to 3 campaigns
 
     return (
         <>
             <Header registerLink={links.getStarted}/>
-            <div>
-                <h1 className="text-2xl font-bold ml-20 my-8">Fundraising Campaign</h1>
-                <div className="grid grid-cols-4 mx-5 gap-4">
+
+            <div className="max-w-6xl mx-auto px-4">
+                <h1 className="text-4xl font-bold my-8">Fundraising Campaigns</h1>
+
+                {/* 
+                    Grid setup for campaign cards, responsive: 
+                    1 column on small screens, 2 on medium, 3 on large screens.
+                    We now display a maximum of 3 cards.
+                */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {randomCampaigns.map(campaign => (
                         <CampaignCard key={campaign._id?.toString()} campaign={campaign}/>
                     ))}
                 </div>
+
                 <div className="text-center py-10">
                     <a href={links.viewAll}
                        className="text-xl text-white bg-gray-800 hover:bg-gray-900 py-3 px-7 rounded-lg">View All</a>

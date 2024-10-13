@@ -1,4 +1,5 @@
-// components/ClientNavBar.tsx
+// components\navAndFooter\ClientNavBar.tsx
+
 'use client';
 
 import React from 'react';
@@ -21,10 +22,15 @@ type ClientNavBarProps = {
     user?: UserProfile;
 };
 
-const ClientNavBar: React.FC<ClientNavBarProps> = ({name, isAuth, links, user}) => {
+const ClientNavBar: React.FC<ClientNavBarProps> = ({ name, isAuth, links, user }) => {
     return (
-        <nav className="bg-gray-800 p-4">
-            <div className="container mx-auto flex items-center justify-between">
+        <nav className="bg-gray-800 fixed py-4 top-0 w-full z-10">
+            {/* 
+                max-w-6xl keeps the content inside a fixed width.
+                px-4 applies horizontal padding of 1rem (16px) to the left and right sides
+                mx-auto centers the content horizontally in the viewport.
+            */}
+            <div className="max-w-6xl px-4 mx-auto flex items-center justify-between h-full">
                 <div className="text-white text-lg font-bold">
                     <a href="/home">{name}</a>
                 </div>
@@ -60,7 +66,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({name, isAuth, links, user}) 
                             <a href={links.logout} className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md">Logout</a>
                         </>
                     ) : (
-                        <a href={links.signIn} className="text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-md">Sign in</a>
+                        <a href={links.signIn} className="text-white bg-green-600 hover:bg-green-500 px-3 py-2 rounded-md ml-auto">Sign in</a>
                     )}
                 </div>
             </div>

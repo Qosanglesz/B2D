@@ -4,10 +4,11 @@ interface HeaderProps {
     registerLink: string,
 }
 
-const Header: React.FC<HeaderProps> = ({registerLink}) => {
+const Header: React.FC<HeaderProps> = ({ registerLink }) => {
     return (
-        <header className="bg-gray-900 text-white py-24">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        // Use Flexbox to center content
+        <header className="bg-gray-900 text-white h-[500px] flex flex-col justify-center">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h1 className="text-3xl md:text-5xl font-bold mb-4">
                     Smart Fundraising Platforms
                 </h1>
@@ -17,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({registerLink}) => {
                 </p>
             </div>
             <div className="text-center pt-10">
-                <a href={registerLink} className="text-xl text-white bg-gray-400 hover:bg-gray-500 py-3 px-5 rounded-lg">Get stared</a>
+                <a href={registerLink} className="text-xl text-white bg-gray-400 hover:bg-gray-500 py-3 px-5 rounded-lg">Get Started</a>
             </div>
         </header>
     );
