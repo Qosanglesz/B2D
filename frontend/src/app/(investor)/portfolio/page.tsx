@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {useUser} from "@auth0/nextjs-auth0/client";
 import {ObjectId} from "mongodb";
 import {useRouter} from "next/navigation";
+import {Spinner} from "@nextui-org/react";
 
 interface UserStatements {
     _id?: ObjectId;
@@ -109,7 +110,8 @@ export default function Home() {
         router.push("/api/auth/logout")
     };
 
-    if (loading || userLoading) return <p>Loading...</p>;
+    if (loading || userLoading) return <div className="flex justify-center items-center h-screen"><Spinner size="lg"/>
+    </div>;
     if (error) return <p>Error: {error}</p>;
 
     const totalAmount = userStatements.reduce((sum, item) => sum + item.amount, 0);

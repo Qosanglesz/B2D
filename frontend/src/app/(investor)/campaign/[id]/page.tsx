@@ -11,6 +11,7 @@ import CompanyInformation from '@/components/campaignComponents/CompanyInformati
 import IntroCarousel from '@/components/campaignComponents/IntroCarousel';
 import IntroStatistics from '@/components/campaignComponents/IntroStatistics';
 import {FundraisingCampaign} from '@/components/types/Campaign';
+import {Spinner} from "@nextui-org/react";
 
 
 interface CampaignProps {
@@ -74,7 +75,7 @@ export default function CampaignPage({params}: CampaignProps) {
         fetchCampaign();
     }, [campaignId]);
 
-    if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    if (isLoading) return <div className="flex justify-center items-center h-screen"><Spinner size="lg" /></div>;
     if (error) return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
     if (!campaign) return <div className="flex justify-center items-center h-screen">No campaign data found</div>;
 
