@@ -50,7 +50,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ name, isAuth, links, user }
                     <a href={links.contact} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">Contact</a>
                     {isAuth ? (
                         <>
-                            <a href={links.profile} className="flex items-center text-white hover:bg-gray-700 px-3 py-2 rounded-md">
+                            <a href={links.portfolio} className="flex items-center text-white hover:bg-gray-700 px-3 py-2 rounded-md">
                                 {user && user.picture && (
                                     <Image
                                         src={user.picture}
@@ -62,7 +62,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ name, isAuth, links, user }
                                 )}
                                 <span>{user?.name || 'Profile'}</span>
                             </a>
-                            <a href={links.portfolio} className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md">Portfolio</a>
+                            {/*<a href={links.portfolio} className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-md">Portfolio</a>*/}
                             <a href={links.logout} className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md">Logout</a>
                         </>
                     ) : (

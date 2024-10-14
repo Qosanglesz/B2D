@@ -52,4 +52,17 @@ export class UserController {
             return NextResponse.json({ error: 'Internal Server Error', details: (error as Error).message }, { status: 500 });
         }
     }
+
+    async patchUserData(newData: object, user_id: string): Promise<NextResponse> {
+        try {
+            const res = await this.auth0Service.patchUserData(newData, user_id);  // Await the service response
+            return NextResponse.json({
+                message: "User successfully patched",
+                data: res
+            });
+        } catch (err) {
+            console.error(`Cannot patch user: ${err}`);
+            return NextResponse.json({ error: 'Failed to patch user' }, { status: 500 });
+        }
+    }
 }

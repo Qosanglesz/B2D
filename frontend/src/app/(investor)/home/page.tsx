@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { FundraisingCampaign } from '@/components/types/Campaign';
 import Header from "@/components/homeComponents/Header";
 import CampaignCard from "@/components/campaignComponents/CampaignCard";
+import {Spinner} from "@nextui-org/react";
 
 const links = {
     getStarted: "/api/auth/login",
@@ -41,7 +42,7 @@ export default function Home() {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center h-screen"><Spinner size="lg"/></div>;
     }
 
     if (error) {
