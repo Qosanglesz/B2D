@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {useRouter} from "next/navigation";
+import {Spinner} from "@nextui-org/react";
 
 interface SuccessProps {
     params: { id: string };
@@ -39,9 +40,7 @@ const Success: React.FC<SuccessProps> = ({params}) => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex justify-center items-center">
-                <p className="text-4xl">Loading...</p>
-            </div>
+            <div className="flex justify-center items-center h-screen"><Spinner size="lg"/></div>
         );
     }
 

@@ -132,4 +132,31 @@ export class Auth0Service {
             throw error;
         }
     }
+
+    async patchUserData(newData: object, user_id: string): Promise<any> {
+        const accessToken = await this.getAccessToken();
+        const axios = require('axios');
+        let data = JSON.stringify(newData);
+
+        let config = {
+            method: 'patch',
+            maxBodyLength: Infinity,
+            url: `${this.domain}/api/v2/users/${user_id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            data: data
+        };
+
+        try {
+            const response = await axios.request(config);  // Await the Axios request
+            console.log(JSON.stringify(response.data));
+            return response.data;  // Return the actual response
+        } catch (error) {
+            console.error('Error in patching user data:', error);
+            throw error;  // Throw the error so it can be caught by the caller
+        }
+    }
 }

@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from "react";
 
 import CampaignCard from '@/components/campaignComponents/CampaignCard';
+import {Spinner} from "@nextui-org/react";
 
 
 export default function CampaignPage() {
@@ -30,7 +31,7 @@ export default function CampaignPage() {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center h-screen"><Spinner size="lg"/></div>;
     }
 
     if (error) {
