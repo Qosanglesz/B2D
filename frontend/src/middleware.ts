@@ -30,5 +30,5 @@ export default withMiddlewareAuthRequired(async (req: NextRequest) => {
 });
 
 export const config = {
-    matcher: ["/admin/:path*", "/campaign/:path*", '/profile/:path*'],
+    matcher: ["/admin/:path*", "/campaign/:path*", '/profile/:path*', '/portfolio/:path*'],
 };
