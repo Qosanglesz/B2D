@@ -1,81 +1,91 @@
-// src/app/(investor)/home/page.tsx
+// /src/app/(investor)/home/page.tsx
 
+// Use client-side rendering for this page
 'use client';
 
 import React, { useEffect, useState } from "react";
 import { FundraisingCampaign } from '@/components/types/Campaign';
 import Header from "@/components/homeComponents/Header";
-import CampaignCard from "@/components/campaignComponents/CampaignCard";
-import {Spinner} from "@nextui-org/react";
+import { LoadingError } from '@/components/homeComponents/LoadingError'; // Import the LoadingError component
+import { CampaignGrid } from '@/components/homeComponents/CampaignGrid'; // Import the CampaignGrid component
+import { ViewAllButton } from '@/components/homeComponents/ViewAllButton'; // Import the ViewAllButton component
 
+
+// Define the links for authentication and viewing all campaigns
 const links = {
-    getStarted: "/api/auth/login",
-    viewAll: "/campaign",
+    getStarted: "/api/auth/login", // Login link
+    viewAll: "/campaign", // Link to view all campaigns
 };
 
+
 export default function Home() {
+    // State to hold the fetched campaigns
     const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
+    
+    // State to manage loading and error status
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    // Fetch the campaigns when the component mounts
     useEffect(() => {
         const fetchCampaigns = async () => {
             try {
-                const response = await fetch('/api/campaigns'); // Update this with your actual API endpoint
+                // Fetch campaigns from the API endpoint
+                const response = await fetch('/api/campaigns'); // Ensure that this API endpoint exists
                 if (!response.ok) {
-                    throw new Error('Failed to fetch campaigns');
+                    throw new Error('Failed to fetch campaigns'); // Throw error if fetch fails
                 }
+
+                // Parse the response data as an array of FundraisingCampaign objects
                 const data: FundraisingCampaign[] = await response.json();
-                setCampaigns(data);
+                setCampaigns(data); // Update state with fetched campaigns
+
             } catch (err: unknown) {
+                // Handle any errors that occur during the fetch
                 if (err instanceof Error) {
-                    setError(err.message);
+                    setError(err.message); // Set error message if it's an Error object
                 } else {
-                    setError('An unknown error occurred');
+                    setError('An unknown error occurred'); // Set a default error message for unknown errors
                 }
             } finally {
+                // Stop loading after fetching is complete, whether successful or failed
                 setLoading(false);
             }
         };
 
-        fetchCampaigns();
-    }, []);
+        fetchCampaigns(); // Call the function to fetch campaigns
 
-    if (loading) {
-        return <div className="flex justify-center items-center h-screen"><Spinner size="lg"/></div>;
-    }
+    }, []); // Only run this effect once on component mount
 
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
+    // Randomly shuffle the campaigns array and limit to 3 campaigns
     const randomCampaigns = campaigns
-        .sort(() => Math.random() - 0.5)  // Shuffle array
-        .slice(0, 3);  // Limit to 3 campaigns
+        .sort(() => Math.random() - 0.5) // Shuffle the campaigns
+        .slice(0, 3);  // Take the first 3 shuffled campaigns
 
     return (
         <>
-            <Header registerLink={links.getStarted}/>
+            {/* Use LoadingError to show either a spinner or an error message */}
+            <LoadingError loading={loading} error={error} />
 
-            <div className="max-w-6xl mx-auto px-4">
-                <h1 className="text-4xl font-bold my-8">Fundraising Campaigns</h1>
+            {/* Only render the content below if not loading and no error */}
+            {!loading && !error && (
+                <>
+                    {/* Render the Header with a link to register */}
+                    <Header registerLink={links.getStarted} />
 
-                {/* 
-                    Grid setup for campaign cards, responsive: 
-                    1 column on small screens, 2 on medium, 3 on large screens.
-                    We now display a maximum of 3 cards.
-                */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {randomCampaigns.map(campaign => (
-                        <CampaignCard key={campaign._id?.toString()} campaign={campaign}/>
-                    ))}
-                </div>
+                    <div className="max-w-6xl mx-auto px-4">
+                        <h1 className="text-4xl font-bold my-8">
+                            Fundraising Campaigns
+                        </h1>
 
-                <div className="text-center py-10">
-                    <a href={links.viewAll}
-                       className="text-xl text-white bg-gray-800 hover:bg-gray-900 py-3 px-7 rounded-lg">View All</a>
-                </div>
-            </div>
+                        {/* Render the campaign grid with random campaigns */}
+                        <CampaignGrid campaigns={randomCampaigns} />
+
+                        {/* Render the "View All" button */}
+                        <ViewAllButton viewAllLink={links.viewAll} />
+                    </div>
+                </>
+            )}
         </>
     );
 }

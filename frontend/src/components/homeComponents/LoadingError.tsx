@@ -19,8 +19,13 @@ export const LoadingError: React.FC<LoadingErrorProps> = ({ loading, error }) =>
     // Display spinner when loading is true
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex flex-col justify-center items-center h-screen">
                 <Spinner size="lg" />
+
+                {/* Loading text added here */}
+                <span className="mt-4 text-lg text-gray-400">
+                    Loading, please wait...
+                </span>
             </div>
         );
     }
