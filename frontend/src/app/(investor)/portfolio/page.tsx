@@ -3,6 +3,7 @@
 import React, {useEffect, useState} from "react";
 import {useUser} from "@auth0/nextjs-auth0/client";
 import {ObjectId} from "mongodb";
+import {useRouter} from "next/navigation";
 
 interface UserStatements {
     _id?: ObjectId;
@@ -20,11 +21,17 @@ interface UserStatements {
 const ITEMS_PER_PAGE = 10;
 
 export default function Home() {
+    const router = useRouter();
     const {user, isLoading: userLoading} = useUser(); // Fetch user data from Auth0
     const [userStatements, setUserStatements] = useState<UserStatements[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+
+    //edit profile
+    const [isEditing, setIsEditing] = useState(false);
+    const [name, setName] = useState<string>();
+    const [nickname, setNickname] = useState<string>();
 
     const totalPages = Math.ceil(userStatements.length / ITEMS_PER_PAGE);
 
@@ -54,7 +61,6 @@ export default function Home() {
 
             setLoading(true);
             try {
-                console.log(user);
                 const user_id = user.sub; // Access user ID (sub) from Auth0
                 const response = await fetch(`/api/statement/byuserid/${user_id}`);
 
@@ -63,6 +69,8 @@ export default function Home() {
                 }
                 const data: UserStatements[] = await response.json();
                 setUserStatements(data);
+                setName(user.name);
+                setNickname(user.nickname)
             } catch (err: any) {
                 setError(err.message);
             } finally {
@@ -72,6 +80,34 @@ export default function Home() {
 
         fetchStatement();
     }, [user, userLoading]); // Depend on `user` and `userLoading`
+
+    // Handle the edit button
+    const toggleEdit = () => {
+        setIsEditing(!isEditing);
+    };
+
+    // Handle the form submission (e.g., to update user info)
+    const handleSave = async () => {
+        const newData = {
+            name: name,
+            nickname: nickname,
+        }
+        const response = await fetch('/api/user/patch', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: user?.sub,
+                newData,
+            }),
+        });
+
+        const data = await response.json();
+        setIsEditing(false);
+        alert('User information saved! Please login again to get changed');
+        router.push("/api/auth/logout")
+    };
 
     if (loading || userLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -83,6 +119,88 @@ export default function Home() {
 
     return (
         <div className="min-h-screen">
+            <div className="bg-white p-4 rounded-lg shadow">
+                <div className="mx-auto bg-white shadow-md rounded-lg p-6 max-w-full grid grid-cols-3 gap-8">
+                    {/* Profile Picture */}
+                    <div className="flex">
+                        <img
+                            className="w-36 h-36 rounded-full object-cover mx-auto"
+                            src={user?.picture || '/default-profile.png'}
+                            alt="Profile Picture"
+                        />
+                    </div>
+
+                    {/* User Info */}
+                    <div className="my-auto">
+                        {isEditing ? (
+                            <>
+                                <div className="grid grid-cols-2">
+                                    {/* Editable Name */}
+                                    <div className="my-auto text-xl text-gray-800">
+                                        Name:
+                                    </div>
+
+                                    <input
+                                        type="text"
+                                        className="text-l font-semibold text-gray-800 border border-gray-300 py-2 rounded mx-auto"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+
+
+
+
+                                    <div className="my-auto text-xl text-gray-800">
+                                        Nickname:
+                                    </div>
+                                    {/* Editable Nickname */}
+                                    <input
+                                        type="text"
+                                        className="text-l text-gray-600 border border-gray-300 py-2 rounded mt-2 mx-auto"
+                                        value={nickname}
+                                        onChange={(e) => setNickname(e.target.value)}
+                                    />
+                                </div>
+                                {/* Save Button */}
+                                <div className="flex mt-4">
+                                    <button
+                                        className="bg-green-500 text-white px-10 py-2 rounded mx-auto"
+                                        onClick={handleSave}
+                                    >Save
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                {/* Name */}
+                                <h2 className="text-2xl font-semibold text-gray-800">{name}</h2>
+
+                                {/* Email */}
+                                <p className="text-xl text-gray-600">{user?.email || 'No Email'}</p>
+
+                                {/* Nickname */}
+                                <p className="text-xl text-gray-600">{nickname}</p>
+
+                                {/* Last Update */}
+                                <p className="text-l text-gray-500 mt-4">
+                                    Last updated: {new Date(user?.updated_at || '').toLocaleDateString() || 'N/A'}
+                                </p>
+
+                                {/* Edit Button */}
+                                <button
+                                    className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
+                                    onClick={toggleEdit}
+                                >
+                                    Edit
+                                </button>
+                            </>
+                        )}
+                    </div>
+
+                    <div></div>
+                </div>
+            </div>
+
             <div>
                 <h1 className="text-3xl font-bold my-4 mx-3">User Investment Portfolio</h1>
 
@@ -97,7 +215,8 @@ export default function Home() {
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-xl font-semibold">Latest investment</h2>
-                        <p className="text-2xl">{latestStatement.amount} invested in {latestStatement.campaignName}</p>
+                        <p className="text-2xl">{latestStatement.amount} invested
+                            in {latestStatement.campaignName}</p>
                     </div>
                 </div>
             </div>
