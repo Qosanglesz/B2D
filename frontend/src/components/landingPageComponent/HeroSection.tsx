@@ -1,3 +1,5 @@
+// src/components/landingPageComponent/HeroSection.tsx
+
 import React from 'react';
 import Link from 'next/link';
 

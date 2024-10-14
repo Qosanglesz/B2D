@@ -9,6 +9,8 @@ import Header from "@/components/homeComponents/Header";
 import { LoadingError } from '@/components/homeComponents/LoadingError'; // Import the LoadingError component
 import { CampaignGrid } from '@/components/homeComponents/CampaignGrid'; // Import the CampaignGrid component
 import { ViewAllButton } from '@/components/homeComponents/ViewAllButton'; // Import the ViewAllButton component
+import HeroSectionHome from '@/components/homeComponents/HeroSectionHome'; // Import HeroSectionHome component
+import FeatureCards from '@/components/homeComponents/FeatureCards'; // Import FeatureCards component
 
 
 // Define the links for authentication and viewing all campaigns
@@ -70,11 +72,17 @@ export default function Home() {
             {/* Only render the content below if not loading and no error */}
             {!loading && !error && (
                 <>
-                    {/* Render the Header with a link to register */}
-                    <Header registerLink={links.getStarted} />
+                    {/* Render the Header with a link to register
+                    <Header registerLink={links.getStarted} /> */}
+
+                    {/* Render the Hero Section with Carousel */}
+                    <HeroSectionHome registerLink={links.getStarted} /> {/* Added HeroSectionHome component */}
 
                     <div className="max-w-6xl mx-auto px-4">
-                        <h1 className="text-4xl font-bold my-8">
+                        {/* Render the FeatureCards component here */}
+                        <FeatureCards />
+
+                        <h1 className="text-4xl font-bold py-8">
                             Fundraising Campaigns
                         </h1>
 
