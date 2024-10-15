@@ -56,7 +56,6 @@ const FundraisingCampaignForm: React.FC = () => {
             });
 
             if (!response.ok) throw new Error('Failed to save campaign');
-            console.log(formData)
             router.push('/admin/form/success'); // Redirect to success page
         } catch (err) {
             setError('Error saving campaign');
