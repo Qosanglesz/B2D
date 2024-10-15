@@ -1,13 +1,14 @@
 import React from 'react';
-import {FundraisingCampaign} from '@/components/types/Campaign';
-import {UploadDropzone} from "@/utils/uploadthing";
+import {FundraisingCampaign } from '@/components/types/Campaign';
+import { UploadDropzone } from "@/utils/uploadthing";
+import { UploadThingPictureFile } from "@/components/types/UploadThingPictureFile";
 
 
 interface AdditionalInformationProps {
     formData: Partial<FundraisingCampaign>;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     handleInvestorsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleUploadFile: (response) => void;
+    handleUploadFile: (response : UploadThingPictureFile[]) => void;
 }
 
 const AdditionalInformation: React.FC<AdditionalInformationProps> = ({
@@ -28,14 +29,14 @@ const AdditionalInformation: React.FC<AdditionalInformationProps> = ({
             <UploadDropzone endpoint="imageUploader"
                             onClientUploadComplete={(res) => {
                                 // Do something with the response
-                                handleUploadFile(res);
+                                handleUploadFile(res as UploadThingPictureFile[]);
                                 alert("Upload Completed");
                             }}
                             onUploadError={(error: Error) => {
                                 // Do something with the error.
                                 alert(`ERROR! ${error.message}`);
                             }}/>
-            <div>
+            {/* <div>
                 <h4 className="font-medium mb-2">Investors</h4>
                 <input
                     name="investors"
@@ -44,7 +45,7 @@ const AdditionalInformation: React.FC<AdditionalInformationProps> = ({
                     placeholder="Investors (comma-separated)"
                     className="p-2 border rounded w-full"
                 />
-            </div>
+            </div> */}
         </section>
     );
 };

@@ -12,7 +12,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ formData, handleChang
       <h3 className="text-xl font-medium mb-2">Campaign Details</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input 
-          name="targetAmount" 
+          name="targetAmount"
           type="number" 
           value={formData.targetAmount || ''} 
           onChange={handleChange} 
@@ -27,7 +27,9 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ formData, handleChang
           placeholder="Amount Raised" 
           className="p-2 border rounded" 
         />
+        <label htmlFor="status" className="sr-only">Status</label>
         <select
+          id="status"
           name="status"
           value={formData.status || ''}
           onChange={handleChange}

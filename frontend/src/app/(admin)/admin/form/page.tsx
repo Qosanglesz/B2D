@@ -8,6 +8,7 @@ import BasicInformation from '@/components/formComponents/BasicInformation';
 import CompanyDetails from '@/components/formComponents/CompanyDetails';
 import CampaignDetails from '@/components/formComponents/CampaignDetails';
 import AdditionalInformation from '@/components/formComponents/AdditionalInformation';
+import {UploadThingPictureFile} from '@/components/types/UploadThingPictureFile';
 import {NextResponse} from "next/server";
 import {ClientUploadedFileData, inferEndpointOutput} from "uploadthing/types";
 import {OurFileRouter} from "@/app/api/uploadthing/core";
@@ -36,7 +37,7 @@ const FundraisingCampaignForm: React.FC = () => {
         setFormData(prev => ({...prev, investors: value.split(', ')}));
     };
 
-    const handleUploadFile = (response) => {
+    const handleUploadFile = (response : UploadThingPictureFile[]) => {
         const files = response;
         setFormData(prev=> ({...prev, pictureFiles: files}));
     }

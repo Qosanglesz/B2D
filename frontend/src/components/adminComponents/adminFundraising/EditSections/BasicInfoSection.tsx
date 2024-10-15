@@ -31,16 +31,16 @@ const BasicInfoSection: React.FC<SectionProps> = ({ campaign, onChange }) => {
           className="w-full p-2 border rounded"
         />
       </div>
-      <div>
+      {/* <div>
         <label className="block mb-1">URL Picture:</label>
         <input
           type="text"
           name="urlPicture"
-          value={campaign.urlPicture}
+          value={campaign.pictureFiles[0].url as string}
           onChange={onChange}
           className="w-full p-2 border rounded"
         />
-      </div>
+      </div> */}
       <div>
         <label className="block mb-1">Status:</label>
         <select

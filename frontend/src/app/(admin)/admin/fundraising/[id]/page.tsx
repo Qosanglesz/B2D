@@ -11,7 +11,7 @@ export default function CampaignDetails({params}: { params: { id: string } }) {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-
+    
     useEffect(() => {
         const fetchCampaign = async () => {
             try {
@@ -65,7 +65,7 @@ export default function CampaignDetails({params}: { params: { id: string } }) {
                 {/* Image */}
                 <div className="mb-8 relative w-64 h-64 mx-auto">
                     <Image
-                        src={campaign.urlPicture}
+                        src={campaign.pictureFiles[0].url as string}
                         alt={campaign.name}
                         layout="fill"
                         objectFit="cover"

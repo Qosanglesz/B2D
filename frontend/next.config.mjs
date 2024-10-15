@@ -28,6 +28,12 @@ const nextConfig = {
         hostname: 'cdn.auth0.com',
         pathname: '/avatars/**',
       },
+      // New pattern for utfs.io
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+        pathname: '/f/**',
+      },
     ],
   },
   // ... any other configurations you might have

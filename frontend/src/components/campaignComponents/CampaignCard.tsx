@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { FundraisingCampaign } from '@/components/types/Campaign';
+import { UploadThingPictureFile } from '@/components/types/UploadThingPictureFile';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
@@ -35,7 +36,7 @@ const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign })
       {/* Upper section - fixed content */}
       <div className="relative">
         <Image 
-          src={campaign.urlPicture} 
+          src={campaign.pictureFiles[0].url as string} 
           alt={campaign.name} 
           width={400} 
           height={200} 
