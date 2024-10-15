@@ -5,7 +5,7 @@ import { FundraisingCampaign } from '@/components/types/Campaign';
 import Image from 'next/image';
 
 interface IntroCarouselProps {
-  campaign: Pick<FundraisingCampaign, 'urlPicture'>;
+  campaign: FundraisingCampaign;
 }
 
 const IntroCarousel: React.FC<IntroCarouselProps> = ({ campaign }) => {

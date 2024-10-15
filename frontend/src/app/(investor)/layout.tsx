@@ -1,3 +1,5 @@
+// src\app\(investor)\layout.tsx
+
 import {getSession} from '@auth0/nextjs-auth0';
 import NavBar from '@/components/navAndFooter/NavBar';
 import Footer from '@/components/navAndFooter/Footer';
@@ -28,7 +30,10 @@ export default async function Layout({children}: { children: ReactNode }) {
         <html lang="en">
         <body>
         <NavBar {...navBarProps} />
-        {children}
+            {/* Add offset to fixed Navbar */}
+            <div style={{ paddingTop: '72px' }}>
+                {children}
+            </div>
         <Footer/>
         </body>
         </html>

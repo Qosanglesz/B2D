@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import 'tailwindcss/tailwind.css';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { NextUIProvider } from "@nextui-org/react";
+// import "@uploadthing/react/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
