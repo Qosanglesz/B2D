@@ -4,7 +4,7 @@ import React from 'react';
 import { FundraisingCampaign } from '@/components/types/Campaign'; // Adjust the path as necessary
 
 interface IntroHeaderProps {
-  campaign: Pick<FundraisingCampaign, 'urlPicture' | 'companyName' | 'description'>;
+  campaign: FundraisingCampaign;
 }
 
 const IntroHeader: React.FC<IntroHeaderProps> = ({ campaign }) => {
@@ -12,7 +12,7 @@ const IntroHeader: React.FC<IntroHeaderProps> = ({ campaign }) => {
     <div className="p-6 mb-5 mt-8">
       <div className="flex items-center space-x-4">
         <img
-          src={campaign.urlPicture}
+          src={campaign.pictureFiles[0].url}
           alt={`${campaign.companyName} logo`}
           className="w-20 h-20 object-cover rounded-full border border-gray-300" // Increased size
         />
