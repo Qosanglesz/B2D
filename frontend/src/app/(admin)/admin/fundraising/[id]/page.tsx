@@ -65,7 +65,7 @@ export default function CampaignDetails({params}: { params: { id: string } }) {
                 {/* Image */}
                 <div className="mb-8 relative w-64 h-64 mx-auto">
                     <Image
-                        src={campaign.urlPicture || '/placeholder.jpg'}
+                        src={campaign.urlPicture}
                         alt={campaign.name}
                         layout="fill"
                         objectFit="cover"
