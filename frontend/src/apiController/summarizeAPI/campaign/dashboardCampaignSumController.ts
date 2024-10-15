@@ -19,7 +19,7 @@ export class DashboardCampaignSumController {
                 totalFundsRaised
             };
 
-            console.log("Dashboard data:", dashboardData);
+            // console.log("Dashboard data:", dashboardData);
             return NextResponse.json(dashboardData);
         } catch (error) {
             console.error("Error fetching dashboard data:", error);
