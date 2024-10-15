@@ -5,7 +5,7 @@ import { FundraisingCampaign } from '@/components/types/Campaign'; // Adjust the
 import Image from 'next/image';
 
 interface IntroHeaderProps {
-  campaign: Pick<FundraisingCampaign, 'urlPicture' | 'companyName' | 'description'>;
+  campaign: FundraisingCampaign;
 }
 
 const IntroHeader: React.FC<IntroHeaderProps> = ({ campaign }) => {
