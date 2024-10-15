@@ -1,5 +1,8 @@
+// src/components/campaignComponents/IntroStatistics.tsx
+
 import React, {useState} from 'react';
 import { FundraisingCampaign } from '@/components/types/Campaign';
+
 
 interface IntroStatisticsProps {
   campaign: Pick<FundraisingCampaign, 'amountRaised' | 'targetAmount' | 'investors' | 'endInDate' | 'companyName'>;
@@ -7,6 +10,7 @@ interface IntroStatisticsProps {
     investmentAmountInput: number;
     handleInvestButton: () => void;
 }
+
 
 const IntroStatistics: React.FC<IntroStatisticsProps> = ({ campaign, handleInputChange, investmentAmountInput, handleInvestButton}) => {
   // Calculate the percentage raised and remaining days
@@ -50,7 +54,7 @@ const IntroStatistics: React.FC<IntroStatisticsProps> = ({ campaign, handleInput
 
           {/* Progress Bar */}
           <p className="text-xl text-gray-500 mb-2">
-              {percentageRaised}% raised of ${targetAmountFormatted} funding goal
+              {percentageRaised}% raised of ${targetAmountFormatted} goal
           </p>
 
           <div className="w-full bg-gray-300 rounded-full h-2.5 mb-8">
@@ -106,4 +110,6 @@ const IntroStatistics: React.FC<IntroStatisticsProps> = ({ campaign, handleInput
   );
 };
 
+
 export default IntroStatistics;
+
