@@ -1,4 +1,5 @@
 import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
+import Image from 'next/image';
 
 export default withPageAuthRequired(
     async function Profile() {
@@ -9,9 +10,12 @@ export default withPageAuthRequired(
             <div className="mx-auto bg-white shadow-md rounded-lg p-6 min-h-screen max-w-full">
                 {/* Profile Picture */}
                 <div className="flex">
-                    <img
-                        className="w-24 h-24 rounded-full object-cover"
-                        src={user?.picture || '/default-profile.png'}
+                    <Image
+                        // className="w-24 h-24 rounded-full object-cover"
+                        src={user?.picture}
+                        alt={user?.name || 'Default Profile Picture'}
+                        width={96}
+                        height={96}
                     />
                 </div>
 

@@ -1,15 +1,14 @@
 'use client';
 
-import React, {useEffect, useState} from "react";
-
+import React, { useEffect, useState } from "react";
 import CampaignCard from '@/components/campaignComponents/CampaignCard';
-import {Spinner} from "@nextui-org/react";
-
+import { Spinner } from "@nextui-org/react";
+import { FundraisingCampaign } from '@/components/types/Campaign';
 
 export default function CampaignPage() {
-    const [campaigns, setCampaigns] = useState([]);
+    const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchCampaigns = async () => {
@@ -18,10 +17,14 @@ export default function CampaignPage() {
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaigns');
                 }
-                const data = await response.json();
-                setCampaigns(data); // Assuming the API response is an array of campaigns
+                const data: FundraisingCampaign[] = await response.json();
+                setCampaigns(data);
             } catch (err) {
-                setError(err.message);
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError('An unknown error occurred');
+                }
             } finally {
                 setLoading(false);
             }
@@ -43,7 +46,7 @@ export default function CampaignPage() {
             <h1 className="text-3xl font-bold mb-6">Live Opportunities</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {campaigns.map((campaign) => (
-                    <CampaignCard key={campaign._id} campaign={campaign}/> // Ensure each card has a unique key
+                    <CampaignCard key={campaign.id} campaign={campaign} />
                 ))}
             </div>
         </div>

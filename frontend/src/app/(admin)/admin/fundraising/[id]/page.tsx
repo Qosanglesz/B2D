@@ -2,6 +2,7 @@
 
 import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 import {FundraisingCampaign} from '@/components/types/Campaign';
 
@@ -62,11 +63,13 @@ export default function CampaignDetails({params}: { params: { id: string } }) {
                 <h1 className="text-3xl font-bold mb-6">{campaign.name}</h1>
 
                 {/* Image */}
-                <div className="mb-8">
-                    <img
-                        src={campaign.urlPicture || ''}
+                <div className="mb-8 relative w-64 h-64 mx-auto">
+                    <Image
+                        src={campaign.urlPicture || '/placeholder.jpg'}
                         alt={campaign.name}
-                        className="w-64 h-64 object-cover rounded-lg shadow-md mx-auto"
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-lg shadow-md"
                     />
                 </div>
 

@@ -1,10 +1,11 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
-import {useUser} from "@auth0/nextjs-auth0/client";
-import {ObjectId} from "mongodb";
-import {useRouter} from "next/navigation";
-import {Spinner} from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { ObjectId } from "mongodb";
+import { useRouter } from "next/navigation";
+import { Spinner } from "@nextui-org/react";
+import Image from 'next/image';
 
 interface UserStatements {
     _id?: ObjectId;
@@ -23,16 +24,15 @@ const ITEMS_PER_PAGE = 10;
 
 export default function Home() {
     const router = useRouter();
-    const {user, isLoading: userLoading} = useUser(); // Fetch user data from Auth0
+    const { user, isLoading: userLoading } = useUser();
     const [userStatements, setUserStatements] = useState<UserStatements[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
 
-    //edit profile
     const [isEditing, setIsEditing] = useState(false);
-    const [name, setName] = useState<string>();
-    const [nickname, setNickname] = useState<string>();
+    const [name, setName] = useState<string | undefined>(undefined);
+    const [nickname, setNickname] = useState<string | undefined>(undefined);
 
     const totalPages = Math.ceil(userStatements.length / ITEMS_PER_PAGE);
 
@@ -53,16 +53,16 @@ export default function Home() {
             day: '2-digit',
             hour: '2-digit',
             minute: '2-digit'
-        }).replace(',', ''); // Removes the comma for cleaner formatting
+        }).replace(',', '');
     };
 
     useEffect(() => {
         const fetchStatement = async () => {
-            if (!user || userLoading) return; // Wait until user is available
+            if (!user || userLoading) return;
 
             setLoading(true);
             try {
-                const user_id = user.sub; // Access user ID (sub) from Auth0
+                const user_id = user.sub;
                 const response = await fetch(`/api/statement/byuserid/${user_id}`);
 
                 if (!response.ok) {
@@ -70,8 +70,8 @@ export default function Home() {
                 }
                 const data: UserStatements[] = await response.json();
                 setUserStatements(data);
-                setName(user.name);
-                setNickname(user.nickname)
+                setName(user.name || undefined);
+                setNickname(user.nickname || undefined);
             } catch (err: any) {
                 setError(err.message);
             } finally {
@@ -80,14 +80,12 @@ export default function Home() {
         };
 
         fetchStatement();
-    }, [user, userLoading]); // Depend on `user` and `userLoading`
+    }, [user, userLoading]);
 
-    // Handle the edit button
     const toggleEdit = () => {
         setIsEditing(!isEditing);
     };
 
-    // Handle the form submission (e.g., to update user info)
     const handleSave = async () => {
         const newData = {
             name: name,
@@ -110,8 +108,7 @@ export default function Home() {
         router.push("/api/auth/logout")
     };
 
-    if (loading || userLoading) return <div className="flex justify-center items-center h-screen"><Spinner size="lg"/>
-    </div>;
+    if (loading || userLoading) return <div className="flex justify-center items-center h-screen"><Spinner size="lg" /></div>;
     if (error) return <p>Error: {error}</p>;
 
     const totalAmount = userStatements.reduce((sum, item) => sum + item.amount, 0);
@@ -123,47 +120,43 @@ export default function Home() {
         <div className="min-h-screen">
             <div className="bg-white p-4 rounded-lg shadow">
                 <div className="mx-auto bg-white shadow-md rounded-lg p-6 max-w-full grid grid-cols-3 gap-8">
-                    {/* Profile Picture */}
                     <div className="flex">
-                        <img
+                        <Image
                             className="w-36 h-36 rounded-full object-cover mx-auto"
                             src={user?.picture || '/default-profile.png'}
                             alt="Profile Picture"
+                            height={96}
+                            width={96}
                         />
                     </div>
 
-                    {/* User Info */}
                     <div className="my-auto">
                         {isEditing ? (
                             <>
                                 <div className="grid grid-cols-2">
-                                    {/* Editable Name */}
                                     <div className="my-auto text-xl text-gray-800">
                                         Name:
                                     </div>
-
                                     <input
                                         type="text"
                                         className="text-l font-semibold text-gray-800 border border-gray-300 py-2 rounded mx-auto"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
+                                        title="Name"
+                                        placeholder="Enter your name"
                                     />
-
-
-
-
                                     <div className="my-auto text-xl text-gray-800">
                                         Nickname:
                                     </div>
-                                    {/* Editable Nickname */}
                                     <input
                                         type="text"
                                         className="text-l text-gray-600 border border-gray-300 py-2 rounded mt-2 mx-auto"
                                         value={nickname}
                                         onChange={(e) => setNickname(e.target.value)}
+                                        title="Nickname"
+                                        placeholder="Enter your nickname"
                                     />
                                 </div>
-                                {/* Save Button */}
                                 <div className="flex mt-4">
                                     <button
                                         className="bg-green-500 text-white px-10 py-2 rounded mx-auto"
@@ -174,21 +167,12 @@ export default function Home() {
                             </>
                         ) : (
                             <>
-                                {/* Name */}
                                 <h2 className="text-2xl font-semibold text-gray-800">{name}</h2>
-
-                                {/* Email */}
                                 <p className="text-xl text-gray-600">{user?.email || 'No Email'}</p>
-
-                                {/* Nickname */}
                                 <p className="text-xl text-gray-600">{nickname}</p>
-
-                                {/* Last Update */}
                                 <p className="text-l text-gray-500 mt-4">
                                     Last updated: {new Date(user?.updated_at || '').toLocaleDateString() || 'N/A'}
                                 </p>
-
-                                {/* Edit Button */}
                                 <button
                                     className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
                                     onClick={toggleEdit}
@@ -217,8 +201,7 @@ export default function Home() {
                     </div>
                     <div className="bg-white p-4 rounded-lg shadow">
                         <h2 className="text-xl font-semibold">Latest investment</h2>
-                        <p className="text-2xl">{latestStatement.amount} invested
-                            in {latestStatement.campaignName}</p>
+                        <p className="text-2xl">{latestStatement.amount} invested in {latestStatement.campaignName}</p>
                     </div>
                 </div>
             </div>
@@ -227,26 +210,26 @@ export default function Home() {
                 <h2 className="text-2xl font-semibold my-4">Investment Statements</h2>
                 <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                     <thead className="bg-gray-200">
-                    <tr>
-                        <th className="py-2 px-4 text-left">Statement ID</th>
-                        <th className="py-2 px-4 text-left">Company Name</th>
-                        <th className="py-2 px-4 text-left">Amount</th>
-                        <th className="py-2 px-4 text-left">Release Date</th>
-                        <th className="py-2 px-4 text-left">Success Date</th>
-                        <th className="py-2 px-4 text-left">Status</th>
-                    </tr>
+                        <tr>
+                            <th className="py-2 px-4 text-left">Statement ID</th>
+                            <th className="py-2 px-4 text-left">Company Name</th>
+                            <th className="py-2 px-4 text-left">Amount</th>
+                            <th className="py-2 px-4 text-left">Release Date</th>
+                            <th className="py-2 px-4 text-left">Success Date</th>
+                            <th className="py-2 px-4 text-left">Status</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {currentInvestments.map((userStatements) => (
-                        <tr key={userStatements._id?.toString()}>
-                            <td className="py-2 px-4 border-b">{userStatements.statement_id}</td>
-                            <td className="py-2 px-4 border-b">{userStatements.campaignName}</td>
-                            <td className="py-2 px-4 border-b">${userStatements.amount}</td>
-                            <td className="py-2 px-4 border-b">{formatDate(userStatements.date)}</td>
-                            <td className="py-2 px-4 border-b">{formatDate(userStatements.successAt)}</td>
-                            <td className="py-2 px-4 border-b">{userStatements.status}</td>
-                        </tr>
-                    ))}
+                        {currentInvestments.map((userStatement) => (
+                            <tr key={userStatement._id?.toString()}>
+                                <td className="py-2 px-4 border-b">{userStatement.statement_id}</td>
+                                <td className="py-2 px-4 border-b">{userStatement.campaignName}</td>
+                                <td className="py-2 px-4 border-b">${userStatement.amount}</td>
+                                <td className="py-2 px-4 border-b">{formatDate(userStatement.date)}</td>
+                                <td className="py-2 px-4 border-b">{formatDate(userStatement.successAt)}</td>
+                                <td className="py-2 px-4 border-b">{userStatement.status}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
 
@@ -259,7 +242,7 @@ export default function Home() {
                         Previous
                     </button>
 
-                    {Array.from({length: totalPages}, (_, index) => (
+                    {Array.from({ length: totalPages }, (_, index) => (
                         <button
                             key={index + 1}
                             onClick={() => handlePageChange(index + 1)}
