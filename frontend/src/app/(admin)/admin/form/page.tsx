@@ -9,6 +9,8 @@ import CompanyDetails from '@/components/formComponents/CompanyDetails';
 import CampaignDetails from '@/components/formComponents/CampaignDetails';
 import AdditionalInformation from '@/components/formComponents/AdditionalInformation';
 import {NextResponse} from "next/server";
+import {ClientUploadedFileData, inferEndpointOutput} from "uploadthing/types";
+import {OurFileRouter} from "@/app/api/uploadthing/core";
 
 const FundraisingCampaignForm: React.FC = () => {
     const [formData, setFormData] = useState<Partial<FundraisingCampaign>>({});
@@ -43,7 +45,6 @@ const FundraisingCampaignForm: React.FC = () => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
-        console.log(formData)
 
         try {
             const response = await fetch('/api/campaign', {
@@ -55,7 +56,7 @@ const FundraisingCampaignForm: React.FC = () => {
             });
 
             if (!response.ok) throw new Error('Failed to save campaign');
-
+            console.log(formData)
             router.push('/admin/form/success'); // Redirect to success page
         } catch (err) {
             setError('Error saving campaign');

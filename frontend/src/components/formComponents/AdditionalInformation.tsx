@@ -2,6 +2,7 @@ import React from 'react';
 import { FundraisingCampaign } from '@/components/types/Campaign';
 import {UploadDropzone} from "@/utils/uploadthing";
 
+
 interface AdditionalInformationProps {
   formData: Partial<FundraisingCampaign>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -20,7 +21,6 @@ const AdditionalInformation: React.FC<AdditionalInformationProps> = ({ formData,
         <UploadDropzone endpoint="imageUploader"
                         onClientUploadComplete={(res) => {
                             // Do something with the response
-                            console.log("Files: ", res);
                             handleUploadFile(res);
                             alert("Upload Completed");
                         }}

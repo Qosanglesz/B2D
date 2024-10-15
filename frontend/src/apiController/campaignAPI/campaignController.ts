@@ -90,6 +90,7 @@ export class CampaignController {
                 status: 'Active',
                 description: formData.description || '',
                 urlPicture: formData.urlPicture || '',
+                pictureFiles: formData.pictureFiles || [],
                 companyName: formData.companyName || '',
                 website: formData.website || '',
                 founderName: formData.founderName || '',

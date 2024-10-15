@@ -17,10 +17,10 @@ export const ourFileRouter = {
             // This code RUNS ON YOUR SERVER after the upload completes
             console.log("Upload complete!");
 
-            console.log("file url", file.url);
+            // console.log("file url", file.url);
 
             // Optionally return any data you'd like to the client
-            return { uploadedFile: file.url };
+            // return { uploadedFile: file.url };
         }),
 } satisfies FileRouter;
 
