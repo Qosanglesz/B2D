@@ -1,4 +1,4 @@
-// /src/components/homeComponents/CampaignGrid.tsx
+// /src/components/campaignComponents/CampaignCardGrid.tsx
 
 import React from 'react';
 import { FundraisingCampaign } from '@/components/types/Campaign';
