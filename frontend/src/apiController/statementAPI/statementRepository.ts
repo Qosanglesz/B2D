@@ -17,7 +17,7 @@ export interface StatementData {
 }
 
 export class StatementRepository {
-    private collection: Collection<StatementData>;
+    private collection? : Collection<StatementData>;
 
     constructor() {
         // Initialize the collection in the constructor asynchronously
@@ -84,5 +84,15 @@ export class StatementRepository {
         const collection = await this.getCollection();
         const statement = await collection.findOne({ statement_id: statementId });
         return !!(statement && statement.status === "open");
+    }
+
+    async findBetweenDates(startDate: Date, endDate: Date): Promise<StatementData[]> {
+        const collection = await this.getCollection();
+        return collection.find({
+            date: {
+                $gte: startDate.toISOString(),
+                $lte: endDate.toISOString()
+            }
+        }).toArray();
     }
 }
