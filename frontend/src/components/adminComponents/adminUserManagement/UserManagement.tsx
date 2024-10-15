@@ -111,13 +111,13 @@ const UserManagement: React.FC = () => {
         <h1 className="text-3xl font-bold">User Management</h1>
         <div className="w-1/3">
           <Input
-            clearable
-            bordered
-            fullWidth
-            color="primary"
-            size="lg"
+            // clearable
+            // bordered
+            // fullWidth
+            // color="primary"
+            // size="lg"
             placeholder="Search user"
-            contentLeft={<SearchIcon />}
+            // contentLeft={<SearchIcon />}
             value={searchTerm}
             onChange={handleSearch}
           />
@@ -153,7 +153,6 @@ const UserManagement: React.FC = () => {
                 <td className="py-2 px-4 border-b text-center">
                   <Button 
                     color="primary" 
-                    auto
                     onClick={() => handleViewUser(user.user_id)}
                   >
                     View
@@ -170,7 +169,6 @@ const UserManagement: React.FC = () => {
         </div>
         <div className="flex space-x-2">
           <Button
-            auto
             color="primary"
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
@@ -178,7 +176,6 @@ const UserManagement: React.FC = () => {
             Previous
           </Button>
           <Button
-            auto
             color="primary"
             onClick={handleNextPage}
             disabled={currentPage === totalPages}

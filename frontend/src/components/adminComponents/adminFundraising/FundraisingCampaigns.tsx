@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Input, Button } from '@nextui-org/react';
 import { FundraisingCampaign } from '@/components/types/Campaign';
 
@@ -20,15 +20,7 @@ const FundraisingCampaigns: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    fetchCampaigns();
-  }, []);
-
-  useEffect(() => {
-    filterCampaigns();
-  }, [campaigns, searchTerm]);
-
-  const fetchCampaigns = async () => {
+  const fetchCampaigns = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/campaigns');
@@ -44,17 +36,25 @@ const FundraisingCampaigns: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const filterCampaigns = () => {
+  const filterCampaigns = useCallback(() => {
     const filtered = campaigns.filter(campaign =>
       campaign.companyName.toLowerCase().startsWith(searchTerm.toLowerCase())
     );
     setFilteredCampaigns(filtered);
     setCurrentPage(1); // Reset to first page when filtering
-  };
+  }, [campaigns, searchTerm]);
 
-  const sortCampaigns = (field: SortField) => {
+  useEffect(() => {
+    fetchCampaigns();
+  }, [fetchCampaigns]);
+
+  useEffect(() => {
+    filterCampaigns();
+  }, [filterCampaigns]);
+
+  const sortCampaigns = useCallback((field: SortField) => {
     const newSortOrder = field === sortField && sortOrder === 'asc' ? 'desc' : 'asc';
     setSortField(field);
     setSortOrder(newSortOrder);
@@ -66,7 +66,7 @@ const FundraisingCampaigns: React.FC = () => {
     });
 
     setFilteredCampaigns(sortedCampaigns);
-  };
+  }, [filteredCampaigns, sortField, sortOrder]);
 
   const getSortIcon = (field: SortField) => {
     if (sortField !== field) return '↕️';
@@ -92,20 +92,6 @@ const FundraisingCampaigns: React.FC = () => {
         <h1 className="text-3xl font-bold">Fundraising Campaigns</h1>
         <div className="w-64">
           <Input
-            clearable
-            contentLeft={<SearchIcon />}
-            contentLeftStyling={false}
-            css={{
-              w: "100%",
-              "@xsMax": {
-                mw: "300px",
-              },
-              "& .nextui-input-content--left": {
-                h: "100%",
-                ml: "\$4",
-                dflex: "center",
-              },
-            }}
             placeholder="Search company"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -144,7 +130,7 @@ const FundraisingCampaigns: React.FC = () => {
                     <td className="py-2 px-4 border-b text-center">{campaign.status ? 'Active' : 'Closed'}</td>
                     <td className="py-2 px-4 border-b text-center">
                       <Link href={`/admin/fundraising/${campaign.id}`}>
-                        <Button auto color="primary" size="sm">
+                        <Button color="primary" size="sm">
                           View
                         </Button>
                       </Link>
@@ -160,7 +146,6 @@ const FundraisingCampaigns: React.FC = () => {
             </div>
             <div className="flex space-x-2">
               <Button
-                auto
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
@@ -168,7 +153,6 @@ const FundraisingCampaigns: React.FC = () => {
                 Previous
               </Button>
               <Button
-                auto
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}

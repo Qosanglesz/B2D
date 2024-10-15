@@ -11,6 +11,7 @@ interface UserData {
 
 interface StatementWithUser extends StatementData {
   user: UserData | null;
+  
 }
 
 interface StatementsTableProps {
@@ -145,7 +146,6 @@ export default function StatementsTable({ initialStatements }: StatementsTablePr
         </div>
         <div className="flex space-x-2">
           <Button
-            auto
             color="primary"
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -153,7 +153,6 @@ export default function StatementsTable({ initialStatements }: StatementsTablePr
             Previous
           </Button>
           <Button
-            auto
             color="primary"
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FundraisingCampaign } from '@/components/types/Campaign';
+import Image from 'next/image';
 
 interface IntroCarouselProps {
   campaign: FundraisingCampaign;
@@ -10,8 +11,8 @@ interface IntroCarouselProps {
 const IntroCarousel: React.FC<IntroCarouselProps> = ({ campaign }) => {
   return (
     <div className="w-full">
-      <img
-        src={campaign.pictureFiles[0].url}
+      <Image
+        src={campaign.urlPicture}
         alt="Company logo"
         className="w-full h-96 lg:h-[32rem] object-cover rounded-lg" // Increased height values
       />

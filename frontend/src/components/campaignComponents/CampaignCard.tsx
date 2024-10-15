@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FundraisingCampaign } from '@/components/types/Campaign';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -17,31 +18,32 @@ const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign })
   };
 
   // Calculate the percentage raised and remaining days
-  const percentageRaised = ((campaign.amountRaised / campaign.targetAmount) * 100).toFixed(2);
+  const percentageRaised = Math.min(100, ((campaign.amountRaised / campaign.targetAmount) * 100)).toFixed(2);
   const daysRemaining = Math.max(0, Math.ceil((new Date(campaign.endInDate).getTime() - Date.now()) / (1000 * 3600 * 24)));
 
   // Format the amounts with thousands separators
   const formattedRaised = Number(campaign.amountRaised).toLocaleString();
   const formattedGoal = Number(campaign.targetAmount).toLocaleString();
 
-
-  // // Debugging logs
-  // console.log('Raised:', formattedRaised);
-  // console.log('Goal:', formattedGoal);
-
   return (
     <div
-      className="campaign-card bg-white rounded-lg shadow-md overflow-hidden relative block cursor-pointer"
+      className="campaign-card bg-white rounded-lg shadow-md overflow-hidden relative block cursor-pointer transition-shadow duration-300 hover:shadow-lg"
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Upper section - fixed content */}
       <div className="relative">
-        <img src={campaign.pictureFiles[0].url} alt={campaign.name} className="w-full h-48 object-cover" />
+        <Image 
+          src={campaign.urlPicture} 
+          alt={campaign.name} 
+          width={400} 
+          height={200} 
+          className="w-full h-48 object-cover"
+        />
         <div className="p-4">
-          <h2 className="text-2xl font-bold">{campaign.name}</h2>
-          <p className="text-base text-gray-600">{campaign.description}</p>
+          <h2 className="text-2xl font-bold truncate">{campaign.name}</h2>
+          <p className="text-base text-gray-600 line-clamp-2">{campaign.description}</p>
         </div>
       </div>
 
@@ -58,15 +60,15 @@ const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign })
         }`}
       >
         <div className="flex flex-col mb-2">
-          <h2 className="text-2xl font-bold">{campaign.name}</h2>
-          <p className="text-base text-gray-600 mb-4">{campaign.description}</p>
+          <h2 className="text-2xl font-bold truncate">{campaign.name}</h2>
+          <p className="text-base text-gray-600 mb-4 line-clamp-2">{campaign.description}</p>
           <div className="flex justify-between">
             <p className="text-lg font-semibold">Raised: ${formattedRaised}</p>
             <p className="text-lg font-semibold">Goal: ${formattedGoal}</p>
           </div>
           <div className="w-full bg-gray-300 rounded-full h-2.5 mb-2">
-            <div
-              className="bg-blue-600 h-2.5 rounded-full"
+            <div 
+              className="bg-blue-600 h-2.5 rounded-full" 
               style={{ width: `${percentageRaised}%` }}
             />
           </div>

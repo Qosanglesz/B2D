@@ -120,8 +120,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return paymentController.handleWebhook(body, signature);
 }
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
+// export const config = {
+//     api: {
+//         bodyParser: false,
+//     },
+// };

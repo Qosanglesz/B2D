@@ -17,28 +17,26 @@ export interface StatementData {
 }
 
 export class StatementRepository {
-    private collection? : Collection<StatementData>;
+    private collectionPromise: Promise<Collection<StatementData>>;
+
 
     constructor() {
-        // Initialize the collection in the constructor asynchronously
-        clientPromise
-            .then(client => {
-                const db = client.db(DATABASE_NAME);
-                this.collection = db.collection<StatementData>(COLLECTION_NAME);
-            })
-            .catch(err => {
-                console.error("Failed to initialize MongoDB collection", err);
-            });
+        this.collectionPromise = this.initializeCollection();
     }
 
-    // Wait for the collection to be initialized if needed
-    private async getCollection(): Promise<Collection<StatementData>> {
-        if (!this.collection) {
+    private async initializeCollection(): Promise<Collection<StatementData>> {
+        try {
             const client = await clientPromise;
             const db = client.db(DATABASE_NAME);
-            this.collection = db.collection<StatementData>(COLLECTION_NAME);
+            return db.collection<StatementData>(COLLECTION_NAME);
+        } catch (err) {
+            console.error("Failed to initialize MongoDB collection", err);
+            throw err;
         }
-        return this.collection;
+    }
+
+    private async getCollection(): Promise<Collection<StatementData>> {
+        return this.collectionPromise;
     }
 
     async insertStatement(data: StatementData): Promise<InsertOneResult<StatementData>> {
