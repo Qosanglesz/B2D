@@ -64,7 +64,7 @@ export default function CampaignDetails({params}: { params: { id: string } }) {
                 {/* Image */}
                 <div className="mb-8">
                     <img
-                        src={campaign.urlPicture || ''}
+                        src={campaign.pictureFiles[0].url || ''}
                         alt={campaign.name}
                         className="w-64 h-64 object-cover rounded-lg shadow-md mx-auto"
                     />

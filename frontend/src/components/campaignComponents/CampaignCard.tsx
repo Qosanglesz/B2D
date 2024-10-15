@@ -24,6 +24,7 @@ const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign })
   const formattedRaised = Number(campaign.amountRaised).toLocaleString();
   const formattedGoal = Number(campaign.targetAmount).toLocaleString();
 
+
   // // Debugging logs
   // console.log('Raised:', formattedRaised);
   // console.log('Goal:', formattedGoal);
@@ -37,7 +38,7 @@ const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign })
     >
       {/* Upper section - fixed content */}
       <div className="relative">
-        <img src={campaign.urlPicture} alt={campaign.name} className="w-full h-48 object-cover" />
+        <img src={campaign.pictureFiles[0].url} alt={campaign.name} className="w-full h-48 object-cover" />
         <div className="p-4">
           <h2 className="text-2xl font-bold">{campaign.name}</h2>
           <p className="text-base text-gray-600">{campaign.description}</p>
