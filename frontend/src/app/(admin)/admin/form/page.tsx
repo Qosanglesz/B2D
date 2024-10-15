@@ -8,6 +8,7 @@ import BasicInformation from '@/components/formComponents/BasicInformation';
 import CompanyDetails from '@/components/formComponents/CompanyDetails';
 import CampaignDetails from '@/components/formComponents/CampaignDetails';
 import AdditionalInformation from '@/components/formComponents/AdditionalInformation';
+import {NextResponse} from "next/server";
 
 const FundraisingCampaignForm: React.FC = () => {
     const [formData, setFormData] = useState<Partial<FundraisingCampaign>>({});
@@ -33,10 +34,16 @@ const FundraisingCampaignForm: React.FC = () => {
         setFormData(prev => ({...prev, investors: value.split(', ')}));
     };
 
+    const handleUploadFile = (response) => {
+        const files = response;
+        setFormData(prev=> ({...prev, pictureFiles: files}));
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
+        console.log(formData)
 
         try {
             const response = await fetch('/api/campaign', {
@@ -69,7 +76,7 @@ const FundraisingCampaignForm: React.FC = () => {
                             handleCheckboxChange={handleCheckboxChange}/>
             <CampaignDetails formData={formData} handleChange={handleChange}/>
             <AdditionalInformation formData={formData} handleChange={handleChange}
-                                   handleInvestorsChange={handleInvestorsChange}/>
+                                   handleInvestorsChange={handleInvestorsChange} handleUploadFile={handleUploadFile}/>
 
             <div className="flex justify-center mt-6">
                 <button

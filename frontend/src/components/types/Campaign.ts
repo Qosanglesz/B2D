@@ -7,6 +7,7 @@ export interface FundraisingCampaign {
     status: string;
     description: string;
     urlPicture: string;
+    pictureFiles: [];
     companyName: string;
     website: string;
     founderName: string;
