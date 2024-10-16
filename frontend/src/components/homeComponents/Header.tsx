@@ -1,12 +1,10 @@
-// src/components/homeComponents/Header.tsx
-
 import React from "react";
 
 interface HeaderProps {
     registerLink: string,
 }
 
-const Header: React.FC<HeaderProps> = ({ registerLink }) => {
+const Header: React.FC<HeaderProps> = ({registerLink}) => {
     return (
         // Use Flexbox to center content
         <header className="bg-gray-900 text-white h-[500px] flex flex-col justify-center">
@@ -20,7 +18,8 @@ const Header: React.FC<HeaderProps> = ({ registerLink }) => {
                 </p>
             </div>
             <div className="text-center pt-10">
-                <a href={registerLink} className="text-xl text-white bg-gray-400 hover:bg-gray-500 py-3 px-5 rounded-lg">Get Started</a>
+                <a href={registerLink}
+                   className="text-xl text-white bg-gray-400 hover:bg-gray-500 py-3 px-5 rounded-lg">Get Started</a>
             </div>
         </header>
     );
