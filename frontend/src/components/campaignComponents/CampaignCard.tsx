@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 import { UploadThingPictureFile } from '@/types/UploadThingPictureFile';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign }) => {
+const CampaignCard: React.FC<{ campaign: Campaign }> = ({ campaign }) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 

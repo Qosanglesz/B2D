@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Input, Button } from '@nextui-org/react';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 
 type SortField = 'id' | 'amountRaised' | 'targetAmount' | 'companyName';
 type SortOrder = 'asc' | 'desc';
@@ -11,8 +11,8 @@ type SortOrder = 'asc' | 'desc';
 const ITEMS_PER_PAGE = 5;
 
 const FundraisingCampaigns: React.FC = () => {
-  const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
-  const [filteredCampaigns, setFilteredCampaigns] = useState<FundraisingCampaign[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>('id');

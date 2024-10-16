@@ -1,12 +1,13 @@
-import { ObjectId } from 'mongodb';
+import {ObjectId} from 'mongodb';
 import {UploadThingPictureFile} from "@/types/UploadThingPictureFile"
-export interface FundraisingCampaign {
+
+
+export interface Campaign {
     _id?: ObjectId;
-    id : number;
+    id: number;
     name: string;
     status: string;
     description: string;
-    // urlPicture: string;
     pictureFiles: UploadThingPictureFile[];
     companyName: string;
     website: string;
@@ -26,5 +27,5 @@ export interface FundraisingCampaign {
     investors: string[];
     companyNumber: string;
     companyVision: string;
-    endInDate: string; 
+    endInDate: string;
 }

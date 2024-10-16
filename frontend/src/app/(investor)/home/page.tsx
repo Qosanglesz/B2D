@@ -4,7 +4,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 import Header from "@/components/homeComponents/Header";
 import { LoadingError } from '@/components/homeComponents/LoadingError'; // Import the LoadingError component
 import { CampaignGrid } from '@/components/homeComponents/CampaignGrid'; // Import the CampaignGrid component
@@ -22,7 +22,7 @@ const links = {
 
 export default function Home() {
     // State to hold the fetched campaigns
-    const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
+    const [campaigns, setCampaigns] = useState<Campaign[]>([]);
     
     // State to manage loading and error status
     const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ export default function Home() {
                 }
 
                 // Parse the response data as an array of FundraisingCampaign objects
-                const data: FundraisingCampaign[] = await response.json();
+                const data: Campaign[] = await response.json();
                 setCampaigns(data); // Update state with fetched campaigns
 
             } catch (err: unknown) {

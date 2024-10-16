@@ -1,13 +1,13 @@
 // components/campaignComponents/IntroCarousel.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 import { UploadThingPictureFile } from '@/types/UploadThingPictureFile';
 
 import Image from 'next/image';
 
 interface IntroCarouselProps {
-  campaign: FundraisingCampaign;
+  campaign: Campaign;
 }
 
 const IntroCarousel: React.FC<IntroCarouselProps> = ({ campaign }) => {

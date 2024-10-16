@@ -1,11 +1,11 @@
 import React from 'react';
-import {FundraisingCampaign } from '@/types/Campaign';
+import {Campaign } from '@/types/Campaign';
 import { UploadDropzone } from "@/components/uploadThing/uploadthing";
 import { UploadThingPictureFile } from "@/types/UploadThingPictureFile";
 
 
 interface AdditionalInformationProps {
-    formData: Partial<FundraisingCampaign>;
+    formData: Partial<Campaign>;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     handleInvestorsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleUploadFile: (response : UploadThingPictureFile[]) => void;

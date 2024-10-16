@@ -1,8 +1,8 @@
 import React from 'react';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 
 interface CampaignDetailsProps {
-  formData: Partial<FundraisingCampaign>;
+  formData: Partial<Campaign>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
 

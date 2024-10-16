@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { CampaignRepository } from '@/controller/campaignAPI/campaignRepository';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 
 export class CampaignController {
     private repository: CampaignRepository;
@@ -23,7 +23,7 @@ export class CampaignController {
         return NextResponse.json(campaign);
     }
 
-    async updateCampaign(id: number, updatedData: Partial<FundraisingCampaign>): Promise<NextResponse> {
+    async updateCampaign(id: number, updatedData: Partial<Campaign>): Promise<NextResponse> {
         try {
             // Remove _id and id from updatedData to prevent overwriting
             delete updatedData._id;
@@ -61,10 +61,10 @@ export class CampaignController {
         }
     }
 
-    async createCampaign(formData: Partial<FundraisingCampaign>): Promise<NextResponse> {
+    async createCampaign(formData: Partial<Campaign>): Promise<NextResponse> {
         try {
             // Validate required fields
-            const requiredFields: (keyof FundraisingCampaign)[] = [
+            const requiredFields: (keyof Campaign)[] = [
                 'companyName', 'website', 'founderName', 'email', 'linkedInProfile',
                 'companyStage', 'industry', 'sector', 'amountRaised', 'targetAmount',
                 'teamSize', 'headquartersLocation', 'productAvailable',
@@ -84,7 +84,7 @@ export class CampaignController {
             endDate.setFullYear(endDate.getFullYear() + 10);
 
             // Prepare campaign data
-            const campaignData: FundraisingCampaign = {
+            const campaignData: Campaign = {
                 id: newId,
                 name: formData.companyName || '',
                 status: 'Active',

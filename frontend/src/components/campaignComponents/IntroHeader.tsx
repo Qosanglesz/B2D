@@ -1,13 +1,13 @@
 // components/campaignComponents/IntroHeader.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/types/Campaign'; // Adjust the path as necessary
+import { Campaign } from '@/types/Campaign'; // Adjust the path as necessary
 import { UploadThingPictureFile } from '@/types/UploadThingPictureFile';
 
 import Image from 'next/image';
 
 interface IntroHeaderProps {
-  campaign: FundraisingCampaign;
+  campaign: Campaign;
 }
 
 const IntroHeader: React.FC<IntroHeaderProps> = ({ campaign }) => {

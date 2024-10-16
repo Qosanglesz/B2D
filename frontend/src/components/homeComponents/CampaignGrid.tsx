@@ -1,14 +1,14 @@
 // /src/components/homeComponents/CampaignGrid.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 import CampaignCard from '@/components/campaignComponents/CampaignCard';
 
 
 // Define the props expected by the CampaignGrid component
 interface CampaignGridProps {
     // campaigns: Array of campaigns to display
-    campaigns: FundraisingCampaign[];
+    campaigns: Campaign[];
 }
 
 

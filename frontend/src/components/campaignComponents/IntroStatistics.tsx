@@ -1,11 +1,11 @@
 // src/components/campaignComponents/IntroStatistics.tsx
 
 import React, {useState} from 'react';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 
 
 interface IntroStatisticsProps {
-  campaign: Pick<FundraisingCampaign, 'amountRaised' | 'targetAmount' | 'investors' | 'endInDate' | 'companyName'>;
+  campaign: Pick<Campaign, 'amountRaised' | 'targetAmount' | 'investors' | 'endInDate' | 'companyName'>;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     investmentAmountInput: number;
     handleInvestButton: () => void;

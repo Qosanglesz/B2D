@@ -4,11 +4,11 @@ import React, {useState, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 
-import {FundraisingCampaign} from '@/types/Campaign';
+import {Campaign} from '@/types/Campaign';
 import EditCampaignForm from '@/components/adminComponents/adminFundraising/EditCampaignForm';
 
 export default function EditCampaignPage({params}: { params: { id: string } }) {
-    const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null);
+    const [campaign, setCampaign] = useState<Campaign | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -18,7 +18,7 @@ export default function EditCampaignPage({params}: { params: { id: string } }) {
             try {
                 const response = await fetch(`/api/campaign/${params.id}`);
                 if (!response.ok) throw new Error('Failed to fetch campaign data');
-                const data: FundraisingCampaign = await response.json();
+                const data: Campaign = await response.json();
                 setCampaign(data);
             } catch (err) {
                 setError('Error fetching campaign data');

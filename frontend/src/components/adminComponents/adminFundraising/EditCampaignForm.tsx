@@ -1,14 +1,14 @@
 // components/EditCampaignForm.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 import BasicInfoSection from './EditSections/BasicInfoSection';
 import CompanyDetailsSection from './EditSections/CompanyDetailsSection';
 import FinancialInfoSection from './EditSections/FinancialInfoSection';
 import AdditionalInfoSection from './EditSections/AdditionalInfoSection';
 
 interface EditCampaignFormProps {
-  campaign: FundraisingCampaign;
+  campaign: Campaign;
   onSubmit: (e: React.FormEvent) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }

@@ -15,7 +15,7 @@ import CompanyInformation from '@/components/campaignComponents/CompanyInformati
 import IntroCarousel from '@/components/campaignComponents/IntroCarousel';
 import IntroStatistics from '@/components/campaignComponents/IntroStatistics';
 import { LoadingError } from '@/components/campaignComponents/LoadingError'; // New LoadingError component
-import { FundraisingCampaign } from '@/types/Campaign'; // FundraisingCampaign type
+import { Campaign } from '@/types/Campaign'; // FundraisingCampaign type
 import { Spinner } from "@nextui-org/react";
 
 
@@ -30,7 +30,7 @@ interface CampaignProps {
 export default function CampaignPage({ params }: CampaignProps) {
 
     // State variables to manage campaign data, loading state, and error message
-    const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null); // Campaign data
+    const [campaign, setCampaign] = useState<Campaign | null>(null); // Campaign data
     const [isLoading, setIsLoading] = useState<boolean>(true); // Loading state
     const [error, setError] = useState<string | null>(null); // Error message
 
@@ -92,7 +92,7 @@ export default function CampaignPage({ params }: CampaignProps) {
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaign data'); // Handle non-OK response
                 }
-                const data: FundraisingCampaign = await response.json(); // Parse JSON response
+                const data: Campaign = await response.json(); // Parse JSON response
                 setCampaign(data); // Update campaign state with fetched data
             } catch (err) {
                 setError('Error fetching campaign data'); // Handle errors
