@@ -9,5 +9,4 @@ export interface UploadThingPictureFile {
     "customId": null,
     "type": String;
     "fileHash": String;
-
 }

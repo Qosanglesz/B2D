@@ -1,5 +1,6 @@
 import {ObjectId} from "mongodb";
-import { User } from "./User";
+import {User} from "./User";
+
 
 export interface Statement {
     _id?: ObjectId;

@@ -1,5 +1,3 @@
-// app/types/User.ts
-
 export interface User {
     user_id: string;
     name: string;
@@ -14,23 +12,21 @@ export interface User {
     last_login: string;
     last_ip: string;
     logins_count: number;
-  }
-  
-  export interface UserAvatarProps {
+}
+
+export interface UserAvatarProps {
     name: string;
     picture: string;
-  }
-  
-  export interface UserInfoGridProps {
-    user: User;
-  }
-  
-  export interface BackButtonProps {
-    onClick: () => void;
-  }
-  
-  export interface ErrorMessageProps {
-    message: string;
-  }
+}
 
-  
+export interface UserInfoGridProps {
+    user: User;
+}
+
+export interface BackButtonProps {
+    onClick: () => void;
+}
+
+export interface ErrorMessageProps {
+    message: string;
+}
