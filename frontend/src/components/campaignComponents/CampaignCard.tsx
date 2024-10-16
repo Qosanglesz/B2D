@@ -38,8 +38,8 @@ const CampaignCard: React.FC<{ campaign: Campaign }> = ({campaign}) => {
                 <Image
                     src={campaign.pictureFiles[0].url as string}
                     alt={campaign.name}
-                    width={400}
-                    height={200}
+                    width={720}
+                    height={480}
                     className="w-full h-48 object-cover"
                 />
                 <div className="p-4">

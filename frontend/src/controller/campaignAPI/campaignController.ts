@@ -10,8 +10,8 @@ export class CampaignController {
         this.repository = new CampaignRepository();
     }
 
-    async getCampaign(id: number): Promise<NextResponse> {
-        if (isNaN(id)) {
+    async getCampaign(id: String): Promise<NextResponse> {
+        if (!id) {
             return NextResponse.json({error: 'Invalid ID'}, {status: 400});
         }
 
@@ -24,7 +24,7 @@ export class CampaignController {
         return NextResponse.json(campaign);
     }
 
-    async updateCampaign(id: number, updatedData: Partial<Campaign>): Promise<NextResponse> {
+    async updateCampaign(id: String, updatedData: Partial<Campaign>): Promise<NextResponse> {
         try {
             // Remove _id and id from updatedData to prevent overwriting
             delete updatedData._id;
@@ -43,9 +43,9 @@ export class CampaignController {
         }
     }
 
-    async deleteCampaign(id: number): Promise<NextResponse> {
+    async deleteCampaign(id: String): Promise<NextResponse> {
         try {
-            if (isNaN(id)) {
+            if (!id) {
                 return NextResponse.json({error: 'Invalid ID'}, {status: 400});
             }
 
@@ -78,15 +78,15 @@ export class CampaignController {
             }
 
             // Generate a new numeric id
-            const newId = await this.repository.getNextId();
+            // const newId = await this.repository.getNextId();
 
             // Calculate end date (10 years from now)
-            const endDate = new Date();
-            endDate.setFullYear(endDate.getFullYear() + 10);
+            // const endDate = new Date();
+            // endDate.setFullYear(endDate.getFullYear() + 10);
 
             // Prepare campaign data
-            const campaignData: Campaign = {
-                id: newId,
+            const campaignData: Campaign = <Campaign>{
+                id: formData.id,
                 name: formData.companyName || '',
                 status: 'Active',
                 description: formData.description || '',
@@ -109,7 +109,7 @@ export class CampaignController {
                 investors: formData.investors || [],
                 companyNumber: formData.companyNumber || '',
                 companyVision: formData.companyVision || '',
-                endInDate: endDate.toISOString(),
+                endInDate: formData.endInDate,
             };
 
             // Insert the new campaign
@@ -119,7 +119,7 @@ export class CampaignController {
                 return NextResponse.json({
                     message: 'Campaign created successfully',
                     campaignId: result.insertedId,
-                    id: newId
+                    id: formData.id
                 }, {status: 201});
             } else {
                 throw new Error('Failed to insert campaign');

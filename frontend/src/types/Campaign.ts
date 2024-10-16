@@ -4,7 +4,7 @@ import {UploadThingPictureFile} from "@/types/UploadThingPictureFile"
 
 export interface Campaign {
     _id?: ObjectId;
-    id: number;
+    id: String;
     name: string;
     status: string;
     description: string;

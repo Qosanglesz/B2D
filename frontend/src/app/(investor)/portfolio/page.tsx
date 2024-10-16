@@ -125,8 +125,8 @@ export default function Home() {
                             className="w-36 h-36 rounded-full object-cover mx-auto"
                             src={user?.picture || '/default-profile.png'}
                             alt="Profile Picture"
-                            height={96}
-                            width={96}
+                            height={300}
+                            width={300}
                         />
                     </div>
 

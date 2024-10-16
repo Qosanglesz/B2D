@@ -1,9 +1,10 @@
 import {NextResponse} from 'next/server';
 import {v4 as uuidv4} from "uuid";
 import {PaymentService} from './paymentService';
-import {StatementRepository, StatementData} from '@/controller/statementAPI/statementRepository';
+import {StatementRepository} from '@/controller/statementAPI/statementRepository';
 import {CampaignRepository} from '@/controller/campaignAPI/campaignRepository';
 import Stripe from 'stripe';
+import {Statement} from "@/types/Statement";
 
 
 export class PaymentController {
@@ -23,7 +24,7 @@ export class PaymentController {
 
             const session = await this.paymentService.createCheckoutSession(campaign.name, amount, statementId);
 
-            const statementData: StatementData = {
+            const statementData: Statement = {
                 statement_id: statementId,
                 user_id: user.sub,
                 campaign_id: campaign.id,
@@ -31,7 +32,7 @@ export class PaymentController {
                 amount: amount,
                 session_id: session.id,
                 date: new Date().toJSON(),
-                successAt: null,
+                successAt: "",
                 status: session.status || 'created',
             };
 

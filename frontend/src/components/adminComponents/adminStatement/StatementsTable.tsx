@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { StatementData } from '@/controller/statementAPI/statementRepository';
 import { Button } from "@nextui-org/react";
+import {Statement} from "@/types/Statement";
 
 interface UserData {
   email: string;
   name: string;
 }
 
-interface StatementWithUser extends StatementData {
+interface StatementWithUser extends Statement {
   user: UserData | null;
   
 }

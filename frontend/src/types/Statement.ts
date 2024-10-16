@@ -6,7 +6,7 @@ export interface Statement {
     _id?: ObjectId;
     statement_id: string;
     user_id: string;
-    campaign_id: number;
+    campaign_id: string;
     campaignName: string;
     amount: number;
     session_id: string;
