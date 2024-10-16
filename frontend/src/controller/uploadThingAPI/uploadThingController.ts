@@ -1,4 +1,4 @@
-import { createUploadthing, type FileRouter } from "uploadthing/next";
+import {createUploadthing, type FileRouter} from "uploadthing/next";
 
 
 const f = createUploadthing();
@@ -9,27 +9,25 @@ class UploadController {
 
     constructor() {
         this.fileRouter = {
-            imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 5 } })
+            imageUploader: f({image: {maxFileSize: "4MB", maxFileCount: 5}})
                 .middleware(this.middleware)
                 .onUploadComplete(this.onUploadComplete)
         } satisfies FileRouter;
     }
 
     // Middleware logic
-    async middleware({ req }: { req: Request }) {
-        // This middleware now skips auth and allows uploads without validation
-        // You can add custom logic here, like rate-limiting, auth checks, etc.
-        return {}; // No metadata needed if no auth is used
+    async middleware({req}: { req: Request }) {
+        return {};
     }
 
     // Handle file upload completion
-    async onUploadComplete({ metadata, file }: { metadata: any; file: any }) {
+    async onUploadComplete({metadata, file}: { metadata: any; file: any }) {
         // This code runs on the server after the upload completes
         console.log("Upload complete!");
-        console.log("File URL:", file.url);
 
+        // console.log("File URL:", file.url);
         // Optionally return some data to the client
-        // return { uploadedFile: file.url };
+
     }
 }
 
