@@ -3,8 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import StatementsTable from '@/components/adminComponents/adminStatement/StatementsTable';
-import { User } from "@/components/types/User";
-import { Statement, StatementWithUser } from "@/components/types/Statement";
+import { User } from "@/types/User";
+import { Statement, StatementWithUser } from "@/types/Statement";
 
 export default function StatementsPage() {
     const [statementsWithUser, setStatementsWithUser] = useState<StatementWithUser[]>([]);

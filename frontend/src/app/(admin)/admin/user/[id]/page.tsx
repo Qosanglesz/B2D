@@ -8,7 +8,7 @@ import UserInfoGrid from '@/components/adminComponents/adminUserManagement/UserI
 import BackButton from '@/components/adminComponents/adminUserManagement/BackButton';
 import LoadingSpinner from '@/components/adminComponents/adminUserManagement/LoadingSpinner';
 import ErrorMessage from '@/components/adminComponents/adminUserManagement/ErrorMessage';
-import {User} from '@/components/types/User';
+import {User} from '@/types/User';
 
 const UserDetail: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);

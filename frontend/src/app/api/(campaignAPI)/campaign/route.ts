@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CampaignController } from '@/apiController/campaignAPI/campaignController';
+import { CampaignController } from '@/controller/campaignAPI/campaignController';
 
 const campaignController = new CampaignController();
 

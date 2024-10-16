@@ -4,10 +4,10 @@ import React, {useState, useEffect} from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {useRouter} from 'next/navigation';
-import {FundraisingCampaign} from '@/components/types/Campaign';
+import {Campaign} from '@/types/Campaign';
 
 export default function CampaignDetails({params}: { params: { id: string } }) {
-    const [campaign, setCampaign] = useState<FundraisingCampaign | null>(null);
+    const [campaign, setCampaign] = useState<Campaign | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();

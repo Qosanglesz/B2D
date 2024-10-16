@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { UserController } from '@/apiController/userAPI/userController';
+import { UserController } from '@/controller/userAPI/userController';
 
 const userController = new UserController();
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { DashboardCampaignSumController } from '@/apiController/summarizeAPI/campaign/dashboardCampaignSumController';
+import { DashboardCampaignSumController } from '@/controller/summarizeAPI/campaign/dashboardCampaignSumController';
 
 const dashboardController = new DashboardCampaignSumController();
 

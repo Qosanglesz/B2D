@@ -1,10 +1,10 @@
 // components/EditSections/AdditionalInfoSection.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/components/types/Campaign';
+import { Campaign } from '@/types/Campaign';
 
 interface SectionProps {
-  campaign: FundraisingCampaign;
+  campaign: Campaign;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 

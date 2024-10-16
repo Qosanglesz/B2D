@@ -1,6 +1,6 @@
 // app/admin/user/[id]/components/UserAvatar.tsx
 import Image from 'next/image';
-import { UserAvatarProps } from '@/components/types/User';
+import { UserAvatarProps } from '@/types/User';
 
 const UserAvatar: React.FC<UserAvatarProps> = ({ name, picture }) => (
   <div className="flex items-center mb-4">

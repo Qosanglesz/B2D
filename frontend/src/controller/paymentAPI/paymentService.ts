@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 
+
 export class PaymentService {
     private stripe: Stripe;
     private endpointSecret: string;

@@ -1,14 +1,14 @@
 import React from 'react';
-import {FundraisingCampaign } from '@/components/types/Campaign';
-import { UploadDropzone } from "@/utils/uploadthing";
-import { UploadThingPictureFile } from "@/components/types/UploadThingPictureFile";
+import {Campaign} from '@/types/Campaign';
+import {UploadDropzone} from "@/components/uploadThing/uploadthing";
+import {UploadThingPictureFile} from "@/types/UploadThingPictureFile";
 
 
 interface AdditionalInformationProps {
-    formData: Partial<FundraisingCampaign>;
+    formData: Partial<Campaign>;
     handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     handleInvestorsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleUploadFile: (response : UploadThingPictureFile[]) => void;
+    handleUploadFile: (response: UploadThingPictureFile[]) => void;
 }
 
 const AdditionalInformation: React.FC<AdditionalInformationProps> = ({
@@ -36,16 +36,6 @@ const AdditionalInformation: React.FC<AdditionalInformationProps> = ({
                                 // Do something with the error.
                                 alert(`ERROR! ${error.message}`);
                             }}/>
-            {/* <div>
-                <h4 className="font-medium mb-2">Investors</h4>
-                <input
-                    name="investors"
-                    value={formData.investors?.join(', ') || ''}
-                    onChange={handleInvestorsChange}
-                    placeholder="Investors (comma-separated)"
-                    className="p-2 border rounded w-full"
-                />
-            </div> */}
         </section>
     );
 };

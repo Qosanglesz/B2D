@@ -5,14 +5,14 @@
 import React, { useEffect, useState } from "react";
 import { CampaignGrid } from '@/components/campaignComponents/CampaignCardGrid'; // Import the CampaignGrid component
 import { LoadingError }  from '@/components/campaignComponents/LoadingError'; // Import the LoadingError component
-import { FundraisingCampaign } from '@/components/types/Campaign'; // Import the FundraisingCampaign type
+import { Campaign } from '@/types/Campaign'; // Import the FundraisingCampaign type
 
 
 // CampaignPage component handles fetching campaign data and rendering it
 export default function CampaignPage() {
 
     // Local state to store the campaigns fetched from the API
-    const [campaigns, setCampaigns] = useState<FundraisingCampaign[]>([]);
+    const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 
     // Loading state to indicate if data is being fetched
     const [loading, setLoading] = useState(true);
@@ -34,7 +34,7 @@ export default function CampaignPage() {
                 }
 
                 // Parse the response JSON and update the campaigns state
-                const data: FundraisingCampaign[] = await response.json();
+                const data: Campaign[] = await response.json();
                 setCampaigns(data);
             } catch (err) {
                 // Handle any errors encountered during fetching

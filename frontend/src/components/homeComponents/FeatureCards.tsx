@@ -1,5 +1,3 @@
-// src/components/homeComponents/FeatureCards.tsx
-
 import React from 'react';
 
 interface Feature {
@@ -8,10 +6,10 @@ interface Feature {
 }
 
 const features: Feature[] = [
-    { value: '500+', label: 'Startups Registered' },
-    { value: '\$50M+', label: 'Invested Money' },
-    { value: '100K+', label: 'Investors Profile' },
-    { value: '10K+', label: 'Successful Campaigns' },
+    {value: '500+', label: 'Startups Registered'},
+    {value: '\$50M+', label: 'Invested Money'},
+    {value: '100K+', label: 'Investors Profile'},
+    {value: '10K+', label: 'Successful Campaigns'},
 ];
 
 const FeatureCards: React.FC = () => {

@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { CampaignSumRepository } from '@/apiController/summarizeAPI/campaign/campaignSumRepository';
-import { Campaign } from '../../../components/campaignComponents/TempCampaignData';
+import {NextResponse} from 'next/server';
+import {CampaignSumRepository} from '@/controller/summarizeAPI/campaign/campaignSumRepository';
+
 
 export class DashboardCampaignSumController {
     private repository: CampaignSumRepository;
@@ -23,7 +23,7 @@ export class DashboardCampaignSumController {
             return NextResponse.json(dashboardData);
         } catch (error) {
             console.error("Error fetching dashboard data:", error);
-            return NextResponse.json({ message: 'Error fetching dashboard data', error }, { status: 500 });
+            return NextResponse.json({message: 'Error fetching dashboard data', error}, {status: 500});
         }
     }
 }

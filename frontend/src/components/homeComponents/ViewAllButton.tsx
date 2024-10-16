@@ -1,17 +1,14 @@
-// /src/components/homeComponents/ViewAllButton.tsx
-
 import React from 'react';
 
 
 // Define the props expected by the ViewAllButton component
 interface ViewAllButtonProps {
-    // viewAllLink: Link for the "View All" button
     viewAllLink: string;
 }
 
 
 // ViewAllButton component that renders a button linking to the "View All" page
-export const ViewAllButton: React.FC<ViewAllButtonProps> = ({ viewAllLink }) => {
+export const ViewAllButton: React.FC<ViewAllButtonProps> = ({viewAllLink}) => {
 
     return (
         <div className="text-center py-10">
@@ -24,5 +21,5 @@ export const ViewAllButton: React.FC<ViewAllButtonProps> = ({ viewAllLink }) => 
             </a>
         </div>
     );
-    
+
 };

@@ -1,8 +1,9 @@
 import React from 'react';
-import { FundraisingCampaign } from '@/components/types/Campaign';
+import { Campaign } from '@/types/Campaign';
+
 
 interface CampaignDetailProps {
-  campaign: FundraisingCampaign;
+  campaign: Campaign;
 }
 
 const CompanyInformation: React.FC<CampaignDetailProps> = ({ campaign }) => {

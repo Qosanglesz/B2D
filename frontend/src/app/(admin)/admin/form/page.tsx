@@ -3,18 +3,18 @@
 import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
 
-import {FundraisingCampaign} from '@/components/types/Campaign';
+import {Campaign} from '@/types/Campaign';
 import BasicInformation from '@/components/formComponents/BasicInformation';
 import CompanyDetails from '@/components/formComponents/CompanyDetails';
 import CampaignDetails from '@/components/formComponents/CampaignDetails';
 import AdditionalInformation from '@/components/formComponents/AdditionalInformation';
-import {UploadThingPictureFile} from '@/components/types/UploadThingPictureFile';
+import {UploadThingPictureFile} from '@/types/UploadThingPictureFile';
 import {NextResponse} from "next/server";
 import {ClientUploadedFileData, inferEndpointOutput} from "uploadthing/types";
-import {OurFileRouter} from "@/app/api/uploadthing/core";
+import {OurFileRouter} from "@/controller/uploadThingAPI/uploadThingController";
 
 const FundraisingCampaignForm: React.FC = () => {
-    const [formData, setFormData] = useState<Partial<FundraisingCampaign>>({});
+    const [formData, setFormData] = useState<Partial<Campaign>>({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();

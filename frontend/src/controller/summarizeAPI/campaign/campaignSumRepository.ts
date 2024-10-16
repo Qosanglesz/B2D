@@ -1,5 +1,6 @@
 import clientPromise from '@/lib/mongodb';
-import { FundraisingCampaign } from '@/components/types/Campaign';
+import {Campaign} from '@/types/Campaign';
+
 
 const DATABASE_NAME = "B2DVentureProject";
 const COLLECTION_NAME = "Campaigns";
@@ -8,7 +9,7 @@ export class CampaignSumRepository {
     private async getCollection() {
         const client = await clientPromise;
         const database = client.db(DATABASE_NAME);
-        return database.collection<FundraisingCampaign>(COLLECTION_NAME);
+        return database.collection<Campaign>(COLLECTION_NAME);
     }
 
     async getTotalCompanies(): Promise<number> {
@@ -22,7 +23,7 @@ export class CampaignSumRepository {
             {
                 $group: {
                     _id: null,
-                    totalFundsRaised: { $sum: "$amountRaised" }
+                    totalFundsRaised: {$sum: "$amountRaised"}
                 }
             }
         ]).toArray();
