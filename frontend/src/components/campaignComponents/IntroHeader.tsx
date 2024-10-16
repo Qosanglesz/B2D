@@ -13,8 +13,8 @@ const IntroHeader: React.FC<IntroHeaderProps> = ({campaign}) => {
         <div className="p-6 mb-5 mt-8">
             <div className="flex items-center space-x-4">
                 <Image
-                    width={80}
-                    height={80}
+                    width={300}
+                    height={300}
                     src={campaign.pictureFiles[0].url as string} // Adjust the path as necessary
                     alt={`${campaign.companyName} logo`}
                     className="w-20 h-20 object-cover rounded-full border border-gray-300" // Increased size
