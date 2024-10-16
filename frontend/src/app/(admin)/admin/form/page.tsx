@@ -9,12 +9,10 @@ import CompanyDetails from '@/components/formComponents/CompanyDetails';
 import CampaignDetails from '@/components/formComponents/CampaignDetails';
 import AdditionalInformation from '@/components/formComponents/AdditionalInformation';
 import {UploadThingPictureFile} from '@/types/UploadThingPictureFile';
-import {NextResponse} from "next/server";
-import {ClientUploadedFileData, inferEndpointOutput} from "uploadthing/types";
-import {OurFileRouter} from "@/controller/uploadThingAPI/uploadThingController";
+import { v4 as uuidv4 } from 'uuid';
 
 const FundraisingCampaignForm: React.FC = () => {
-    const [formData, setFormData] = useState<Partial<Campaign>>({});
+    const [formData, setFormData] = useState<Partial<Campaign>>({id: uuidv4()});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -48,6 +46,7 @@ const FundraisingCampaignForm: React.FC = () => {
         setError(null);
 
         try {
+            console.log(formData)
             const response = await fetch('/api/campaign', {
                 method: 'POST',
                 headers: {

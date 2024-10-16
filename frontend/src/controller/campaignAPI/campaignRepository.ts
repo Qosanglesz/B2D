@@ -12,12 +12,12 @@ export class CampaignRepository {
         return database.collection<Campaign>(COLLECTION_NAME);
     }
 
-    async findById(id: number): Promise<Campaign | null> {
+    async findById(id: String): Promise<Campaign | null> {
         const collection = await this.getCollection();
         return collection.findOne({id: id});
     }
 
-    async update(id: number, updatedData: Partial<Campaign>): Promise<boolean> {
+    async update(id: String, updatedData: Partial<Campaign>): Promise<boolean> {
         const collection = await this.getCollection();
         const result = await collection.updateOne(
             {id: id},
@@ -26,7 +26,7 @@ export class CampaignRepository {
         return result.matchedCount > 0;
     }
 
-    async delete(id: number): Promise<boolean> {
+    async delete(id: String): Promise<boolean> {
         const collection = await this.getCollection();
         const result = await collection.deleteOne({id: id});
         return result.deletedCount > 0;
@@ -48,7 +48,7 @@ export class CampaignRepository {
         return collection.find({}).toArray();
     }
 
-    async updateCampaignFunding(campaignId: number, amount: number, userId: string): Promise<void> {
+    async updateCampaignFunding(campaignId: String, amount: number, userId: string): Promise<void> {
         const collection = await this.getCollection();
         await collection.updateOne(
             {id: campaignId},
