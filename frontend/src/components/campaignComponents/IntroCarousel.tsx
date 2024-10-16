@@ -1,8 +1,6 @@
-// components/campaignComponents/IntroCarousel.tsx
-
 import React from 'react';
 import { Campaign } from '@/types/Campaign';
-import { UploadThingPictureFile } from '@/types/UploadThingPictureFile';
+
 
 import Image from 'next/image';
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Campaign } from '@/types/Campaign';
 
+
 interface CampaignDetailProps {
   campaign: Campaign;
 }
