@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import DashboardData from '../../types/DashboardData';
+import DashboardData from '@/types/DashboardData';
 import InvestmentGraph from './InvestmentGraph';
 import StatementCountGraph from './StatementCountGraph';
 

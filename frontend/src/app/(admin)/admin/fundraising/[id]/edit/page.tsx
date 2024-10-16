@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 
-import {FundraisingCampaign} from '@/components/types/Campaign';
+import {FundraisingCampaign} from '@/types/Campaign';
 import EditCampaignForm from '@/components/adminComponents/adminFundraising/EditCampaignForm';
 
 export default function EditCampaignPage({params}: { params: { id: string } }) {

@@ -1,5 +1,5 @@
 // app/admin/user/[id]/components/UserInfoGrid.tsx
-import { UserInfoGridProps } from '@/components/types/User';
+import { UserInfoGridProps } from '@/types/User';
 
 const UserInfoGrid: React.FC<UserInfoGridProps> = ({ user }) => (
   <div className="grid grid-cols-2 gap-4">

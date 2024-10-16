@@ -3,12 +3,12 @@
 import React, {useState} from 'react';
 import {useRouter} from 'next/navigation';
 
-import {FundraisingCampaign} from '@/components/types/Campaign';
+import {FundraisingCampaign} from '@/types/Campaign';
 import BasicInformation from '@/components/formComponents/BasicInformation';
 import CompanyDetails from '@/components/formComponents/CompanyDetails';
 import CampaignDetails from '@/components/formComponents/CampaignDetails';
 import AdditionalInformation from '@/components/formComponents/AdditionalInformation';
-import {UploadThingPictureFile} from '@/components/types/UploadThingPictureFile';
+import {UploadThingPictureFile} from '@/types/UploadThingPictureFile';
 import {NextResponse} from "next/server";
 import {ClientUploadedFileData, inferEndpointOutput} from "uploadthing/types";
 import {OurFileRouter} from "@/app/api/uploadthing/core";

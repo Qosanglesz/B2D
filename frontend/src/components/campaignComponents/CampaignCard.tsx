@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState } from 'react';
-import { FundraisingCampaign } from '@/components/types/Campaign';
-import { UploadThingPictureFile } from '@/components/types/UploadThingPictureFile';
+import { FundraisingCampaign } from '@/types/Campaign';
+import { UploadThingPictureFile } from '@/types/UploadThingPictureFile';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
