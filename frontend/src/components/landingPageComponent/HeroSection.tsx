@@ -1,18 +1,12 @@
-// src/components/landingPageComponent/HeroSection.tsx
-
 import React from 'react';
-import Link from 'next/link';
+
 
 const HeroSection = () => {
   return (
     <div className="relative h-screen bg-gradient-to-r from-blue-300 to-indigo-800 overflow-hidden">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-20 bg-[url('../../public/images/landing.jpeg')]"
-        // style={{
-        //   backgroundImage: "url('../../public/images/hero.jpeg')"
-        // }}
-      >
+        className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-20 bg-[url('../../public/images/landing.jpeg')]">
       </div>
       
       {/* Content Container */}
