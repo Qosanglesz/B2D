@@ -11,7 +11,7 @@ import AdditionalInformation from '@/components/formComponents/AdditionalInforma
 import {UploadThingPictureFile} from '@/types/UploadThingPictureFile';
 import {NextResponse} from "next/server";
 import {ClientUploadedFileData, inferEndpointOutput} from "uploadthing/types";
-import {OurFileRouter} from "@/app/api/uploadthing/core";
+import {OurFileRouter} from "@/app/api/uploadthing/uploadThingController";
 
 const FundraisingCampaignForm: React.FC = () => {
     const [formData, setFormData] = useState<Partial<Campaign>>({});
