@@ -1,6 +1,6 @@
 import React from 'react';
 import {FundraisingCampaign } from '@/components/types/Campaign';
-import { UploadDropzone } from "@/utils/uploadthing";
+import { UploadDropzone } from "@/components/utils/uploadthing";
 import { UploadThingPictureFile } from "@/components/types/UploadThingPictureFile";
 
 
