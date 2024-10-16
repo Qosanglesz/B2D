@@ -46,7 +46,6 @@ const FundraisingCampaignForm: React.FC = () => {
         setError(null);
 
         try {
-            console.log(formData)
             const response = await fetch('/api/campaign', {
                 method: 'POST',
                 headers: {
