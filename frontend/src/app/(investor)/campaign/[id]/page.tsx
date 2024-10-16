@@ -30,7 +30,7 @@ interface CampaignProps {
 export default function CampaignPage({ params }: CampaignProps) {
 
     // State variables to manage campaign data, loading state, and error message
-    const [campaign, setCampaign] = useState<Campaign | null>(null); // Campaign data
+    const [campaign, setCampaign] = useState<Campaign>(); // Campaign data
     const [isLoading, setIsLoading] = useState<boolean>(true); // Loading state
     const [error, setError] = useState<string | null>(null); // Error message
 
@@ -121,18 +121,18 @@ export default function CampaignPage({ params }: CampaignProps) {
 
                         {/* Header for the campaign */}
                         <div className="col-span-6 p-2">
-                            <IntroHeader campaign={campaign} />
+                            <IntroHeader campaign={campaign as Campaign} />
                         </div>
 
                         {/* Carousel for campaign images */}
                         <div className="col-span-4 row-span-3 p-3">
-                            <IntroCarousel campaign={campaign} />
+                            <IntroCarousel campaign={campaign as Campaign} />
                         </div>
 
                         {/* Statistics of the campaign */}
                         <div className="col-span-2 row-span-3 p-10">
                             <IntroStatistics
-                                campaign={campaign}
+                                campaign={campaign as Campaign}
                                 handleInputChange={handleInputChange}
                                 investmentAmountInput={investAmountInput}
                                 handleInvestButton={handleInvestButton}
@@ -141,7 +141,7 @@ export default function CampaignPage({ params }: CampaignProps) {
 
                         {/* Company info for the campaign */}
                         <div className="col-span-6 p-3 mt-6 mb-10 rounded-lg">
-                            <CompanyInformation campaign={campaign} />
+                            <CompanyInformation campaign={campaign as Campaign} />
                         </div>
                     </div>
                 </div>
