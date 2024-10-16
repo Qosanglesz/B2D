@@ -1,5 +1,6 @@
 import clientPromise from '@/lib/mongodb';
-import { Campaign } from '@/types/Campaign';
+import {Campaign} from '@/types/Campaign';
+
 
 const DATABASE_NAME = "B2DVentureProject";
 const COLLECTION_NAME = "Campaigns";
@@ -13,21 +14,21 @@ export class CampaignRepository {
 
     async findById(id: number): Promise<Campaign | null> {
         const collection = await this.getCollection();
-        return collection.findOne({ id: id });
+        return collection.findOne({id: id});
     }
 
     async update(id: number, updatedData: Partial<Campaign>): Promise<boolean> {
         const collection = await this.getCollection();
         const result = await collection.updateOne(
-            { id: id },
-            { $set: updatedData }
+            {id: id},
+            {$set: updatedData}
         );
         return result.matchedCount > 0;
     }
 
     async delete(id: number): Promise<boolean> {
         const collection = await this.getCollection();
-        const result = await collection.deleteOne({ id: id });
+        const result = await collection.deleteOne({id: id});
         return result.deletedCount > 0;
     }
 
@@ -50,10 +51,10 @@ export class CampaignRepository {
     async updateCampaignFunding(campaignId: number, amount: number, userId: string): Promise<void> {
         const collection = await this.getCollection();
         await collection.updateOne(
-            { id: campaignId },
+            {id: campaignId},
             {
-                $inc: { amountRaised: amount },
-                $addToSet: { investors: userId }
+                $inc: {amountRaised: amount},
+                $addToSet: {investors: userId}
             }
         );
     }

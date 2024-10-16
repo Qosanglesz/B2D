@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
-import { CampaignRepository } from '@/controller/campaignAPI/campaignRepository';
-import { Campaign } from '@/types/Campaign';
+import {NextResponse} from 'next/server';
+import {CampaignRepository} from '@/controller/campaignAPI/campaignRepository';
+import {Campaign} from '@/types/Campaign';
+
 
 export class CampaignController {
     private repository: CampaignRepository;
@@ -11,13 +12,13 @@ export class CampaignController {
 
     async getCampaign(id: number): Promise<NextResponse> {
         if (isNaN(id)) {
-            return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+            return NextResponse.json({error: 'Invalid ID'}, {status: 400});
         }
 
         const campaign = await this.repository.findById(id);
 
         if (!campaign) {
-            return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+            return NextResponse.json({error: 'Campaign not found'}, {status: 404});
         }
 
         return NextResponse.json(campaign);
@@ -32,32 +33,32 @@ export class CampaignController {
             const result = await this.repository.update(id, updatedData);
 
             if (!result) {
-                return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+                return NextResponse.json({error: 'Campaign not found'}, {status: 404});
             }
 
-            return NextResponse.json({ message: 'Campaign updated successfully' }, { status: 200 });
+            return NextResponse.json({message: 'Campaign updated successfully'}, {status: 200});
         } catch (error) {
             console.error("Error updating campaign:", error);
-            return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+            return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
         }
     }
 
     async deleteCampaign(id: number): Promise<NextResponse> {
         try {
             if (isNaN(id)) {
-                return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+                return NextResponse.json({error: 'Invalid ID'}, {status: 400});
             }
 
             const result = await this.repository.delete(id);
 
             if (!result) {
-                return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+                return NextResponse.json({error: 'Campaign not found'}, {status: 404});
             }
 
-            return NextResponse.json({ message: 'Campaign deleted successfully' }, { status: 200 });
+            return NextResponse.json({message: 'Campaign deleted successfully'}, {status: 200});
         } catch (error) {
             console.error("Error deleting campaign:", error);
-            return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+            return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
         }
     }
 
@@ -136,7 +137,7 @@ export class CampaignController {
             return NextResponse.json(campaigns);
         } catch (error) {
             console.error("Error fetching campaigns:", error);
-            return NextResponse.json({ message: 'Error fetching campaigns', error }, { status: 500 });
+            return NextResponse.json({message: 'Error fetching campaigns', error}, {status: 500});
         }
     }
 }

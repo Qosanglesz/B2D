@@ -1,5 +1,6 @@
 import clientPromise from '@/lib/mongodb';
-import { Campaign } from '@/types/Campaign';
+import {Campaign} from '@/types/Campaign';
+
 
 const DATABASE_NAME = "B2DVentureProject";
 const COLLECTION_NAME = "Campaigns";
@@ -22,7 +23,7 @@ export class CampaignSumRepository {
             {
                 $group: {
                     _id: null,
-                    totalFundsRaised: { $sum: "$amountRaised" }
+                    totalFundsRaised: {$sum: "$amountRaised"}
                 }
             }
         ]).toArray();

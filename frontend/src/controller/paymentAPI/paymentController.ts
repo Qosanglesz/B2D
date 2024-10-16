@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server';
-import { v4 as uuidv4 } from "uuid";
-import { PaymentService } from './paymentService';
-import { StatementRepository, StatementData } from '@/controller/statementAPI/statementRepository';
-import { CampaignRepository } from '@/controller/campaignAPI/campaignRepository';
+import {NextResponse} from 'next/server';
+import {v4 as uuidv4} from "uuid";
+import {PaymentService} from './paymentService';
+import {StatementRepository, StatementData} from '@/controller/statementAPI/statementRepository';
+import {CampaignRepository} from '@/controller/campaignAPI/campaignRepository';
 import Stripe from 'stripe';
+
 
 export class PaymentController {
     private paymentService: PaymentService;
@@ -44,7 +45,7 @@ export class PaymentController {
             });
         } catch (error: any) {
             console.error('Error creating payment intent:', error);
-            return NextResponse.json({ message: error.message }, { status: 500 });
+            return NextResponse.json({message: error.message}, {status: 500});
         }
     }
 
@@ -53,13 +54,13 @@ export class PaymentController {
             const statement = await this.statementRepository.findStatementById(statementId);
 
             if (!statement) {
-                return NextResponse.json({ message: `Statement with id ${statementId} not found.` }, { status: 404 });
+                return NextResponse.json({message: `Statement with id ${statementId} not found.`}, {status: 404});
             }
 
             return NextResponse.json(statement);
         } catch (error: any) {
             console.error('Error fetching statement:', error);
-            return NextResponse.json({ message: error.message }, { status: 500 });
+            return NextResponse.json({message: error.message}, {status: 500});
         }
     }
 
@@ -87,10 +88,10 @@ export class PaymentController {
                 console.log(`Unhandled event type: ${event.type}`);
             }
 
-            return NextResponse.json({ received: true }, { status: 200 });
+            return NextResponse.json({received: true}, {status: 200});
         } catch (error: any) {
             console.error('Error processing webhook:', error);
-            return NextResponse.json({ error: error.message }, { status: 400 });
+            return NextResponse.json({error: error.message}, {status: 400});
         }
     }
 }
