@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { StatementController } from '@/apiController/statementAPI/statementController';
+import { StatementController } from '@/controller/statementAPI/statementController';
 
 const statementController = new StatementController();
 

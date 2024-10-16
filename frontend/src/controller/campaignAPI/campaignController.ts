@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { CampaignRepository } from '@/apiController/campaignAPI/campaignRepository';
+import { CampaignRepository } from '@/controller/campaignAPI/campaignRepository';
 import { FundraisingCampaign } from '@/components/types/Campaign';
 
 export class CampaignController {
