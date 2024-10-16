@@ -126,7 +126,7 @@ const FundraisingCampaigns: React.FC = () => {
                             </thead>
                             <tbody>
                             {paginatedCampaigns.map((campaign) => (
-                                <tr key={campaign.id}>
+                                <tr key={String(campaign.id)}>
                                     <td className="py-2 px-4 border-b text-center">{campaign.id}</td>
                                     <td className="py-2 px-4 border-b text-center">{campaign.companyName}</td>
                                     <td className="py-2 px-4 border-b text-center">${campaign.targetAmount.toLocaleString()}</td>

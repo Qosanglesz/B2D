@@ -32,11 +32,11 @@ export class CampaignRepository {
         return result.deletedCount > 0;
     }
 
-    async getNextId(): Promise<number> {
-        const collection = await this.getCollection();
-        const lastCampaign = await collection.findOne({}, {sort: {id: -1}});
-        return (lastCampaign?.id || 0) + 1;
-    }
+    // async getNextId(): Promise<number> {
+    //     const collection = await this.getCollection();
+    //     const lastCampaign = await collection.findOne({}, {sort: {id: -1}});
+    //     return (lastCampaign?.id || 0) + 1;
+    // }
 
     async create(campaignData: Campaign) {
         const collection = await this.getCollection();

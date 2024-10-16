@@ -15,7 +15,7 @@ export const CampaignGrid: React.FC<CampaignGridProps> = ({campaigns}) => {
             {/* Iterate over the campaigns array and render a CampaignCard for each campaign */}
             {campaigns.map(campaign => (
                 // Key uses `_id` if available, or falls back to `id` to ensure a unique key is provided.
-                <CampaignCard key={campaign._id?.toString() || campaign.id} campaign={campaign}/>
+                <CampaignCard key={campaign._id?.toString()} campaign={campaign}/>
             ))}
         </div>
     );
