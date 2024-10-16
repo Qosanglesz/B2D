@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import {UploadThingPictureFile} from "@/components/types/UploadThingPictureFile"
 export interface FundraisingCampaign {
     _id?: ObjectId;
-    id : number;
+    id : string;
     name: string;
     status: string;
     description: string;

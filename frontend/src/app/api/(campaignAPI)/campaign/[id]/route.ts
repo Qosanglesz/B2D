@@ -7,7 +7,7 @@ export async function GET(
     request: NextRequest,
     { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-    const id = parseInt(params.id, 10);
+    const id = params.id;
     return campaignController.getCampaign(id);
 }
 
@@ -15,7 +15,7 @@ export async function PUT(
     request: NextRequest,
     { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-    const id = parseInt(params.id, 10);
+    const id = params.id;
     const updatedData = await request.json();
     return campaignController.updateCampaign(id, updatedData);
 }
@@ -24,6 +24,6 @@ export async function DELETE(
     request: NextRequest,
     { params }: { params: { id: string } }
 ): Promise<NextResponse> {
-    const id = parseInt(params.id, 10);
+    const id = params.id;
     return campaignController.deleteCampaign(id);
 }

@@ -25,7 +25,7 @@ export class PaymentController {
             const statementData: StatementData = {
                 statement_id: statementId,
                 user_id: user.sub,
-                campaign_id: campaign.id,
+                campaign_id: campaign.id, // Assuming campaign.id is now a string
                 campaignName: campaign.name,
                 amount: amount,
                 session_id: session.id,
@@ -76,7 +76,7 @@ export class PaymentController {
                 const statement = await this.statementRepository.findStatementBySessionId(paymentData.id);
                 if (statement) {
                     await this.campaignRepository.updateCampaignFunding(
-                        statement.campaign_id,
+                        statement.campaign_id.toString(), // Now this is a string may be usable
                         paymentData.amount_total ? paymentData.amount_total / 100 : 0,
                         statement.user_id
                     );

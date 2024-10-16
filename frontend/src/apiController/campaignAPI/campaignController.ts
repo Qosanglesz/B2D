@@ -9,8 +9,8 @@ export class CampaignController {
         this.repository = new CampaignRepository();
     }
 
-    async getCampaign(id: number): Promise<NextResponse> {
-        if (isNaN(id)) {
+    async getCampaign(id: string): Promise<NextResponse> {
+        if (!id || typeof id !== 'string') {
             return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
         }
 
@@ -23,13 +23,16 @@ export class CampaignController {
         return NextResponse.json(campaign);
     }
 
-    async updateCampaign(id: number, updatedData: Partial<FundraisingCampaign>): Promise<NextResponse> {
+    async updateCampaign(id: string, updatedData: Partial<FundraisingCampaign>): Promise<NextResponse> {
         try {
-            // Remove _id and id from updatedData to prevent overwriting
-            delete updatedData._id;
-            delete updatedData.id;
+            if (!id || typeof id !== 'string') {
+                return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+            }
 
-            const result = await this.repository.update(id, updatedData);
+            // Remove _id and id from updatedData to prevent overwriting
+            const { _id, id: _, ...safeUpdatedData } = updatedData;
+
+            const result = await this.repository.update(id, safeUpdatedData);
 
             if (!result) {
                 return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
@@ -42,9 +45,9 @@ export class CampaignController {
         }
     }
 
-    async deleteCampaign(id: number): Promise<NextResponse> {
+    async deleteCampaign(id: string): Promise<NextResponse> {
         try {
-            if (isNaN(id)) {
+            if (!id || typeof id !== 'string') {
                 return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
             }
 
@@ -63,47 +66,41 @@ export class CampaignController {
 
     async createCampaign(formData: Partial<FundraisingCampaign>): Promise<NextResponse> {
         try {
-            // Validate required fields
             const requiredFields: (keyof FundraisingCampaign)[] = [
                 'companyName', 'website', 'founderName', 'email', 'linkedInProfile',
                 'companyStage', 'industry', 'sector', 'amountRaised', 'targetAmount',
                 'teamSize', 'headquartersLocation', 'productAvailable',
             ];
 
-            for (const field of requiredFields) {
-                if (!formData[field]) {
-                    return NextResponse.json({error: `Missing required field: ${field}`}, {status: 400});
-                }
+            const missingFields = requiredFields.filter(field => !formData[field]);
+            if (missingFields.length > 0) {
+                return NextResponse.json({ error: `Missing required fields: ${missingFields.join(', ')}` }, { status: 400 });
             }
 
-            // Generate a new numeric id
             const newId = await this.repository.getNextId();
-
-            // Calculate end date (10 years from now)
             const endDate = new Date();
             endDate.setFullYear(endDate.getFullYear() + 10);
 
-            // Prepare campaign data
             const campaignData: FundraisingCampaign = {
                 id: newId,
                 name: formData.companyName || '',
                 status: 'Active',
                 description: formData.description || '',
                 pictureFiles: formData.pictureFiles || [],
-                companyName: formData.companyName || '',
-                website: formData.website || '',
-                founderName: formData.founderName || '',
-                email: formData.email || '',
-                linkedInProfile: formData.linkedInProfile || '',
-                companyStage: formData.companyStage || '',
-                industry: formData.industry || '',
-                sector: formData.sector || '',
-                amountRaised: formData.amountRaised || 0,
-                targetAmount: formData.targetAmount || 0,
-                teamSize: formData.teamSize || 0,
-                headquartersLocation: formData.headquartersLocation || '',
-                productAvailable: formData.productAvailable || false,
-                location: formData.location || formData.headquartersLocation || '',
+                companyName: formData.companyName!,
+                website: formData.website!,
+                founderName: formData.founderName!,
+                email: formData.email!,
+                linkedInProfile: formData.linkedInProfile!,
+                companyStage: formData.companyStage!,
+                industry: formData.industry!,
+                sector: formData.sector!,
+                amountRaised: formData.amountRaised!,
+                targetAmount: formData.targetAmount!,
+                teamSize: formData.teamSize!,
+                headquartersLocation: formData.headquartersLocation!,
+                productAvailable: formData.productAvailable!,
+                location: formData.location || formData.headquartersLocation!,
                 incorporationDate: formData.incorporationDate || new Date().toISOString(),
                 investors: formData.investors || [],
                 companyNumber: formData.companyNumber || '',
@@ -111,22 +108,21 @@ export class CampaignController {
                 endInDate: endDate.toISOString(),
             };
 
-            // Insert the new campaign
             const result = await this.repository.create(campaignData);
 
-            if (result) {
+            if (result.insertedId) {
                 return NextResponse.json({
                     message: 'Campaign created successfully',
                     campaignId: result.insertedId,
                     id: newId
-                }, {status: 201});
+                }, { status: 201 });
             } else {
                 throw new Error('Failed to insert campaign');
             }
 
         } catch (error) {
             console.error("Error creating campaign:", error);
-            return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
+            return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
         }
     }
 
@@ -136,7 +132,7 @@ export class CampaignController {
             return NextResponse.json(campaigns);
         } catch (error) {
             console.error("Error fetching campaigns:", error);
-            return NextResponse.json({ message: 'Error fetching campaigns', error }, { status: 500 });
+            return NextResponse.json({ error: 'Error fetching campaigns' }, { status: 500 });
         }
     }
 }

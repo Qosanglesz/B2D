@@ -6,16 +6,16 @@ import { UploadThingPictureFile } from '@/components/types/UploadThingPictureFil
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-const CampaignCard: React.FC<{ campaign: FundraisingCampaign }> = ({ campaign }) => {
+interface CampaignCardProps {
+  campaign: FundraisingCampaign & { id: string };
+}
+
+const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 
   const handleCardClick = () => {
-    if (campaign.id) {
-      router.push(`/campaign/${campaign.id}`);
-    } else {
-      console.error("Invalid campaign id:", campaign.id);
-    }
+    router.push(`/campaign/${campaign.id}`);
   };
 
   // Calculate the percentage raised and remaining days

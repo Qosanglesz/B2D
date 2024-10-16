@@ -11,12 +11,12 @@ export class CampaignRepository {
         return database.collection<FundraisingCampaign>(COLLECTION_NAME);
     }
 
-    async findById(id: number): Promise<FundraisingCampaign | null> {
+    async findById(id: string): Promise<FundraisingCampaign | null> {
         const collection = await this.getCollection();
         return collection.findOne({ id: id });
     }
 
-    async update(id: number, updatedData: Partial<FundraisingCampaign>): Promise<boolean> {
+    async update(id: string, updatedData: Partial<FundraisingCampaign>): Promise<boolean> {
         const collection = await this.getCollection();
         const result = await collection.updateOne(
             { id: id },
@@ -25,16 +25,17 @@ export class CampaignRepository {
         return result.matchedCount > 0;
     }
 
-    async delete(id: number): Promise<boolean> {
+    async delete(id: string): Promise<boolean> {
         const collection = await this.getCollection();
         const result = await collection.deleteOne({ id: id });
         return result.deletedCount > 0;
     }
 
-    async getNextId(): Promise<number> {
+    async getNextId(): Promise<string> {
         const collection = await this.getCollection();
         const lastCampaign = await collection.findOne({}, {sort: {id: -1}});
-        return (lastCampaign?.id || 0) + 1;
+        const lastId = lastCampaign?.id || '0';
+        return (parseInt(lastId) + 1).toString();
     }
 
     async create(campaignData: FundraisingCampaign) {
@@ -47,7 +48,7 @@ export class CampaignRepository {
         return collection.find({}).toArray();
     }
 
-    async updateCampaignFunding(campaignId: number, amount: number, userId: string): Promise<void> {
+    async updateCampaignFunding(campaignId: string, amount: number, userId: string): Promise<void> {
         const collection = await this.getCollection();
         await collection.updateOne(
             { id: campaignId },
