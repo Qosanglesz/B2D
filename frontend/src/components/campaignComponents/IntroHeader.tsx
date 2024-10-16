@@ -1,8 +1,8 @@
 // components/campaignComponents/IntroHeader.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/components/types/Campaign'; // Adjust the path as necessary
-import { UploadThingPictureFile } from '@/components/types/UploadThingPictureFile';
+import { FundraisingCampaign } from '@/types/Campaign'; // Adjust the path as necessary
+import { UploadThingPictureFile } from '@/types/UploadThingPictureFile';
 
 import Image from 'next/image';
 

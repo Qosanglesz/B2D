@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from "react";
 import { CampaignGrid } from '@/components/campaignComponents/CampaignCardGrid'; // Import the CampaignGrid component
 import { LoadingError }  from '@/components/campaignComponents/LoadingError'; // Import the LoadingError component
-import { FundraisingCampaign } from '@/components/types/Campaign'; // Import the FundraisingCampaign type
+import { FundraisingCampaign } from '@/types/Campaign'; // Import the FundraisingCampaign type
 
 
 // CampaignPage component handles fetching campaign data and rendering it

@@ -1,7 +1,7 @@
 import React from 'react';
-import {FundraisingCampaign } from '@/components/types/Campaign';
+import {FundraisingCampaign } from '@/types/Campaign';
 import { UploadDropzone } from "@/components/uploadThing/uploadthing";
-import { UploadThingPictureFile } from "@/components/types/UploadThingPictureFile";
+import { UploadThingPictureFile } from "@/types/UploadThingPictureFile";
 
 
 interface AdditionalInformationProps {

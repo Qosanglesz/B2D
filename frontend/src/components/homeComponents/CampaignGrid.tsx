@@ -1,7 +1,7 @@
 // /src/components/homeComponents/CampaignGrid.tsx
 
 import React from 'react';
-import { FundraisingCampaign } from '@/components/types/Campaign';
+import { FundraisingCampaign } from '@/types/Campaign';
 import CampaignCard from '@/components/campaignComponents/CampaignCard';
 
 

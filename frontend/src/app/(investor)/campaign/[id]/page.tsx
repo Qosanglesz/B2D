@@ -15,7 +15,7 @@ import CompanyInformation from '@/components/campaignComponents/CompanyInformati
 import IntroCarousel from '@/components/campaignComponents/IntroCarousel';
 import IntroStatistics from '@/components/campaignComponents/IntroStatistics';
 import { LoadingError } from '@/components/campaignComponents/LoadingError'; // New LoadingError component
-import { FundraisingCampaign } from '@/components/types/Campaign'; // FundraisingCampaign type
+import { FundraisingCampaign } from '@/types/Campaign'; // FundraisingCampaign type
 import { Spinner } from "@nextui-org/react";
 
 

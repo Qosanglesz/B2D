@@ -1,7 +1,7 @@
 // src/components/campaignComponents/IntroStatistics.tsx
 
 import React, {useState} from 'react';
-import { FundraisingCampaign } from '@/components/types/Campaign';
+import { FundraisingCampaign } from '@/types/Campaign';
 
 
 interface IntroStatisticsProps {

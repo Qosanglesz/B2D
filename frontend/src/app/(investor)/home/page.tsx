@@ -4,7 +4,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import { FundraisingCampaign } from '@/components/types/Campaign';
+import { FundraisingCampaign } from '@/types/Campaign';
 import Header from "@/components/homeComponents/Header";
 import { LoadingError } from '@/components/homeComponents/LoadingError'; // Import the LoadingError component
 import { CampaignGrid } from '@/components/homeComponents/CampaignGrid'; // Import the CampaignGrid component
