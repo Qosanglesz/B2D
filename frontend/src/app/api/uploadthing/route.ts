@@ -1,5 +1,5 @@
 import { createRouteHandler } from "uploadthing/next";
-import { ourFileRouter } from "./uploadThingController";
+import { ourFileRouter } from "@/controller/uploadThingAPI/uploadThingController";
 
 
 export const { GET, POST } = createRouteHandler({
