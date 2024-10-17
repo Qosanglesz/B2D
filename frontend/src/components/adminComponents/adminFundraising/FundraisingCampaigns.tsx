@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React, {useState, useEffect, useCallback} from 'react';
 import {Input, Button} from '@nextui-org/react';
 import {Campaign} from '@/types/Campaign';
+import {LoadingError} from "@/components/homeComponents/LoadingError";
 
 type SortField = 'id' | 'amountRaised' | 'targetAmount' | 'companyName';
 type SortOrder = 'asc' | 'desc';
@@ -83,7 +84,7 @@ const FundraisingCampaigns: React.FC = () => {
         currentPage * ITEMS_PER_PAGE
     );
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <LoadingError loading={isLoading} error={error} />;
     if (error) return <div>{error}</div>;
 
     return (
