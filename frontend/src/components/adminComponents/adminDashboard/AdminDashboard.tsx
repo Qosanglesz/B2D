@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react';
 import DashboardData from '@/types/DashboardData';
 import InvestmentGraph from './InvestmentGraph';
 import StatementCountGraph from './StatementCountGraph';
+import {LoadingError} from "@/components/homeComponents/LoadingError";
 
 
 interface InvestmentData {
@@ -77,7 +78,7 @@ const AdminDashboard: React.FC = () => {
         }
     };
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <LoadingError loading={isLoading} error={error} />;
     if (error) return <div>{error}</div>;
 
     return (

@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import {Campaign} from '@/types/Campaign';
 import EditCampaignForm from '@/components/adminComponents/adminFundraising/EditCampaignForm';
+import {LoadingError} from "@/components/homeComponents/LoadingError";
 
 export default function EditCampaignPage({params}: { params: { id: string } }) {
     const [campaign, setCampaign] = useState<Campaign | null>(null);
@@ -73,7 +74,7 @@ export default function EditCampaignPage({params}: { params: { id: string } }) {
         }
     };
 
-    if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    if (isLoading) return <LoadingError loading={isLoading} error={error} />;
     if (error) return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
     if (!campaign) return <div className="flex justify-center items-center h-screen">No campaign data found</div>;
 

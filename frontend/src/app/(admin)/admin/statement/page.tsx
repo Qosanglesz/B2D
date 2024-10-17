@@ -1,10 +1,10 @@
-// app/statements/page.tsx
 "use client"
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import StatementsTable from '@/components/adminComponents/adminStatement/StatementsTable';
 import { User } from "@/types/User";
 import { Statement, StatementWithUser } from "@/types/Statement";
+import {LoadingError} from "@/components/homeComponents/LoadingError";
 
 export default function StatementsPage() {
     const [statementsWithUser, setStatementsWithUser] = useState<StatementWithUser[]>([]);
@@ -38,7 +38,7 @@ export default function StatementsPage() {
         fetchData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <LoadingError loading={loading} error={error} />;
     if (error) return <div>{error}</div>;
 
     return (

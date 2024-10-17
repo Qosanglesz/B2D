@@ -27,15 +27,15 @@ export default async function Layout({children}: { children: ReactNode }) {
     };
 
     return (
-        <html lang="en">
-        <body>
+        <div>
+
         <NavBar {...navBarProps} />
             {/* Add offset to fixed Navbar */}
             <div style={{ paddingTop: '72px' }}>
                 {children}
             </div>
         <Footer/>
-        </body>
-        </html>
+
+        </div>
     );
 }

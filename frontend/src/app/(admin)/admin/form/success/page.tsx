@@ -1,14 +1,17 @@
+"use client"
+
 import React from 'react';
 
 const SuccessPage: React.FC = () => {
     return (
-        <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Success!</h2>
-            <p className="text-lg">Your form has been submitted successfully. Thank you!</p>
-            <div className="mt-4">
-                <a href="/admin" className="text-blue-600 hover:underline">
-                    Return to Home
-                </a>
+        <div className="min-h-screen flex justify-center items-center">
+            <div className="text-center">
+                <h1 className="text-5xl font-bold mb-4">
+                    Create form successfully!
+                </h1>
+                <p className="text-lg text-gray-700 mb-2">
+                    <a href={"/campaign"}>Your campaigns will show at campaigns page</a>
+                </p>
             </div>
         </div>
     );

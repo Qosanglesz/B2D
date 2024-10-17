@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@nextui-org/react';
+import {LoadingError} from "@/components/homeComponents/LoadingError";
 
 interface User {
   user_id: string;
@@ -98,7 +99,7 @@ const UserManagement: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="p-6 min-h-screen">Loading...</div>;
+    return <LoadingError loading={loading} error={error} />;
   }
 
   if (error) {

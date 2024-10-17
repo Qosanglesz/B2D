@@ -1,18 +1,20 @@
+"use client"
+
 import React from "react";
 import Image from "next/image";
 import ReportsAndAnalytics from "@/components/adminComponents/adminMainPage/ReportAndAnalytics";
 
 export default function Admin() {
     const stats = [
-        { value: "3M+", description: "Global investor community" },
-        { value: "2000+", description: "Private ventures funded" },
-        { value: "\$2.6B+", description: "Capital raised" },
-        { value: "31", description: "Unicorns in portfolio" },
+        { value: "USD", description: "Currency" },
+        { value: "several", description: "Fundraising Campaigns" },
+        { value: "Reliable", description: "Companies around the world" },
         { value: "150", description: "Countries" },
+        { value: "Secure", description: "user informations" },
     ];
 
     return (
-        <div className="">
+        <div className="h-screen">
             <div className="relative inset-0 bg-cover overflow-hidden">
                 <Image
                     src="/images/movie_bg.jpeg"
@@ -25,29 +27,19 @@ export default function Admin() {
                 <section className="relative text-center py-16 z-10">
                     <h1 className="text-4xl font-bold mb-6 text-white">Stake your claim</h1>
                     <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-8">
-                        At b2s venture, our innovative investment platform connects visionary startups with a network of
+                        At B2D venture, our innovative investment platform connects visionary startups with a network of
                         trusted investors. By leveraging cutting-edge technology, we provide secure and streamlined access to funding,
                         facilitating primary issuance, secondary trading, and comprehensive support for businesses looking
                         to thrive in the ever-evolving world of finance.
                     </p>
-                    <button className="bg-blue-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition duration-300">
-                        Get in touch
-                    </button>
+                    <a href={"/admin/dashboard/"}>
+                        <button
+                            className="bg-blue-600 text-white py-3 px-6 rounded-lg text-lg hover:bg-blue-700 transition duration-300">
+                            Get in touch
+                        </button>
+                    </a>
                 </section>
 
-                {/* Icons Section */}
-                <section className="flex justify-center space-x-8 py-12">
-                    {[1, 2, 3].map((index) => (
-                        <div key={index} className="relative w-16 h-16">
-                            <Image
-                                src={`https://picsum.photos/seed/${index}/200/300/?blur`}
-                                alt={`icon${index}`}
-                                layout="fill"
-                                objectFit="cover"
-                            />
-                        </div>
-                    ))}
-                </section>
             </div>
 
             {/* Infrastructure Snapshot Section */}
@@ -61,8 +53,7 @@ export default function Admin() {
                     ))}
                 </div>
             </section>
-
-            <ReportsAndAnalytics />
+            <ReportsAndAnalytics/>
         </div>
     );
 }
