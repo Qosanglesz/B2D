@@ -1,3 +1,5 @@
+// src/components/campaignComponents/IntroCarousel.tsx
+
 import React from 'react';
 import { Campaign } from '@/types/Campaign';
 

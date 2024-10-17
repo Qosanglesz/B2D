@@ -1,3 +1,5 @@
+// src/components/homeComponents/HeroSectionHome.tsx
+
 import React from 'react';
 import {Carousel, Flowbite} from 'flowbite-react';
 import type {CustomFlowbiteTheme} from 'flowbite-react';

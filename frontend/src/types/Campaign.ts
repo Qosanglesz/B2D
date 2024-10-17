@@ -1,3 +1,6 @@
+// src/types/Campaign.ts
+
+
 import {ObjectId} from 'mongodb';
 import {UploadThingPictureFile} from "@/types/UploadThingPictureFile"
 
