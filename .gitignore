@@ -132,3 +132,6 @@ dist
 .idea
 frontend/tests/config.js
 frontend/test-results
+
+# Ignore test results
+test-results/

@@ -1,5 +1,7 @@
+// tests/config.example.js
+
 export const testEnv= {
     HOST: "",
-    GOOGLE_ID: "",
-    Pass: "",
+    EMAIL: "",
+    PASSWORD: "",
 }

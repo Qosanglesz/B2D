@@ -117,30 +117,30 @@ export default function CampaignPage({ params }: CampaignProps) {
             {/* Return null if still loading or there is an error */}
             {isLoading || error ? null : (
                 <div className="w-full max-w-screen-xl p-0">
-                    <div className="grid grid-cols-6">
+                    <div className="grid grid-cols-6 gap-x-10">
 
                         {/* Header for the campaign */}
-                        <div className="col-span-6 p-2">
+                        <div className="col-span-6 px-0 py-2">
                             <IntroHeader campaign={campaign as Campaign} />
                         </div>
 
                         {/* Carousel for campaign images */}
-                        <div className="col-span-4 row-span-3 p-3">
+                        <div className="col-span-4 row-span-3 px-0 py-3">
                             <IntroCarousel campaign={campaign as Campaign} />
                         </div>
 
                         {/* Statistics of the campaign */}
-                        <div className="col-span-2 row-span-3 p-10">
+                        <div className="col-span-2 row-span-3 px-0 py-10">
                             <IntroStatistics
                                 campaign={campaign as Campaign}
                                 handleInputChange={handleInputChange}
-                                investmentAmountInput={investAmountInput}
+                                investmentAmountInput={investAmountInput}   
                                 handleInvestButton={handleInvestButton}
                             />
                         </div>
 
                         {/* Company info for the campaign */}
-                        <div className="col-span-6 p-3 mt-6 mb-10 rounded-lg">
+                        <div className="col-span-6 px-0 py-3 mt-6 mb-10 rounded-lg">
                             <CompanyInformation campaign={campaign as Campaign} />
                         </div>
                     </div>
