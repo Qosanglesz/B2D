@@ -45,7 +45,7 @@ test('Register with valid details', async ({ page }) => {
     await page.goto(`${testEnv.HOST}`);
 
     // Wait for redirection to /home if user starts at /
-    await page.waitForURL('http://localhost:3000/home');
+    await page.waitForURL(`${testEnv.HOST}/home`);
 
     // Step 3: Click the "Sign in" link
     await page.getByRole('link', { name: 'Sign in' }).click();
@@ -108,7 +108,7 @@ test('Register with duplicate email', async ({ page }) => {
     await page.goto(`${testEnv.HOST}`);
 
     // Wait for redirection to /home if user starts at /
-    await page.waitForURL('http://localhost:3000/home');
+    await page.waitForURL(`${testEnv.HOST}/home`);
 
     // Step 2: Click the "Sign in" link
     await page.getByRole('link', { name: 'Sign in' }).click();
@@ -146,3 +146,49 @@ test('Register with duplicate email', async ({ page }) => {
     await expect(errorMessage).toHaveText("Something went wrong, please try again later");
 });
  
+
+// Test Case ID: TC_01_03
+test('Login with valid credentials', async ({ page }) => {
+    // Step 1: Navigate to the home page
+    await page.goto(`${testEnv.HOST}`);
+
+    // Step 2: Wait for redirection to /home if user starts at /
+    await page.waitForURL(`${testEnv.HOST}/home`);
+
+    // Step 3: Click the "Sign in" link
+    await page.getByRole('link', { name: 'Sign in' }).click();
+
+    // Wait for the login page to load
+    await page.waitForTimeout(1000);
+
+    // Step 4: Verify that we are on the Auth0 login page
+    console.log('Current URL before waiting for login...');
+    await page.waitForURL(/\/u\/login/, { timeout: 10000 }); // Partial match for login URL
+
+    // Step 5: Ensure email input is visible and fill it
+    // const emailInput = page.locator('#email'); // Login page use username as ID instead of email
+    const emailInput = page.locator('#username');
+    await emailInput.waitFor({ state: 'visible', timeout: 10000 }); // Wait for the email input to be visible
+    await emailInput.click();
+    
+    // Using email from config (which should be valid)
+    await emailInput.fill(testEnv.EMAIL);
+
+    // Step 6: Ensure password input is visible and fill it
+    const passwordInput = page.locator('#password');
+    await passwordInput.waitFor({ state: 'visible', timeout: 10000 }); // Wait for the password input to be visible
+    await passwordInput.click();
+    
+    // Using password from config (which should be valid)
+    await passwordInput.fill(testEnv.PASSWORD); 
+
+    // Step : Click the "Continue" button
+    await page.click('button:has-text("Continue")');
+
+    // Step 8: Verify user is redirected to the home page
+    await page.waitForURL(`${testEnv.HOST}/home`);
+
+    // Step 9: Check for the presence of the "Logout" link
+    const logoutLink = await page.locator('text=Logout');
+    await expect(logoutLink).toBeVisible();
+});
