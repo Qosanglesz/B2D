@@ -54,7 +54,8 @@ test('Register with valid details', async ({ page }) => {
     await page.waitForTimeout(1000);
 
     // Step 4: Verify that we are on the Auth0 login page
-    console.log('Current URL before waiting for login:', page.url());
+    // console.log('Current URL before waiting for login:', page.url());
+    console.log('Current URL before waiting for login...');
     await page.waitForURL(/\/u\/login/, { timeout: 10000 }); // Partial match for login URL
 
     // Step 5: Click the "Sign up" link
@@ -65,7 +66,8 @@ test('Register with valid details', async ({ page }) => {
     await page.waitForTimeout(1000);
 
     // Step 6: Verify that we are on the Auth0 sign-up page
-    console.log('Current URL before waiting for sign-up:', page.url());
+    // console.log('Current URL before waiting for sign-up:', page.url());
+    console.log('Current URL before waiting for sign-up...');
     await page.waitForURL(/\/u\/signup/, { timeout: 10000 }); // Partial match for sign-up URL
 
     // Step 7: Ensure email input is visible and fill it
@@ -84,7 +86,8 @@ test('Register with valid details', async ({ page }) => {
     await page.click('button:has-text("Continue")');
 
     // Step 10: Verify that we are redirected to the consent page
-    console.log('Current URL before waiting for consent:', page.url());
+    // console.log('Current URL before waiting for consent:', page.url());
+    console.log('Current URL before waiting for consent...');
     await page.waitForURL(/\/u\/consent/, { timeout: 10000 }); // Partial match for consent URL
 
     // Step 11: Click the "Accept" button for authorization
@@ -97,3 +100,49 @@ test('Register with valid details', async ({ page }) => {
     const logoutLink = await page.locator('text=Logout');
     await expect(logoutLink).toBeVisible();
 });
+
+
+// Test Case ID: TC_01_02
+test('Register with duplicate email', async ({ page }) => {
+    // Step 1: Navigate to the home page
+    await page.goto(`${testEnv.HOST}`);
+
+    // Wait for redirection to /home if user starts at /
+    await page.waitForURL('http://localhost:3000/home');
+
+    // Step 2: Click the "Sign in" link
+    await page.getByRole('link', { name: 'Sign in' }).click();
+
+    // Wait for the login page to load
+    await page.waitForTimeout(1000);
+
+    // Step 3: Click the "Sign up" link
+    console.log('Navigating to Sign Up page...');
+    await page.locator('a[href*="/u/signup"]').click();
+
+    // Wait for the signup page to load
+    await page.waitForTimeout(1000);
+
+    // Step 4: Ensure email input is visible and fill it with the duplicate email
+    const emailInput = page.locator('#email');
+    await emailInput.waitFor({ state: 'visible', timeout: 10000 });
+    await emailInput.click();
+    await emailInput.fill(testEnv.EMAIL); // Use the email from config.js (which should be already registered)
+
+    // Step 5: Ensure password input is visible and fill it with a valid password
+    const passwordInput = page.locator('#password');
+    await passwordInput.waitFor({ state: 'visible', timeout: 10000 });
+    await passwordInput.click();
+    await passwordInput.fill("ValidPassword123!"); // Use a placeholder or a valid password
+
+    // Step 6: Click the "Continue" button
+    await page.click('button:has-text("Continue")');
+
+    // Step 7: Wait for the error message to be visible
+    const errorMessage = page.locator('p.cce607bb6.c2c8605a6'); // Adjust the class name if needed
+    await errorMessage.waitFor({ state: 'visible', timeout: 10000 });
+
+    // Step 8: Verify that the error message is displayed
+    await expect(errorMessage).toHaveText("Something went wrong, please try again later");
+});
+ 
