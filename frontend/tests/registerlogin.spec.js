@@ -182,7 +182,7 @@ test('Login with valid credentials', async ({ page }) => {
     // Using password from config (which should be valid)
     await passwordInput.fill(testEnv.PASSWORD); 
 
-    // Step : Click the "Continue" button
+    // Step 7: Click the "Continue" button
     await page.click('button:has-text("Continue")');
 
     // Step 8: Verify user is redirected to the home page
@@ -191,4 +191,45 @@ test('Login with valid credentials', async ({ page }) => {
     // Step 9: Check for the presence of the "Logout" link
     const logoutLink = await page.locator('text=Logout');
     await expect(logoutLink).toBeVisible();
+});
+
+
+// Test Case ID: TC_01_04
+test('Login with invalid username', async ({ page }) => {
+    // Step 1: Navigate to the home page
+    await page.goto(`${testEnv.HOST}`);
+
+    // Step 2: Wait for redirection to /home if user starts at /
+    await page.waitForURL(`${testEnv.HOST}/home`);
+
+    // Step 3: Click the "Sign in" link
+    await page.getByRole('link', { name: 'Sign in' }).click();
+
+    // Wait for the login page to load
+    await page.waitForTimeout(1000);
+
+    // Step 4: Verify that we are on the Auth0 login page
+    console.log('Current URL before waiting for login...');
+    await page.waitForURL(/\/u\/login/, { timeout: 10000 }); // Partial match for login URL
+
+    // Step 5: Enter an invalid email (username) and valid password
+    const emailInput = page.locator('#username'); // Ensure the correct ID
+    await emailInput.waitFor({ state: 'visible', timeout: 10000 });
+    await emailInput.click();
+
+    // Invalid email
+    await emailInput.fill('สวัสดีครับพ่อแม่พี่น้อง กระผมมีนามว่าอินวาลิ่ดอีเมล');
+
+    const passwordInput = page.locator('#password'); // Ensure the correct ID
+    await passwordInput.fill('ValidPassword123'); // Replace with a valid password
+
+    // Step 6: Click the "Continue" button
+    await page.click('button:has-text("Continue")');
+
+    // Step 7: Verify that an error message is displayed
+    const errorMessage = page.locator('#error-element-password'); // Adjust selector based on your app's HTML
+    await expect(errorMessage).toBeVisible();
+
+    // Step 8: Verify that the error message is displayed correctly (trimmed)
+    await expect(errorMessage).toHaveText(/Wrong email or password/i); // Use regex to match text, ignoring leading/trailing whitespace
 });
