@@ -30,7 +30,12 @@ const UserManagement: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/users');
+        const response = await fetch(`/api/users?_t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+              'Cache-Control': 'no-cache'
+          }
+      });
         if (!response.ok) {
           throw new Error('Failed to fetch users');
         }
