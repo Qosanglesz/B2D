@@ -235,7 +235,7 @@ test('Login with invalid username', async ({ page }) => {
 });
 
 
-// Test Case ID: TC_01_05 (invalid password)
+// Test Case ID: TC_01_05
 test('Login with invalid password', async ({ page }) => {
     // Step 1: Navigate to the home page
     await page.goto(`${testEnv.HOST}`);
@@ -278,3 +278,37 @@ test('Login with invalid password', async ({ page }) => {
     // Step 8: Verify that the error message is displayed correctly (trimmed)
     await expect(errorMessage).toHaveText(/Wrong email or password/i); // Use regex to match text, ignoring leading/trailing whitespace
 });
+
+
+// // Test Case ID: TC_01_06
+// test('Register with missing required fields', async ({ page }) => {
+//     // Step 1: Navigate to the home page
+//     await page.goto(`${testEnv.HOST}`);
+
+//     // Step 2: Wait for redirection to /home if user starts at /
+//     await page.waitForURL(`${testEnv.HOST}/home`);
+
+//     // Step 3: Click the "Sign in" link
+//     await page.getByRole('link', { name: 'Sign in' }).click();
+
+//     // Wait for the login page to load
+//     await page.waitForTimeout(1000);
+
+//     // Step 4: Verify that we are on the Auth0 login page
+//     console.log('Current URL before waiting for login...');
+//     await page.waitForURL(/\/u\/login/, { timeout: 10000 }); // Partial match for login URL
+
+//     // Step 5: Click the "Sign up" link
+//     console.log('Navigating to Sign Up page...');
+//     await page.locator('a[href*="/u/signup"]').click();
+
+//     // Wait for the signup page to load
+//     await page.waitForTimeout(1000);
+
+//     // Step 6: Verify that we are on the Auth0 sign-up page
+//     console.log('Current URL before waiting for sign-up...');
+//     await page.waitForURL(/\/u\/signup/, { timeout: 10000 }); // Partial match for sign-up URL
+
+//     // Step 7: Click the "Continue" button
+//     await page.click('button:has-text("Continue")');
+// });
