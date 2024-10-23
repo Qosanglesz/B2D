@@ -1,4 +1,4 @@
-// tests/viewCompanyDetails.spec.js
+// tests/viewcompanydetails.spec.js
 
 import { test, expect } from '@playwright/test';
 import { login } from './helpers/login';
