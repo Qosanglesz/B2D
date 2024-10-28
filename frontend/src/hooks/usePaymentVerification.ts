@@ -8,9 +8,9 @@ export const usePaymentVerification = () => {
         error: null
     });
 
-    const verifyPayment = useCallback(async (chargeId: string) => {
+    const verifyPayment = useCallback(async (statementId: string) => {
         try {
-            const response = await fetch(`/api/payment/coinbase?chargeId=${chargeId}`);
+            const response = await fetch(`/api/payment/coinbase?statementId=${statementId}`);
             const data = await response.json();
 
             setPaymentState(prevState => {
@@ -35,7 +35,7 @@ export const usePaymentVerification = () => {
             });
 
             if (data.status === 'PENDING') {
-                setTimeout(() => verifyPayment(chargeId), 5000);
+                setTimeout(() => verifyPayment(statementId), 5000);
             }
         } catch (error) {
             setPaymentState({

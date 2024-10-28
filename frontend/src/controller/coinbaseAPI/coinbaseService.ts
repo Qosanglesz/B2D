@@ -52,6 +52,9 @@ import { RequestBody, ChargeMetadata, ChargeResponse } from '@/types/payment';
 //     }>;
 // }
 
+const DATABASE_NAME = 'B2DVentureProject';
+
+
 export class CoinbaseService {
     private static instance: CoinbaseService;
     private readonly Charge = resources.Charge;
@@ -78,7 +81,7 @@ export class CoinbaseService {
 
     private async getDatabase() {
         const mongoClient = await clientPromise;
-        return mongoClient.db('B2DVentureProject');
+        return mongoClient.db(DATABASE_NAME);
     }
 
     private async verifyCampaign(campaignId: string, amount: number) {
