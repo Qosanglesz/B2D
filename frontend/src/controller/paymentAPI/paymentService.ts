@@ -26,8 +26,8 @@ export class PaymentService {
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success/${statementId}`,
-            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${statementId}`,
+            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success/${statementId}?provider=stripe`,
+            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${statementId}?provider=stripe`,
         });
     }
 
