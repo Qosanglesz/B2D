@@ -26,7 +26,9 @@ export default function CampaignPage() {
         const fetchCampaigns = async () => {
             try {
                 // Make a request to the API to get the campaigns
-                const response = await fetch('/api/campaigns'); // Ensure this endpoint is correct in your API setup
+                const response = await fetch('/api/campaigns', {
+                    cache: "no-store",
+                }); // Ensure this endpoint is correct in your API setup
                 
                 // If the response status is not OK, throw an error
                 if (!response.ok) {
