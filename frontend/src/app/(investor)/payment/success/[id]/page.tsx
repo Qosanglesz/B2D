@@ -18,19 +18,19 @@ const Success: React.FC<SuccessProps> = ({params}) => {
         const checkStatus = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/api/payment/statement/${statementId}`
+                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/statement/${statementId}`
                 );
                 const {status} = response.data;
 
                 if (status !== "complete") {
-                    router.push(`http://localhost:3000/payment/cancel/${statementId}`);
+                    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${statementId}`);
                 } else {
                     setLoading(false);
                 }
 
             } catch (error) {
                 console.error("Failed to fetch payment status:", error);
-                router.push(`http://localhost:3000/home`); //redirect if cant fetch api
+                router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/home`); //redirect if cant fetch api
 
             }
         };
