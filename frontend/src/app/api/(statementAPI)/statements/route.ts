@@ -3,6 +3,7 @@ import { StatementController } from '@/controller/statementAPI/statementControll
 
 const statementController = new StatementController();
 
+export const dynamic = 'force-dynamic'
 export async function GET(): Promise<NextResponse> {
     return statementController.getStatements();
 }
