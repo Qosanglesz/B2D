@@ -11,7 +11,13 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
     "@heroicons/react": "^2.1.5",
+    "@nextui-org/pagination": "^2.0.36",
     "@nextui-org/react": "^2.4.8",
+    "@nextui-org/system": "^2.2.6",
+    "@nextui-org/table": "^2.0.40",
+    "@nextui-org/theme": "^2.2.11",
+    "@react-stately/data": "^3.11.7",
+    "@react-stately/table": "^3.12.3",
     "@stripe/stripe-js": "^4.7.0",
     "@uploadthing/react": "^7.0.3",
     "auth0": "^4.10.0",

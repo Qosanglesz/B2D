@@ -40,10 +40,13 @@ const AdminNavBar: React.FC = () => {
           <Link href="/admin/statement">
             <span className="hover:text-gray-600 cursor-pointer">Statement</span>
           </Link>
+          <Link href="/admin/transaction">
+            <span className="hover:text-gray-600 cursor-pointer">Crypto</span>
+          </Link>
           <Link href="/admin/form">
             <span className="hover:text-gray-600 cursor-pointer">Form</span>
           </Link>
-
+          
           <div className="flex items-center space-x-2">
             {user && user.picture && (
               <Link href="/admin/profile">

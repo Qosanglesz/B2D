@@ -109,4 +109,9 @@ export class CoinbaseRepository {
             { $set: updateData }
         );
     }
+
+    async getAllCryptoTransactions(): Promise<Transaction[]> {
+        const db = await this.getDatabase();
+        return db.collection<Transaction>('Transactions').find({ paymentMethod: 'crypto' }).toArray();
+    }
 }

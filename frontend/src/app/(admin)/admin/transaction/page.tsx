@@ -5,8 +5,9 @@ import React, { useEffect, useState } from 'react';
 import { FiAlertCircle } from 'react-icons/fi';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import TransactionTable from '@/components/adminComponents/adminCrypto/TransactionTable';
-import { Input, Pagination } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import SearchIcon from "@/components/adminComponents/adminCrypto/SearchIcon";
+import PaginationComponent from '@/components/adminComponents/adminCrypto/PaginationComponent'; // Import the new component
 
 const TransactionCryptoPage: React.FC = () => {
     const [transactions, setTransactions] = useState<any[]>([]);
@@ -85,10 +86,6 @@ const TransactionCryptoPage: React.FC = () => {
     const totalPages = Math.ceil(sortedTransactions.length / transactionsPerPage);
     const currentTransactions = sortedTransactions.slice((currentPage - 1) * transactionsPerPage, currentPage * transactionsPerPage);
 
-    console.log("Total Pages:", totalPages);
-    console.log("Current Page:", currentPage);
-    console.log("Current Transactions:", currentTransactions);
-
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen bg-gray-50">
@@ -135,15 +132,11 @@ const TransactionCryptoPage: React.FC = () => {
             <div className="overflow-x-auto">
                 <TransactionTable transactions={currentTransactions} onSort={handleSort} />
             </div>
-            <div className="flex justify-center mt-4">
-                {totalPages > 1 && (
-                    <Pagination
-                        total={totalPages}
-                        initialPage={1}
-                        onChange={(page) => setCurrentPage(page)}
-                    />
-                )}
-            </div>
+            <PaginationComponent 
+                totalPages={totalPages} 
+                currentPage={currentPage} 
+                onPageChange={setCurrentPage} 
+            />
         </div>
     );
 };
