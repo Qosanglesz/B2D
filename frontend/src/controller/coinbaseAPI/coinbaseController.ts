@@ -1,8 +1,7 @@
-// app/api/payment/coinbase/controllers/CoinbaseController.ts
-
+// src/app/api/payment/coinbase/controllers/CoinbaseController.ts
 import { NextResponse } from 'next/server';
-import { CoinbaseService} from '@/controller/coinbaseAPI/coinbaseService';
-import { RequestBody } from '@/types/payment';
+import { CoinbaseService } from '@/controller/coinbaseAPI/coinbaseService';
+import { CreateChargeRequest } from '@/types/payment';  
 
 export class CoinbaseController {
     private static instance: CoinbaseController;
@@ -19,28 +18,36 @@ export class CoinbaseController {
         return CoinbaseController.instance;
     }
 
-    private validateRequestBody(body: RequestBody) {
-        const { user, campaign, amount } = body;
-        if (!user?.sub || !campaign?._id || !amount) {
-            throw new Error('Missing required fields');
-        }
-        if (amount <= 0) {
-            throw new Error('Invalid amount');
-        }
-    }
-
-    public async handleCreateCharge(request: Request) {
+    async createCharge(request: Request): Promise<NextResponse> {
         try {
-            const body: RequestBody = await request.json();
-            this.validateRequestBody(body);
-            const result = await this.coinbaseService.createCharge(body);
-            return NextResponse.json(result);
-        } catch (error) {
-            return this.handleError(error);
+            const body: CreateChargeRequest = await request.json();
+            
+            if (!body.user?.sub || !body.campaign?.id || !body.amount) {
+                return NextResponse.json(
+                    { error: 'Missing required fields' },
+                    { status: 400 }
+                );
+            }
+
+            const charge = await this.coinbaseService.createCharge(body);
+
+            return NextResponse.json({
+                success: true,
+                chargeId: charge.id,
+                hostedUrl: charge.hosted_url,
+                expiresAt: charge.expires_at
+            });
+
+        } catch (error: any) {
+            console.error('Error creating charge:', error);
+            return NextResponse.json(
+                { error: error.message || 'Failed to create charge' },
+                { status: 500 }
+            );
         }
     }
 
-    public async handleGetChargeStatus(request: Request) {
+    async getChargeStatus(request: Request): Promise<NextResponse> {
         try {
             const { searchParams } = new URL(request.url);
             const chargeId = searchParams.get('chargeId');
@@ -52,42 +59,249 @@ export class CoinbaseController {
                 );
             }
 
-            const result = await this.coinbaseService.getChargeStatus(chargeId);
-            return NextResponse.json(result);
-        } catch (error) {
-            return this.handleError(error);
-        }
-    }
+            const charge = await this.coinbaseService.getChargeStatus(chargeId);
+            
+            return NextResponse.json({
+                status: charge.status,
+                timeline: charge.timeline,
+                payments: charge.payments
+            });
 
-    private handleError(error: unknown) {
-        console.error('Coinbase Commerce error:', error);
-        
-        if (error instanceof Error) {
-            if (error.message.includes('API Key')) {
-                return NextResponse.json(
-                    { 
-                        error: 'Configuration error',
-                        details: 'Invalid API key'
-                    },
-                    { status: 401 }
-                );
-            }
-
+        } catch (error: any) {
+            console.error('Error getting charge status:', error);
             return NextResponse.json(
-                { 
-                    error: 'Payment processing error',
-                    details: error.message
-                },
+                { error: error.message || 'Failed to get charge status' },
                 { status: 500 }
             );
         }
+    }
 
-        return NextResponse.json(
-            { 
-                error: 'Internal server error',
-                details: 'An unexpected error occurred'
-            },
-            { status: 500 }
-        );
+    // async handleWebhook(request: Request): Promise<NextResponse> {
+    //     try {
+    //         const rawBody = await request.text();
+    //         const signature = request.headers.get('x-cc-webhook-signature');
+
+    //         if (!signature) {
+    //             return NextResponse.json(
+    //                 { error: 'Invalid webhook signature' },
+    //                 { status: 400 }
+    //             );
+    //         }
+
+    //         const event = this.coinbaseService.verifyWebhookSignature(rawBody, signature);
+    //         await this.coinbaseService.processWebhookEvent(event);
+            
+    //         return NextResponse.json({ success: true });
+
+    //     } catch (error: any) {
+    //         console.error('Webhook error:', error);
+    //         return NextResponse.json(
+    //             { error: error.message || 'Webhook processing failed' },
+    //             { status: 500 }
+    //         );
+    //     }
+    // }
+
+    // src/controller/coinbaseAPI/coinbaseController.ts
+    // async handleWebhook(request: Request): Promise<NextResponse> {
+    //     try {
+    //         const rawBody = await request.text();
+    //         const signature = request.headers.get('x-cc-webhook-signature');
+
+    //         if (!signature) {
+    //             return NextResponse.json(
+    //                 { error: 'Missing webhook signature' },
+    //                 { status: 400 }
+    //             );
+    //         }
+
+    //         try {
+    //             // Verify the webhook signature
+    //             const event = this.coinbaseService.verifyWebhookSignature(rawBody, signature);
+                
+    //             // Process the webhook event
+    //             await this.coinbaseService.processWebhookEvent(event);
+                
+    //             return NextResponse.json({ success: true });
+
+    //         } catch (error: any) {
+    //             console.error('Webhook verification error:', error);
+    //             return NextResponse.json(
+    //                 { error: 'Invalid webhook signature' },
+    //                 { status: 400 }
+    //             );
+    //         }
+
+    //     } catch (error: any) {
+    //         console.error('Webhook processing error:', error);
+    //         return NextResponse.json(
+    //             { error: error.message || 'Webhook processing failed' },
+    //             { status: 500 }
+    //         );
+    //     }
+    // }
+
+    // async handleWebhook(request: Request): Promise<NextResponse> {
+    //     try {
+    //         const rawBody = await request.text();
+    //         console.log('Received webhook payload:', rawBody);
+    
+    //         if (!rawBody) {
+    //             console.error('Empty webhook payload received');
+    //             return NextResponse.json(
+    //                 { error: 'Empty webhook payload' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         let event;
+    //         try {
+    //             event = JSON.parse(rawBody);
+    //         } catch (parseError) {
+    //             console.error('Failed to parse webhook payload:', parseError);
+    //             return NextResponse.json(
+    //                 { error: 'Invalid JSON in webhook payload' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         if (!event || !event.type || !event.data) {
+    //             console.error('Invalid webhook event structure:', event);
+    //             return NextResponse.json(
+    //                 { error: 'Invalid webhook event structure' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         const signature = request.headers.get('x-cc-webhook-signature');
+    //         const timestamp = request.headers.get('x-cc-timestamp');
+    
+    //         if (!signature) {
+    //             console.error('Missing webhook signature');
+    //             return NextResponse.json(
+    //                 { error: 'Missing webhook signature' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         // Verify the webhook signature
+    //         const isValid = this.coinbaseService.verifyWebhookSignature(rawBody, signature, timestamp || undefined);
+            
+    //         if (!isValid) {
+    //             console.error('Invalid webhook signature');
+    //             return NextResponse.json(
+    //                 { error: 'Invalid webhook signature' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         // Process the webhook event
+    //         await this.coinbaseService.processWebhookEvent(event);
+            
+    //         return NextResponse.json({ success: true });
+    
+    //     } catch (error: any) {
+    //         console.error('Webhook processing error:', error);
+    //         return NextResponse.json(
+    //             { error: error.message || 'Webhook processing failed' },
+    //             { status: 500 }
+    //         );
+    //     }
+    // }
+
+    // async handleWebhook(request: Request): Promise<NextResponse> {
+    //     try {
+    //         const rawBody = await request.text();
+    //         const signature = request.headers.get('x-cc-webhook-signature');
+    //         const timestamp = request.headers.get('x-cc-timestamp');
+    
+    //         if (!signature) {
+    //             console.error('Missing webhook signature');
+    //             return NextResponse.json(
+    //                 { error: 'Missing webhook signature' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         // Verify the webhook signature
+    //         const isValid = this.coinbaseService.verifyWebhookSignature(rawBody, signature, timestamp);
+    //         if (!isValid) {
+    //             console.error('Invalid webhook signature');
+    //             return NextResponse.json(
+    //                 { error: 'Invalid webhook signature' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         // Parse the event data
+    //         let event;
+    //         try {
+    //             event = JSON.parse(rawBody);
+    //         } catch (parseError) {
+    //             console.error('Failed to parse webhook payload:', parseError);
+    //             return NextResponse.json(
+    //                 { error: 'Invalid JSON in webhook payload' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         if (!event || !event.type || !event.data) {
+    //             console.error('Invalid webhook event structure:', event);
+    //             return NextResponse.json(
+    //                 { error: 'Invalid webhook event structure' },
+    //                 { status: 400 }
+    //             );
+    //         }
+    
+    //         // Process the webhook event
+    //         await this.coinbaseService.processWebhookEvent(event);
+    
+    //         return NextResponse.json({ success: true });
+    
+    //     } catch (error: any) {
+    //         console.error('Webhook processing error:', error);
+    //         return NextResponse.json(
+    //             { error: error.message || 'Webhook processing failed' },
+    //             { status: 500 }
+    //         );
+    //     }
+    // }
+
+    async handleWebhook(request: Request): Promise<NextResponse> {
+        try {
+            const rawBody = await request.text();
+            const signature = request.headers.get('x-cc-webhook-signature');
+    
+            if (!signature) {
+                return NextResponse.json(
+                    { error: 'Missing webhook signature' },
+                    { status: 400 }
+                );
+            }
+    
+            const event = JSON.parse(rawBody); // Ensure you parse the raw body
+            console.log('Parsed webhook event:', event); // Log the parsed event
+    
+            // Check if the event structure is valid
+            if (!event || !event.event || !event.event.data) {
+                console.error('Invalid webhook event structure:', event);
+                return NextResponse.json(
+                    { error: 'Invalid webhook event structure' },
+                    { status: 400 }
+                );
+            }
+    
+            // Process the event
+            await this.coinbaseService.processWebhookEvent(event.event); // Pass only the event part
+    
+            return NextResponse.json({ success: true });
+    
+        } catch (error: any) {
+            console.error('Webhook error:', error);
+            return NextResponse.json(
+                { error: error.message || 'Webhook processing failed' },
+                { status: 500 }
+            );
+        }
     }
 }

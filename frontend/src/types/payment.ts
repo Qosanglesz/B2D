@@ -13,13 +13,6 @@ export interface PaymentRequest {
     amount: number;
 }
 
-export interface CoinbaseCharge {
-    id: string;
-    code: string;
-    hosted_url: string;
-    expires_at: string;
-    status: 'NEW' | 'PENDING' | 'COMPLETED' | 'EXPIRED' | 'UNRESOLVED' | 'RESOLVED' | 'CANCELED';
-}
 
 export interface TransactionRecord {
     _id?: string;
@@ -92,4 +85,143 @@ export interface ChargeMetadata {
     campaignId: string;
     campaignName: string;
     investmentAmount: string;
+}
+
+export interface ChargeMetadata {
+    userId: string;
+    userEmail: string;
+    campaignId: string;
+    campaignName: string;
+    investmentAmount: string;
+}
+
+// export interface CreateChargeRequest {
+//     user: {
+//         sub: string;
+//         email: string;
+//     };
+//     campaign: {
+//         id: string;
+//         name: string;
+//         companyName: string;
+//     };
+//     amount: number;
+// }
+
+export type PricingType = 'no_price' | 'fixed_price';
+
+export interface ChargeMetadata {
+    userId: string;
+    userEmail: string;
+    campaignId: string;
+    campaignName: string;
+    investmentAmount: string;
+}
+
+export interface PricingInformation {
+    amount: string;
+    currency: string;
+}
+
+// export interface BaseCharge {
+//     name: string;
+//     description: string;
+//     pricing_type: PricingType;
+//     local_price: PricingInformation;
+//     metadata: ChargeMetadata;
+//     redirect_url?: string;
+//     cancel_url?: string;
+// }
+
+
+export interface CreateChargeRequest {
+    user: {
+        sub: string;
+        email: string;
+    };
+    campaign: {
+        id: string;
+        name: string;
+        companyName: string;
+    };
+    amount: number;
+}
+
+export type ChargeStatus = 'NEW' | 'PENDING' | 'COMPLETED' | 'EXPIRED' | 'UNRESOLVED' | 'RESOLVED' | 'CANCELED' | 'REFUNDED';
+
+export interface ChargeMetadata {
+    userId: string;
+    userEmail: string;
+    campaignId: string;
+    campaignName: string;
+    investmentAmount: string;
+}
+
+export interface PricingInformation {
+    amount: string;
+    currency: string;
+}
+
+export interface BaseCharge {
+    name: string;
+    description: string;
+    pricing_type: PricingType;
+    local_price: PricingInformation;
+    metadata: ChargeMetadata;
+    redirect_url?: string;
+    cancel_url?: string;
+}
+
+// Updated to match Coinbase Commerce API response
+export interface CoinbaseCharge {
+    id: string;
+    resource: string;
+    code: string;
+    name: string;
+    description: string;
+    logo_url?: string;
+    hosted_url: string;
+    created_at: string;
+    expires_at: string;
+    confirmed_at?: string;
+    checkout?: {
+        id: string;
+    };
+    timeline: Array<{
+        time: string;
+        status: ChargeStatus;
+        context?: string;
+    }>;
+    metadata: ChargeMetadata;
+    pricing_type: PricingType;
+    pricing: {
+        local: PricingInformation;
+        bitcoin?: PricingInformation;
+        ethereum?: PricingInformation;
+    };
+    payments: Array<{
+        network: string;
+        transaction_id: string;
+        status: string;
+        value: {
+            local: PricingInformation;
+            crypto: PricingInformation;
+        };
+        block: {
+            height: number;
+            hash: string;
+            confirmations: number;
+            confirmations_required: number;
+        };
+    }>;
+    addresses: {
+        bitcoin?: string;
+        ethereum?: string;
+    };
+    local_price: PricingInformation;
+    status: ChargeStatus;
+}
+
+export interface ChargeResponse {
+    data: CoinbaseCharge;
 }

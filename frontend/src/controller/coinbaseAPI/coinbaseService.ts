@@ -1,69 +1,24 @@
-// app/api/payment/coinbase/services/CoinbaseService.ts
+// src/app/api/payment/coinbase/services/CoinbaseService.ts
+import { Webhook } from 'coinbase-commerce-node';
+import { coinbaseClient, Charge } from '@/lib/coinbase'; // Import the initialized client and Charge resource
+import { CoinbaseRepository } from '@/controller/coinbaseAPI/coinbaseRepository';
+import { CreateChargeRequest, CoinbaseCharge, BaseCharge, ChargeResponse } from '@/types/payment';
+import { CampaignRepository } from '@/controller/campaignAPI/campaignRepository';
 
-import { Client, resources } from 'coinbase-commerce-node';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
-import { chargeData } from '@/types/Investment';
-import { RequestBody, ChargeMetadata, ChargeResponse } from '@/types/payment';
+import * as crypto from 'crypto';
 
-
-// export interface RequestBody {
-//     user: {
-//         sub: string;
-//         email: string;
-//     };
-//     campaign: {
-//         _id: string;
-//         name: string;
-//         companyName: string;
-//     };
-//     amount: number;
-// }
-
-// interface ChargeMetadata {
-//     userId: string;
-//     userEmail: string;
-//     campaignId: string;
-//     campaignName: string;
-//     investmentAmount: string;
-// }
-
-// interface ChargeResponse {
-//     id: string;
-//     status: string;
-//     timeline: Array<{
-//         time: string;
-//         status: string;
-//     }>;
-//     payments: Array<{
-//         network: string;
-//         transaction_id: string;
-//         status: string;
-//         value: {
-//             local: { amount: string; currency: string };
-//             crypto: { amount: string; currency: string };
-//         };
-//         block: {
-//             height: number;
-//             hash: string;
-//             confirmations: number;
-//             confirmations_required: number;
-//         };
-//     }>;
-// }
-
-const DATABASE_NAME = 'B2DVentureProject';
-
+import { Transaction } from '@/types/Transaction';
 
 export class CoinbaseService {
     private static instance: CoinbaseService;
-    private readonly Charge = resources.Charge;
+    private readonly repository: CoinbaseRepository;
+    private readonly campaignRepository: CampaignRepository;
 
     private constructor() {
-        if (!process.env.COINBASE_COMMERCE_API_KEY) {
-            throw new Error('Coinbase Commerce API key not configured');
-        }
-        Client.init(process.env.COINBASE_COMMERCE_API_KEY);
+        this.repository = new CoinbaseRepository();
+        this.campaignRepository = new CampaignRepository();
     }
 
     public static getInstance(): CoinbaseService {
@@ -73,108 +28,787 @@ export class CoinbaseService {
         return CoinbaseService.instance;
     }
 
-    private async validateEnvironment() {
-        if (!process.env.MONGODB_URL) {
-            throw new Error('MongoDB database not configured');
+    // async createCharge(data: CreateChargeRequest) {
+    //     // console.log('Creating charge with data:', {
+    //     //     campaignId: data.campaign.id,
+    //     //     amount: data.amount,
+    //     //     userId: data.user.sub
+    //     // });
+
+    //     // First, verify the campaign exists
+    //     const campaign = await this.campaignRepository.findById(data.campaign.id);
+
+    //     if (!campaign) {
+    //         console.error('Campaign not found with ID:', data.campaign.id);
+    //         throw new Error(`Campaign not found with ID: ${data.campaign.id}`);
+    //     }
+
+    //     // Verify remaining amount
+    //     const remainingAmount = campaign.targetAmount - campaign.amountRaised;
+
+    //     if (data.amount > remainingAmount) {
+    //         throw new Error(`Investment amount (${data.amount}) exceeds campaign remaining target (${remainingAmount})`);
+    //     }
+
+    //     try {
+    //         const chargeData: BaseCharge = {
+                
+    //             name: `Investment in ${campaign.name}`,
+    //             description: `Investment in ${campaign.companyName}`,
+    //             local_price: {
+    //                 amount: data.amount.toString(),
+    //                 currency: 'USD'
+    //             },
+    //             pricing_type: 'fixed_price',
+    //             metadata: {
+    //                 userId: data.user.sub,
+    //                 userEmail: data.user.email,
+    //                 campaignId: data.campaign.id,
+    //                 campaignName: campaign.name,
+    //                 investmentAmount: data.amount.toString()
+    //             },
+    //             redirect_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success/${data.campaign.id}?provider=coinbase`,
+    //             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${data.campaign.id}?provider=coinbase`,
+    //         };
+
+    //         const charge = await Charge.create(chargeData); // Use the Charge resource
+
+    //         // Create transaction record
+    //         await this.repository.createTransaction({
+    //             // transactionId: charge.id,
+    //             userId: data.user.sub,
+    //             campaignId: data.campaign.id,
+    //             chargeId: charge.id,
+    //             amount: data.amount,
+    //             currency: 'USD',
+    //             paymentMethod: 'crypto',
+    //             paymentProvider: 'coinbase',
+    //             status: 'pending',
+    //             metadata: {
+    //                 chargeCode: charge.code,
+    //                 campaignName: campaign.name,
+    //                 companyName: campaign.companyName
+    //             },
+    //             createdAt: new Date(),
+    //             updatedAt: new Date()
+    //         });
+
+    //         return charge;
+    //     } catch (error) {
+    //         throw new Error('Failed to create charge');
+    //     }
+    // }
+    // async createCharge(data: CreateChargeRequest) {
+    //     const campaign = await this.campaignRepository.findById(data.campaign.id);
+
+    //     if (!campaign) {
+    //         throw new Error(`Campaign not found with ID: ${data.campaign.id}`);
+    //     }
+
+    //     const remainingAmount = campaign.targetAmount - campaign.amountRaised;
+    //     if (data.amount > remainingAmount) {
+    //         throw new Error(`Investment amount (${data.amount}) exceeds campaign remaining target (${remainingAmount})`);
+    //     }
+
+    //     try {
+    //         const chargeData: BaseCharge = {
+    //             name: `Investment in ${campaign.name}`,
+    //             description: `Investment in ${campaign.companyName}`,
+    //             local_price: {
+    //                 amount: data.amount.toString(),
+    //                 currency: 'USD'
+    //             },
+    //             pricing_type: 'fixed_price',
+    //             metadata: {
+    //                 userId: data.user.sub,
+    //                 userEmail: data.user.email,
+    //                 campaignId: data.campaign.id,
+    //                 campaignName: campaign.name,
+    //                 investmentAmount: data.amount.toString()
+    //             },
+    //             redirect_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success/${data.campaign.id}?provider=coinbase`,
+    //             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${data.campaign.id}?provider=coinbase`,
+    //         };
+
+    //         const charge = await Charge.create(chargeData);
+            
+    //         // Create transaction record with explicit chargeCode
+    //         await this.repository.createTransaction({
+    //             userId: data.user.sub,
+    //             campaignId: data.campaign.id,
+    //             chargeId: charge.id,
+    //             chargeCode: charge.code,  // Store at root level
+    //             amount: data.amount,
+    //             currency: 'USD',
+    //             paymentMethod: 'crypto',
+    //             paymentProvider: 'coinbase',
+    //             status: 'pending',
+    //             metadata: {
+    //                 campaignName: campaign.name,
+    //                 companyName: campaign.companyName
+    //             },
+    //             createdAt: new Date(),
+    //             updatedAt: new Date()
+    //         });
+
+    //         return charge;
+    //     } catch (error) {
+    //         console.error('Error creating charge:', error);
+    //         throw new Error('Failed to create charge');
+    //     }
+    // }
+
+    async createCharge(data: CreateChargeRequest) {
+        const campaign = await this.campaignRepository.findById(data.campaign.id);
+        if (!campaign) {
+            throw new Error(`Campaign not found with ID: ${data.campaign.id}`);
+        }
+    
+        const remainingAmount = campaign.targetAmount - campaign.amountRaised;
+        if (data.amount > remainingAmount) {
+            throw new Error(`Investment amount (${data.amount}) exceeds campaign remaining target (${remainingAmount})`);
+        }
+    
+        try {
+            const chargeData: BaseCharge = {
+                name: `Investment in ${campaign.name}`,
+                description: `Investment in ${campaign.companyName}`,
+                local_price: {
+                    amount: data.amount.toString(),
+                    currency: 'USD'
+                },
+                pricing_type: 'fixed_price',
+                metadata: {
+                    userId: data.user.sub,
+                    userEmail: data.user.email,
+                    campaignId: data.campaign.id,
+                    campaignName: campaign.name,
+                    investmentAmount: data.amount.toString()
+                },
+                redirect_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success/${data.campaign.id}?provider=coinbase`,
+                cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${data.campaign.id}?provider=coinbase`,
+            };
+    
+            const charge = await Charge.create(chargeData);
+    
+            // Create transaction record with complete charge information
+            await this.repository.createTransaction({
+                userId: data.user.sub,
+                campaignId: data.campaign.id,
+                chargeId: charge.id,
+                chargeCode: charge.code,
+                amount: data.amount,
+                currency: 'USD',
+                paymentMethod: 'crypto',
+                paymentProvider: 'coinbase',
+                status: 'created',
+                metadata: {
+                    campaignName: campaign.name,
+                    companyName: campaign.companyName,
+                    chargeCode: charge.code,
+                    userEmail: data.user.email
+                },
+                charge: {
+                    id: charge.id,
+                    code: charge.code,
+                    name: charge.name,
+                    description: charge.description,
+                    hosted_url: charge.hosted_url,
+                    created_at: charge.created_at,
+                    expires_at: charge.expires_at,
+                    pricing: charge.pricing,
+                    timeline: [{
+                        status: 'created',
+                        time: new Date().toISOString()
+                    }]
+                },
+                createdAt: new Date(),
+                updatedAt: new Date()
+            });
+    
+            return charge;
+        } catch (error) {
+            console.error('Error creating charge:', error);
+            throw new Error('Failed to create charge');
         }
     }
 
-    private async getDatabase() {
-        const mongoClient = await clientPromise;
-        return mongoClient.db(DATABASE_NAME);
+    async getChargeStatus(chargeId: string): Promise<CoinbaseCharge> {
+        const response = await Charge.retrieve(chargeId) as unknown as ChargeResponse;
+        return this.mapChargeToCoinbaseCharge(response.data);
     }
 
-    private async verifyCampaign(campaignId: string, amount: number) {
-        const db = await this.getDatabase();
-        const campaignDoc = await db.collection('Campaigns').findOne({
-            _id: new ObjectId(campaignId.toString()),
-            status: 'Active'
-        });
-
-        if (!campaignDoc) {
-            throw new Error('Campaign not found or inactive');
-        }
-
-        const remainingAmount = campaignDoc.targetAmount - campaignDoc.amountRaised;
-        if (amount > remainingAmount) {
-            throw new Error('Investment amount exceeds campaign remaining target');
-        }
-
-        return { campaignDoc, remainingAmount };
+    private mapChargeToCoinbaseCharge(charge: any): CoinbaseCharge {
+        return {
+            id: charge.id,
+            resource: charge.resource,
+            code: charge.code,
+            name: charge.name,
+            description: charge.description,
+            logo_url: charge.logo_url,
+            hosted_url: charge.hosted_url,
+            created_at: charge.created_at,
+            expires_at: charge.expires_at,
+            confirmed_at: charge.confirmed_at,
+            checkout: charge.checkout,
+            timeline: charge.timeline,
+            metadata: charge.metadata,
+            pricing_type: charge.pricing_type,
+            pricing: charge.pricing,
+            payments: charge.payments,
+            addresses: charge.addresses,
+            local_price: charge.local_price,
+            status: charge.status
+        };
     }
 
-    private async createTransaction(charge: any, userData: any) {
-        const db = await this.getDatabase();
-        await db.collection('Transactions').insertOne({
-            userId: userData.user.sub,
-            campaignId: new ObjectId(userData.campaign._id.toString()),
-            chargeId: charge.id,
-            amount: userData.amount,
-            currency: 'USD',
+    private mapCoinbaseChargeToTransaction(eventData: any): Partial<Transaction> {
+        return {
+            chargeId: eventData.id,
+            chargeCode: eventData.code,
+            amount: parseFloat(eventData.pricing.local.amount),
+            currency: eventData.pricing.local.currency,
+            status: eventData.status as Transaction['status'],
+            charge: {
+                id: eventData.id,
+                code: eventData.code,
+                name: eventData.name,
+                description: eventData.description,
+                hosted_url: eventData.hosted_url,
+                created_at: eventData.created_at,
+                expires_at: eventData.expires_at,
+                pricing: eventData.pricing,
+                payments: eventData.payments,
+                timeline: eventData.timeline
+            },
+            updatedAt: new Date()
+        };
+    }
+
+    // public verifyWebhookSignature(rawBody: string, signature: string): any {
+    //     return Webhook.verifyEventBody(
+    //         rawBody,
+    //         signature,
+    //         process.env.COINBASE_COMMERCE_WEBHOOK_SECRET!
+    //     );
+    // }
+
+    public verifyWebhookSignature(rawBody: string, signature: string, timestamp?: string): any {
+        if (!process.env.COINBASE_COMMERCE_WEBHOOK_SECRET) {
+          throw new Error('Webhook secret is not configured');
+        }
+      
+        try {
+          if (!timestamp) {
+            // If no timestamp provided, fall back to simple verification
+            const computedSignature = crypto
+              .createHmac('sha256', process.env.COINBASE_COMMERCE_WEBHOOK_SECRET)
+              .update(rawBody)
+              .digest('hex');
+            
+            return computedSignature === signature;
+          }
+      
+          // With timestamp (preferred method)
+          const signaturePayload = timestamp + rawBody;
+          const computedSignature = crypto
+            .createHmac('sha256', process.env.COINBASE_COMMERCE_WEBHOOK_SECRET)
+            .update(signaturePayload)
+            .digest('hex');
+      
+          return computedSignature === signature;
+        } catch (error) {
+          console.error('Signature verification error:', error);
+          return false;
+        }
+      }
+
+    // public verifyWebhookSignature(rawBody: string, signature: string, timestamp?: string): boolean {
+    //     if (!process.env.COINBASE_COMMERCE_WEBHOOK_SECRET) {
+    //         throw new Error('Webhook secret is not configured');
+    //     }
+    
+    //     try {
+    //         if (!timestamp) {
+    //             // If no timestamp provided, fall back to simple verification
+    //             const computedSignature = crypto
+    //                 .createHmac('sha256', process.env.COINBASE_COMMERCE_WEBHOOK_SECRET)
+    //                 .update(rawBody)
+    //                 .digest('hex');
+                
+    //             return computedSignature === signature;
+    //         }
+    
+    //         // With timestamp (preferred method)
+    //         const signaturePayload = timestamp + rawBody;
+    //         const computedSignature = crypto
+    //             .createHmac('sha256', process.env.COINBASE_COMMERCE_WEBHOOK_SECRET)
+    //             .update(signaturePayload)
+    //             .digest('hex');
+    
+    //         return computedSignature === signature;
+    //     } catch (error) {
+    //         console.error('Signature verification error:', error);
+    //         return false;
+    //     }
+    // }
+
+    // public async processWebhookEvent(event: any) {
+    //     const { data } = event;
+    //     console.log(data);
+    //     console.log(data.id);
+    //     const transaction = await this.repository.findTransactionByChargeId(data.id);
+
+    //     if (!transaction) {
+    //         throw new Error('Transaction not found');
+    //     }
+
+    //     switch (event.type) {
+    //         case 'charge:confirmed':
+    //             await this.handleConfirmedPayment(data, transaction);
+    //             break;
+    //         case 'charge:failed':
+    //             await this.handleFailedPayment(data);
+    //             break;
+    //         case 'charge:delayed':
+    //             await this.handleDelayedPayment(data);
+    //             break;
+    //         default:
+    //             throw new Error(`Unhandled event type: ${event.type}`);
+    //     }
+    // }
+
+    // private async handleConfirmedPayment(data: any, transaction: any) {
+    //     const client = await clientPromise;
+    //     const session = client.startSession();
+
+    //     try {
+    //         await session.withTransaction(async () => {
+    //             await this.repository.updateTransactionStatus(data.id, 'completed', data);
+    //             await this.repository.updateCampaignAmount(
+    //                 transaction.campaignId,
+    //                 transaction.amount,
+    //                 session
+    //             );
+    //             await this.repository.createStatement({
+    //                 userId: transaction.userId,
+    //                 campaignId: transaction.campaignId,
+    //                 transactionId: transaction._id,
+    //                 type: 'investment',
+    //                 amount: transaction.amount,
+    //                 currency: 'USD',
+    //                 status: 'completed',
+    //                 metadata: {
+    //                     campaignName: transaction.metadata.campaignName,
+    //                     companyName: transaction.metadata.companyName
+    //                 },
+    //                 createdAt: new Date()
+    //             }, session);
+    //         });
+    //     } finally {
+    //         await session.endSession();
+    //     }
+    // }
+    // public async processWebhookEvent(event: any) {
+    //     const { data } = event;
+    //     console.log('Processing webhook event:', event.type);
+    //     console.log('Event data:', JSON.stringify(data, null, 2));
+    
+    //     // Find transaction by charge ID or code
+    //     let transaction = await this.repository.findTransactionByChargeCodeOrId(data.id);
+        
+    //     if (!transaction) {
+    //         console.log(`Transaction not found for charge ID: ${data.id}. Attempting to find by code: ${data.code}`);
+    //         transaction = await this.repository.findTransactionByChargeCodeOrId(data.code);
+    //     }
+    
+    //     if (!transaction) {
+    //         console.log(`No transaction found for charge ID: ${data.id} or code: ${data.code}. Creating new transaction.`);
+    //         transaction = await this.createTransactionFromWebhookData(data);
+    //     }
+    
+    //     // Update transaction with payment details if available
+    //     if (data.payments && data.payments.length > 0) {
+    //         const payment = data.payments[0];
+    //         await this.repository.updateTransactionWithPaymentDetails(transaction.chargeId, payment);
+    //     }
+    
+    //     await this.handleWebhookUpdate(transaction.chargeId, data);
+    
+    //     switch (event.type) {
+    //         case 'charge:created':
+    //             await this.handleCreatedCharge(data);
+    //             break;
+    //         case 'charge:pending':
+    //             await this.handlePendingPayment(data);
+    //             break;
+    //         case 'charge:confirmed':
+    //             await this.handleConfirmedPayment(data, transaction);
+    //             break;
+    //         case 'charge:failed':
+    //             await this.handleFailedPayment(data);
+    //             break;
+    //         case 'charge:delayed':
+    //             await this.handleDelayedPayment(data);
+    //             break;
+    //         case 'charge:resolved':
+    //             await this.handleResolvedPayment(data, transaction);
+    //             break;
+    //         default:
+    //             console.log(`Unhandled event type: ${event.type}`);
+    //             break;
+    //     }
+    // }
+
+    public async processWebhookEvent(event: any) {
+        const { data } = event; // This is now the charge data
+        console.log('Processing webhook event:', event.type);
+        console.log('Event data:', JSON.stringify(data, null, 2));
+    
+        // Find transaction by charge ID or code
+        let transaction = await this.repository.findTransactionByChargeCodeOrId(data.id);
+    
+        if (!transaction) {
+            console.log(`Transaction not found for charge ID: ${data.id}. Attempting to find by code: ${data.code}`);
+            transaction = await this.repository.findTransactionByChargeCodeOrId(data.code);
+        }
+    
+        if (!transaction) {
+            console.log(`No transaction found for charge ID: ${data.id} or code: ${data.code}. Creating new transaction.`);
+            transaction = await this.createTransactionFromWebhookData(data); // Pass the charge data directly
+        }
+    
+        // Update transaction with payment details if available
+        if (data.payments && data.payments.length > 0) {
+            const payment = data.payments[0];
+            await this.repository.updateTransactionWithPaymentDetails(transaction.chargeId, payment);
+        }
+    
+        await this.handleWebhookUpdate(transaction.chargeId, data);
+    
+        switch (event.type) {
+            case 'charge:created':
+                await this.handleCreatedCharge(data);
+                break;
+            case 'charge:pending':
+                await this.handlePendingPayment(data);
+                break;
+            case 'charge:confirmed':
+                await this.handleConfirmedPayment(data, transaction);
+                break;
+            case 'charge:failed':
+                await this.handleFailedPayment(data);
+                break;
+            case 'charge:delayed':
+                await this.handleDelayedPayment(data);
+                break;
+            case 'charge:resolved':
+                await this.handleResolvedPayment(data, transaction);
+                break;
+            default:
+                console.log(`Unhandled event type: ${event.type}`);
+                break;
+        }
+    }
+    
+    private async createTransactionFromWebhookData(data: any): Promise<Transaction> {
+        const newTransaction: Transaction = {
+            userId: data.metadata?.userId || 'unknown',
+            campaignId: data.metadata?.campaignId || 'unknown',
+            chargeId: data.id,
+            chargeCode: data.code,
+            amount: parseFloat(data.pricing.local.amount),
+            currency: data.pricing.local.currency,
             paymentMethod: 'crypto',
             paymentProvider: 'coinbase',
-            status: 'pending',
+            status: this.mapCoinbaseStatusToTransactionStatus(data.status),
             metadata: {
-                chargeCode: charge.code,
-                campaignName: userData.campaignDoc.name,
-                companyName: userData.campaignDoc.companyName,
-                companyStage: userData.campaignDoc.companyStage,
-                industry: userData.campaignDoc.industry,
-                sector: userData.campaignDoc.sector
+                campaignName: data.metadata?.campaignName || 'unknown',
+                companyName: data.metadata?.companyName || 'unknown',
+                chargeCode: data.code,
+                userEmail: data.metadata?.userEmail || 'unknown'
+            },
+            charge: {
+                id: data.id,
+                code: data.code,
+                name: data.name,
+                description: data.description,
+                hosted_url: data.hosted_url,
+                created_at: data.created_at,
+                expires_at: data.expires_at,
+                pricing: data.pricing,
+                timeline: data.timeline || []
             },
             createdAt: new Date(),
             updatedAt: new Date()
+        };
+    
+        await this.repository.createTransaction(newTransaction);
+        console.log(`Created new transaction for charge ID: ${data.id}`);
+        return newTransaction;
+    }
+    
+    private mapCoinbaseStatusToTransactionStatus(status: string): Transaction['status'] {
+        const statusMap: { [key: string]: Transaction['status'] } = {
+            'NEW': 'created',
+            'PENDING': 'pending',
+            'COMPLETED': 'completed',
+            'FAILED': 'failed',
+            'EXPIRED': 'failed',
+            'UNRESOLVED': 'delayed',
+            'RESOLVED': 'resolved'
+        };
+    
+        return statusMap[status] || 'pending';
+    }
+
+    private async handleCreatedCharge(data: any) {
+        await this.repository.updateTransactionStatus(data.id, 'created', {
+            created_at: data.created_at,
+            expires_at: data.expires_at
         });
     }
+    
+    private async handlePendingPayment(data: any) {
+        await this.repository.updateTransactionStatus(data.id, 'pending', {
+            status: 'pending',
+            payment_details: data.payments?.[0],
+            updated_at: new Date()
+        });
+    }
+    
+    // private async handleConfirmedPayment(data: any, transaction: any) {
+    //     const client = await clientPromise;
+    //     const session = client.startSession();
+    
+    //     try {
+    //         await session.withTransaction(async () => {
+    //             // Update transaction status
+    //             await this.repository.updateTransactionStatus(data.id, 'completed', data);
+    
+    //             // Update campaign amount
+    //             await this.repository.updateCampaignAmount(
+    //                 transaction.campaignId,
+    //                 transaction.amount,
+    //                 session
+    //             );
+    
+    //             // Create statement
+    //             await this.repository.createStatement({
+    //                 userId: transaction.userId,
+    //                 campaignId: transaction.campaignId,
+    //                 transactionId: transaction._id,
+    //                 chargeId: transaction.chargeId,
+    //                 type: 'investment',
+    //                 amount: transaction.amount,
+    //                 currency: 'USD',
+    //                 status: 'completed',
+    //                 metadata: {
+    //                     campaignName: transaction.metadata.campaignName,
+    //                     companyName: transaction.metadata.companyName
+    //                 },
+    //                 createdAt: new Date()
+    //             }, session);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error handling confirmed payment:', error);
+    //         throw error;
+    //     } finally {
+    //         await session.endSession();
+    //     }
+    // }
 
-    public async createCharge(data: RequestBody) {
-        await this.validateEnvironment();
-        const { user, campaign, amount } = data;
-        const { campaignDoc, remainingAmount } = await this.verifyCampaign(campaign._id, amount);
+    // private async handleConfirmedPayment(data: any, transaction: any) {
+    //     const client = await clientPromise;
+    //     const session = client.startSession();
+    
+    //     try {
+    //         await session.withTransaction(async () => {
+    //             // Log the campaignId for debugging
+    //             console.log('Campaign ID:', transaction.campaignId);
+    
+    //             // Validate campaignId before using it
+    //             if (!ObjectId.isValid(transaction.campaignId)) {
+    //                 throw new Error(`Invalid campaignId: ${transaction.campaignId}`);
+    //             }
+    
+    //             // Update transaction status
+    //             await this.repository.updateTransactionStatus(data.id, 'completed', data);
+    
+    //             // Update campaign amount
+    //             await this.repository.updateCampaignAmount(
+    //                 transaction.campaignId,
+    //                 transaction.amount,
+    //                 session
+    //             );
+    
+    //             // Create statement
+    //             await this.repository.createStatement({
+    //                 userId: transaction.userId,
+    //                 campaignId: transaction.campaignId,
+    //                 transactionId: transaction._id,
+    //                 chargeId: transaction.chargeId,
+    //                 type: 'investment',
+    //                 amount: transaction.amount,
+    //                 currency: 'USD',
+    //                 status: 'completed',
+    //                 metadata: {
+    //                     campaignName: transaction.metadata.campaignName,
+    //                     companyName: transaction.metadata.companyName
+    //                 },
+    //                 createdAt: new Date()
+    //             }, session);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error handling confirmed payment:', error);
+    //         throw error;
+    //     } finally {
+    //         await session.endSession();
+    //     }
+    // }
 
-        const metadata: ChargeMetadata = {
-            userId: user.sub,
-            userEmail: user.email,
-            campaignId: campaign._id,
-            campaignName: campaign.name,
-            investmentAmount: amount.toString()
-        };
+    private async handleConfirmedPayment(data: any, transaction: any) {
+        const client = await clientPromise;
+        const session = client.startSession();
+    
+        try {
+            await session.withTransaction(async () => {
+                console.log('Transaction data:', JSON.stringify(transaction, null, 2));
+    
+                // Update transaction status
+                await this.repository.updateTransactionStatus(data.id, 'completed', data);
+    
+                // Check if campaignId exists and is valid
+                if (transaction.campaignId && ObjectId.isValid(transaction.campaignId)) {
+                    // Update campaign amount
+                    await this.repository.updateCampaignAmount(
+                        transaction.campaignId,
+                        transaction.amount,
+                        session
+                    );
+    
+                    // Create statement
+                    await this.repository.createStatement({
+                        userId: transaction.userId || 'unknown',
+                        campaignId: transaction.campaignId,
+                        transactionId: transaction._id,
+                        chargeId: transaction.chargeId,
+                        type: 'investment',
+                        amount: transaction.amount,
+                        currency: 'USD',
+                        status: 'completed',
+                        metadata: {
+                            campaignName: transaction.metadata?.campaignName || 'Unknown Campaign',
+                            companyName: transaction.metadata?.companyName || 'Unknown Company'
+                        },
+                        createdAt: new Date()
+                    }, session);
+                } else {
+                    console.warn(`Invalid or missing campaignId for transaction ${transaction.chargeId}`);
+                }
+            });
+        } catch (error) {
+            console.error('Error handling confirmed payment:', error);
+            throw error;
+        } finally {
+            await session.endSession();
+        }
+    }
 
-        const chargeData: chargeData = {
-            name: `Investment in ${campaignDoc.name}`,
-            description: `Investment in ${campaignDoc.companyName} - ${campaignDoc.description.substring(0, 100)}...`,
-            local_price: {
-                amount: amount.toString(),
-                currency: 'USD'
-            },
-            pricing_type: 'fixed_price',
-            metadata,
-            redirect_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/success/${campaign._id}?provider=coinbase`,
-            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${campaign._id}?provider=coinbase`,
-        };
+    private async handleFailedPayment(data: any) {
+        await this.repository.updateTransactionStatus(data.id, 'failed', {
+            status: 'failed',
+            failure_reason: data.failure_reason,
+            updated_at: new Date()
+        });
+    }
+    
+    private async handleDelayedPayment(data: any) {
+        await this.repository.updateTransactionStatus(data.id, 'delayed', {
+            status: 'delayed',
+            delay_reason: data.delay_reason,
+            updated_at: new Date()
+        });
+    }
+    
+    private async handleResolvedPayment(data: any, transaction: any) {
+        const client = await clientPromise;
+        const session = client.startSession();
+    
+        try {
+            await session.withTransaction(async () => {
+                // Update transaction status
+                await this.repository.updateTransactionStatus(data.id, 'resolved', {
+                    status: 'resolved',
+                    resolution_details: data.resolution,
+                    updated_at: new Date()
+                });
+    
+                // If the resolution was successful, update campaign amount
+                if (data.resolution === 'completed') {
+                    await this.repository.updateCampaignAmount(
+                        transaction.campaignId,
+                        transaction.amount,
+                        session
+                    );
+    
+                    // Create statement for successful resolution
+                    await this.repository.createStatement({
+                        userId: transaction.userId,
+                        campaignId: transaction.campaignId,
+                        transactionId: transaction._id,
+                        chargeId: transaction.chargeId,
+                        type: 'investment',
+                        amount: transaction.amount,
+                        currency: 'USD',
+                        status: 'resolved',
+                        metadata: {
+                            campaignName: transaction.metadata.campaignName,
+                            companyName: transaction.metadata.companyName,
+                            resolution: data.resolution
+                        },
+                        createdAt: new Date()
+                    }, session);
+                }
+            });
+        } catch (error) {
+            console.error('Error handling resolved payment:', error);
+            throw error;
+        } finally {
+            await session.endSession();
+        }
+    }
 
-        const charge = await this.Charge.create(chargeData);
-        await this.createTransaction(charge, { user, campaign, amount, campaignDoc });
-
-        return {
-            success: true,
-            chargeId: charge.id,
-            hostedUrl: charge.hosted_url,
-            expiresAt: charge.expires_at,
-            campaignDetails: {
-                name: campaignDoc.name,
-                companyName: campaignDoc.companyName,
-                remainingTarget: remainingAmount - amount
+    private async handleWebhookUpdate(chargeId: string, eventData: any) {
+        const existingTransaction = await this.repository.findTransactionByChargeId(chargeId);
+    
+        if (!existingTransaction) {
+            const newTransaction: Transaction = {
+                ...this.mapCoinbaseChargeToTransaction(eventData),
+                userId: eventData.metadata?.userId || '',
+                campaignId: eventData.metadata?.campaignId || '',
+                paymentMethod: 'crypto',
+                paymentProvider: 'coinbase',
+                metadata: {
+                    campaignName: eventData.metadata?.campaignName || '',
+                    companyName: eventData.metadata?.companyName || '',
+                    chargeCode: eventData.code,
+                    userEmail: eventData.metadata?.userEmail
+                },
+                createdAt: new Date()
+            } as Transaction;
+    
+            await this.repository.createTransaction(newTransaction);
+        } else {
+            const updateData = this.mapCoinbaseChargeToTransaction(eventData);
+            
+            if (eventData.status === 'completed') {
+                updateData.completedAt = new Date();
             }
-        };
+    
+            await this.repository.updateTransaction(chargeId, updateData);
+        }
     }
-
-    public async getChargeStatus(chargeId: string) {
-        const charge = await this.Charge.retrieve(chargeId) as unknown as ChargeResponse;
-        return {
-            status: charge.status,
-            timeline: charge.timeline,
-            payments: charge.payments
-        };
-    }
+    
+    
 }
