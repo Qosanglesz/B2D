@@ -154,3 +154,35 @@ export async function POST(request: Request) {
         );
     }
 }
+
+// import { NextResponse } from 'next/server';
+// import crypto from 'crypto';
+
+// const WEBHOOK_SECRET = process.env.COINBASE_COMMERCE_WEBHOOK_SECRET;
+
+// export async function POST(request: Request) {
+//   const body = await request.json();
+//   const rawBody = JSON.stringify(body);
+//   const signature = request.headers.get('X-CC-Webhook-Signature');
+//   const timestamp = request.headers.get('X-CC-Timestamp');
+
+//   if (!signature || !timestamp || !WEBHOOK_SECRET) {
+//     return NextResponse.json({ error: 'Missing required headers or secret' }, { status: 400 });
+//   }
+
+//   const computedSignature = crypto
+//     .createHmac('sha256', WEBHOOK_SECRET)
+//     .update(timestamp + rawBody)
+//     .digest('hex');
+
+//   if (computedSignature !== signature) {
+//     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+//   }
+
+//   // Process the webhook event
+//   console.log('Received valid webhook:', body);
+
+//   // Add your webhook processing logic here
+
+//   return NextResponse.json({ received: true });
+// }
