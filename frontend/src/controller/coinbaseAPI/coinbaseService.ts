@@ -98,7 +98,7 @@ export class CoinbaseService {
     
             return charge;
         } catch (error) {
-            console.error('Error creating charge:', error);
+            // console.error('Error creating charge:', error);
             throw new Error('Failed to create charge');
         }
     }
@@ -188,7 +188,7 @@ export class CoinbaseService {
       
           return computedSignature === signature;
         } catch (error) {
-          console.error('Signature verification error:', error);
+        //   console.error('Signature verification error:', error);
           return false;
         }
     }
@@ -257,12 +257,12 @@ export class CoinbaseService {
         let transaction = await this.repository.findTransactionByChargeCodeOrId(data.id);
     
         if (!transaction) {
-            console.log(`Transaction not found for charge ID: ${data.id}. Attempting to find by code: ${data.code}`);
+            // console.log(`Transaction not found for charge ID: ${data.id}. Attempting to find by code: ${data.code}`);
             transaction = await this.repository.findTransactionByChargeCodeOrId(data.code);
         }
     
         if (!transaction) {
-            console.log(`No transaction found for charge ID: ${data.id} or code: ${data.code}. Creating new transaction.`);
+            // console.log(`No transaction found for charge ID: ${data.id} or code: ${data.code}. Creating new transaction.`);
             
             // Create a new transaction with the extracted campaignId
             const newTransaction = await this.createTransactionFromWebhookData(data, userId, campaignId);
@@ -297,7 +297,7 @@ export class CoinbaseService {
                 await this.handleResolvedPayment(data, transaction);
                 break;
             default:
-                console.log(`Unhandled event type: ${event.type}`);
+                // console.log(`Unhandled event type: ${event.type}`);
                 break;
         }
     }
@@ -372,7 +372,7 @@ export class CoinbaseService {
         };
     
         await this.repository.createTransaction(newTransaction);
-        console.log(`Created new transaction for charge ID: ${data.id}`);
+        // console.log(`Created new transaction for charge ID: ${data.id}`);
         return newTransaction;
     }
     
@@ -411,7 +411,7 @@ export class CoinbaseService {
     
         try {
             await session.withTransaction(async () => {
-                console.log('Transaction data:', JSON.stringify(transaction, null, 2));
+                // console.log('Transaction data:', JSON.stringify(transaction, null, 2));
     
                 // Update transaction status
                 await this.repository.updateTransactionStatus(data.id, 'completed', data);
@@ -446,7 +446,7 @@ export class CoinbaseService {
                 }
             });
         } catch (error) {
-            console.error('Error handling confirmed payment:', error);
+            // console.error('Error handling confirmed payment:', error);
             throw error;
         } finally {
             await session.endSession();
@@ -511,7 +511,7 @@ export class CoinbaseService {
                 }
             });
         } catch (error) {
-            console.error('Error handling resolved payment:', error);
+            // console.error('Error handling resolved payment:', error);
             throw error;
         } finally {
             await session.endSession();

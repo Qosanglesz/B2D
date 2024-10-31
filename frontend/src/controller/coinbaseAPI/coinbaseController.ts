@@ -39,7 +39,7 @@ export class CoinbaseController {
             });
 
         } catch (error: any) {
-            console.error('Error creating charge:', error);
+            // console.error('Error creating charge:', error);
             return NextResponse.json(
                 { error: error.message || 'Failed to create charge' },
                 { status: 500 }
@@ -93,7 +93,7 @@ export class CoinbaseController {
     
             // Check if the event structure is valid
             if (!event || !event.event || !event.event.data) {
-                console.error('Invalid webhook event structure:', event);
+                // console.error('Invalid webhook event structure:', event);
                 return NextResponse.json(
                     { error: 'Invalid webhook event structure' },
                     { status: 400 }
