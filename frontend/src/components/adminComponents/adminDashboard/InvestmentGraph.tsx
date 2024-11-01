@@ -74,6 +74,7 @@ const InvestmentGraph: React.FC<InvestmentGraphProps> = ({data}) => {
                 },
             },
         },
+        
     };
 
     return <Line data={chartData} options={options}/>;
