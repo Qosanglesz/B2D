@@ -1,6 +1,7 @@
 import {NextResponse} from 'next/server';
 import {CampaignRepository} from '@/controller/campaignAPI/campaignRepository';
 import {Campaign} from '@/types/Campaign';
+import { ObjectId } from 'mongodb'; // Import ObjectId for MongoDB
 
 
 export class CampaignController {
@@ -10,7 +11,7 @@ export class CampaignController {
         this.repository = new CampaignRepository();
     }
 
-    async getCampaign(id: String): Promise<NextResponse> {
+    async getCampaign(id: string): Promise<NextResponse> {
         if (!id) {
             return NextResponse.json({error: 'Invalid ID'}, {status: 400});
         }
@@ -24,26 +25,38 @@ export class CampaignController {
         return NextResponse.json(campaign);
     }
 
-    async updateCampaign(id: String, updatedData: Partial<Campaign>): Promise<NextResponse> {
+    async updateCampaign(id: string, updatedData: Partial<Campaign>): Promise<NextResponse> {
         try {
+            if (!id) { // Validate ObjectId
+                return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+            }
+
             // Remove _id and id from updatedData to prevent overwriting
             delete updatedData._id;
             delete updatedData.id;
 
-            const result = await this.repository.update(id, updatedData);
-
-            if (!result) {
-                return NextResponse.json({error: 'Campaign not found'}, {status: 404});
+            // Validate fields in updatedData
+            const validFields = ['name', 'status', 'description', 'pictureFiles', 'companyName', 'website', 'founderName', 'email', 'linkedInProfile', 'companyStage', 'industry', 'sector', 'amountRaised', 'targetAmount', 'teamSize', 'headquartersLocation', 'productAvailable', 'location', 'incorporationDate', 'investors', 'companyNumber', 'companyVision', 'endInDate'];
+            for (const key in updatedData) {
+                if (!validFields.includes(key)) {
+                    return NextResponse.json({ error: `Invalid field: ${key}` }, { status: 400 });
+                }
             }
 
-            return NextResponse.json({message: 'Campaign updated successfully'}, {status: 200});
+            const result = await this.repository.update(id, updatedData); // Use ObjectId
+
+            if (!result) {
+                return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+            }
+
+            return NextResponse.json({ message: 'Campaign updated successfully' }, { status: 200 });
         } catch (error) {
             console.error("Error updating campaign:", error);
-            return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
+            return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
         }
     }
 
-    async deleteCampaign(id: String): Promise<NextResponse> {
+    async deleteCampaign(id: string): Promise<NextResponse> {
         try {
             if (!id) {
                 return NextResponse.json({error: 'Invalid ID'}, {status: 400});
