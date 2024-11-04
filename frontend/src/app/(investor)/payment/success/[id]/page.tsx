@@ -1,67 +1,3 @@
-// 'use client';
-
-// import React, {useEffect, useState} from "react";
-// import axios from "axios";
-// import {useRouter} from "next/navigation";
-// import {Spinner} from "@nextui-org/react";
-
-// interface SuccessProps {
-//     params: { id: string };
-// }
-
-// const Success: React.FC<SuccessProps> = ({params}) => {
-//     const {id: statementId} = params;
-//     const router = useRouter();
-//     const [loading, setLoading] = useState<boolean>(true);
-
-//     useEffect(() => {
-//         const checkStatus = async () => {
-//             try {
-//                 const response = await axios.get(
-//                     `http://localhost:3000/api/payment/statement/${statementId}`
-//                 );
-//                 const {status} = response.data;
-
-//                 if (status !== "complete") {
-//                     router.push(`http://localhost:3000/payment/cancel/${statementId}`);
-//                 } else {
-//                     setLoading(false);
-//                 }
-
-//             } catch (error) {
-//                 console.error("Failed to fetch payment status:", error);
-//                 router.push(`http://localhost:3000/home`); //redirect if cant fetch api
-
-//             }
-//         };
-
-//         checkStatus();
-//     }, [statementId, router]);
-
-//     if (loading) {
-//         return (
-//             <div className="flex justify-center items-center h-screen"><Spinner size="lg"/></div>
-//         );
-//     }
-
-//     return (
-//         <div className="min-h-screen flex justify-center items-center">
-//             <div className="text-center">
-//                 <h1 className="text-5xl font-bold text-green-600 mb-4">
-//                     Payment Successful!
-//                 </h1>
-//                 <p className="text-lg text-gray-700 mb-2">
-//                     Thank you for your investment. Your payment has been processed
-//                     successfully.
-//                 </p>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Success;
-
-// src/app/payment/success/[id]/page.tsx
 'use client';
 
 import React, { useEffect, useState } from "react";
@@ -78,21 +14,21 @@ const Success: React.FC<SuccessProps> = ({ params }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [loading, setLoading] = useState<boolean>(true);
-    
+
     // Get payment provider from URL query
-    const provider = searchParams.get('provider'); // 'stripe' or 'coinbase'
+    const provider = searchParams.get('provider') as string | null;
 
     useEffect(() => {
         const checkStatus = async () => {
             try {
                 let response;
-                
+
                 // Check payment status based on provider
                 if (provider === 'coinbase') {
                     response = await axios.get(
                         `/api/payment/coinbase?chargeId=${statementId}`
                     );
-                    
+
                     if (response.data.status !== "COMPLETED") {
                         router.push(`/payment/cancel/${statementId}?provider=coinbase`);
                         return;
@@ -102,7 +38,7 @@ const Success: React.FC<SuccessProps> = ({ params }) => {
                     response = await axios.get(
                         `/api/payment/statement/${statementId}`
                     );
-                    
+
                     if (response.data.status !== "complete") {
                         router.push(`/payment/cancel/${statementId}?provider=stripe`);
                         return;
