@@ -1,9 +1,9 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import 'tailwindcss/tailwind.css';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { NextUIProvider } from "@nextui-org/react";
-// import "@uploadthing/react/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,14 +12,16 @@ export const metadata: Metadata = {
   description: "Created by FishermanFriends team",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode;}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <body className={inter.className}>
         <UserProvider>
-              <body className={inter.className}>
-                  {children}
-              </body>
+          <NextUIProvider>
+            {children}
+          </NextUIProvider>
         </UserProvider>
+      </body>
     </html>
   );
 }

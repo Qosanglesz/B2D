@@ -1,46 +1,66 @@
 'use client';
 
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {useRouter} from "next/navigation";
-import {Spinner} from "@nextui-org/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Spinner } from "@nextui-org/react";
 
 interface SuccessProps {
     params: { id: string };
 }
 
-const Success: React.FC<SuccessProps> = ({params}) => {
-    const {id: statementId} = params;
+const Success: React.FC<SuccessProps> = ({ params }) => {
+    const { id: statementId } = params;
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [loading, setLoading] = useState<boolean>(true);
+
+    // Get payment provider from URL query
+    const provider = searchParams.get('provider') as string | null;
 
     useEffect(() => {
         const checkStatus = async () => {
             try {
-                const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/statement/${statementId}`
-                );
-                const {status} = response.data;
+                let response;
 
-                if (status !== "complete") {
-                    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/payment/cancel/${statementId}`);
+                // Check payment status based on provider
+                if (provider === 'coinbase') {
+                    response = await axios.get(
+                        `/api/payment/coinbase?chargeId=${statementId}`
+                    );
+
+                    if (response.data.status !== "COMPLETED") {
+                        router.push(`/payment/cancel/${statementId}?provider=coinbase`);
+                        return;
+                    }
                 } else {
-                    setLoading(false);
+                    // Assuming this is your existing Stripe check
+                    response = await axios.get(
+                        `/api/payment/statement/${statementId}`
+                    );
+
+                    if (response.data.status !== "complete") {
+                        router.push(`/payment/cancel/${statementId}?provider=stripe`);
+                        return;
+                    }
                 }
+
+                setLoading(false);
 
             } catch (error) {
                 console.error("Failed to fetch payment status:", error);
-                router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/home`); //redirect if cant fetch api
-
+                router.push(`/home`);
             }
         };
 
         checkStatus();
-    }, [statementId, router]);
+    }, [statementId, provider, router]);
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen"><Spinner size="lg"/></div>
+            <div className="flex justify-center items-center h-screen">
+                <Spinner size="lg" />
+            </div>
         );
     }
 
