@@ -96,8 +96,7 @@ const Success: React.FC<SuccessProps> = ({ params }) => {
                     if (response.data.status !== "COMPLETED") {
                         router.push(`/payment/cancel/${statementId}?provider=coinbase`);
                         return;
-                    }
-                } else {
+                    } else {
                     // Assuming this is your existing Stripe check
                     response = await axios.get(
                         `/api/payment/statement/${statementId}`
