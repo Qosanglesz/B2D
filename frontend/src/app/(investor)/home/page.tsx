@@ -33,7 +33,9 @@ export default function Home() {
         const fetchCampaigns = async () => {
             try {
                 // Fetch campaigns from the API endpoint
-                const response = await fetch('/api/campaigns'); // Ensure that this API endpoint exists
+                const response = await fetch('/api/campaigns', {
+                    cache: "no-store",
+                }); // Ensure that this API endpoint exists
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaigns'); // Throw error if fetch fails
                 }
