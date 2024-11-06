@@ -17,9 +17,7 @@ test('View current portfolio', async ({ page }) => {
     await login(page);
 
     // Step 2: Navigate to the fundraising campaigns page
-    const url = `${testEnv.HOST}/portfolio`;
-    console.log(`Navigating to: ${url}`);
-    await page.goto(url);
+    await page.goto(`${testEnv.PORTFOLIO}`);
 
     // Step 3: Verify the User Investment Portfolio heading is visible
     const userInvestmentPortfolioHeader = page.locator('h1.text-3xl.font-bold.my-4.mx-3');
