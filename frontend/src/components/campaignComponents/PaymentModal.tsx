@@ -45,19 +45,19 @@ export default function PaymentModal({
                                         </div>
                                         <div className="flex items-center gap-2 mb-4">
                                             <Image
-                                                src="/visa.svg"
+                                                src="/images/visa.svg"
                                                 alt="Visa"
                                                 width={40}
                                                 height={25}
                                             />
                                             <Image
-                                                src="/mastercard.svg"
+                                                src="/images/mastercard.svg"
                                                 alt="Mastercard"
                                                 width={40}
                                                 height={25}
                                             />
                                             <Image
-                                                src="/amex.svg"
+                                                src="/images/amex.svg"
                                                 alt="American Express"
                                                 width={40}
                                                 height={25}
@@ -82,19 +82,19 @@ export default function PaymentModal({
                                         </div>
                                         <div className="flex items-center gap-2 mb-4">
                                             <Image
-                                                src="/ethereum.svg"
+                                                src="/images/ethereum.svg"
                                                 alt="Ethereum"
                                                 width={30}
                                                 height={30}
                                             />
                                             <Image
-                                                src="/usdc.svg"
+                                                src="/images/usdc.svg"
                                                 alt="USDC"
                                                 width={30}
                                                 height={30}
                                             />
                                             <Image
-                                                src="/bitcoin.svg"
+                                                src="/images/bitcoin.svg"
                                                 alt="Bitcoin"
                                                 width={30}
                                                 height={30}
