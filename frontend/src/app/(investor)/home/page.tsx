@@ -64,7 +64,7 @@ export default function Home() {
     // Randomly shuffle the campaigns array and limit to 3 campaigns
     const randomCampaigns = campaigns
         .sort(() => Math.random() - 0.5) // Shuffle the campaigns
-        .slice(0, 3);  // Take the first 3 shuffled campaigns
+        .slice(0, 4);  // Take the first 3 shuffled campaigns
 
     return (
         <>
@@ -80,7 +80,7 @@ export default function Home() {
                     {/* Render the Hero Section with Carousel */}
                     <HeroSectionHome registerLink={links.getStarted} /> {/* Added HeroSectionHome component */}
 
-                    <div className="max-w-6xl mx-auto px-4">
+                    <div className="max-w-7xl mx-auto">
                         {/* Render the FeatureCards component here */}
                         <FeatureCards />
 

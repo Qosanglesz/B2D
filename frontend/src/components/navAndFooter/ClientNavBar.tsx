@@ -25,7 +25,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({name, isAuth, links, user}) 
     return (
         <nav className="bg-gray-800 fixed py-4 top-0 w-full z-10">
 
-            <div className="max-w-6xl px-4 mx-auto flex items-center justify-between h-full">
+            <div className="max-w-7xl px-4 mx-auto flex items-center justify-between h-full">
                 <div className="text-white text-lg font-bold">
                     <a href="/home">{name}</a>
                 </div>
