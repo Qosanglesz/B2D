@@ -1,4 +1,4 @@
-// tests/registerlogin.spec.js
+// tests/RegisterLogin.spec.js
 
 import { test, expect } from '@playwright/test';
 import { testEnv } from './config.js';
@@ -164,7 +164,7 @@ test('Login with invalid password', async ({ page }) => {
 
     // Step 3: Fill in an existing email but wrong password
     await page.getByLabel('Email address').click();
-    await page.getByLabel('Email address').fill(testEnv);
+    await page.getByLabel('Email address').fill(testEnv.EMAIL);
 
     // Password doesn't really matter in this case
     await page.getByLabel('Password').click();
