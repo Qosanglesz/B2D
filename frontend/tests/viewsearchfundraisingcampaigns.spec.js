@@ -1,8 +1,13 @@
-// tests/viewsearchfundraisingcampaigns.spec.js
+// tests/ViewSearchFundraisingCampaigns.spec.js
 
 import { test, expect } from '@playwright/test';
 import { login } from './helpers/login';
 import { testEnv } from './config';
+
+
+test.use({
+    locale: 'en'
+});
 
 
 // Test Case ID: TC_02_01
@@ -12,24 +17,30 @@ test('View all fundraising campaigns', async ({ page }) => {
     await login(page);
   
     // Step 2: Navigate to the fundraising campaigns page
-    const url = `${testEnv.HOST}/campaign`;
-    console.log(`Navigating to: ${url}`);
-    await page.goto(url);
+    await page.getByRole('link', { name: 'Campaigns' }).click();
+
+    // Step 3: Check if you are on campaigns page
+    await expect(page.getByRole('heading', { name: 'Live Opportunities' })).toBeVisible();
+    // this 'grid' should contain all campaign cards
+    await expect(page.locator('.grid')).toBeVisible();
+});
+
+
+// Test Case ID: TC_02_03
+test('Search campaigns with no matching results', async ({ page }) => {
+    // Step 1: Log in using the helper function
+    await login(page);
   
-    // Step 3: Verify the page title is correct
-    await expect(page.locator('h1')).toHaveText('Live Opportunities');
-  
-    // Step 4: Wait for the campaign cards to load
-    await page.waitForSelector('.campaign-card', { timeout: 15000 }); // Adjust timeout as needed
-    const campaignCards = page.locator('.campaign-card');
-    
-    // Ensure at least one campaign card is present
-    const cardCount = await campaignCards.count();
-    await expect(cardCount).toBeGreaterThan(0);
-  
-    // Step 5: Verify that all campaign cards are visible
-    for (let i = 0; i < cardCount; i++) {
-        const card = campaignCards.nth(i); // Get each individual card
-        await expect(card).toBeVisible();   // Check visibility
-    }
+    // Step 2: Navigate to the fundraising campaigns page
+    await page.getByRole('link', { name: 'Campaigns' }).click();
+
+    // Step 3: Check if you are on campaigns page
+    await expect(page.getByRole('heading', { name: 'Live Opportunities' })).toBeVisible();
+    // this 'grid' should contain all campaign cards
+    await expect(page.locator('.grid')).toBeVisible();
+
+    // Step 4: Click on 'Search' and try to search for non-existing campaign
+    await page.getByPlaceholder('Search..').click();
+    await page.getByPlaceholder('Search..').fill('ข้าวมันไก่เตียงเกตุ');
+    await expect(page.getByText('No campaigns found')).toBeVisible();
 });

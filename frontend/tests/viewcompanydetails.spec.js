@@ -1,8 +1,13 @@
-// tests/viewcompanydetails.spec.js
+// tests/ViewCompanyDetails.spec.js
 
 import { test, expect } from '@playwright/test';
 import { login } from './helpers/login';
 import { testEnv } from './config';
+
+
+test.use({
+    locale: 'en'
+});
 
 
 // Test Case ID: TC_03_01
@@ -12,11 +17,10 @@ test('View company details', async ({ page }) => {
     await login(page);
 
     // Step 2: Navigate to the fundraising campaigns page
-    const url = `${testEnv.HOST}/campaign`;
-    console.log(`Navigating to: ${url}`);
-    await page.goto(url);
+    await page.getByRole('link', { name: 'Campaigns' }).click();
 
-    // Step 3: Wait for the campaign cards to load
+    // Step 3: Check if you are on campaigns page
+    await expect(page.getByRole('heading', { name: 'Live Opportunities' })).toBeVisible();
     await page.waitForSelector('.campaign-card', { timeout: 15000 }); // Wait for campaign cards
 
     // Step 4: Click on the first campaign card
@@ -25,7 +29,7 @@ test('View company details', async ({ page }) => {
     await firstCampaignCard.click(); // Click on the first campaign card
 
     // Step 5: Wait for the campaign details to load
-    await page.waitForSelector('h2.text-5xl.font-bold.text-gray-900.mb-8', { timeout: 15000 }); // Wait for the company details header
+    await page.waitForSelector('h2.text-5xl.font-bold.text-gray-900.mb-8'); // Wait for the company details header
 
     // Step 6: Verify the Company Details header is visible
     const companyDetailsHeader = page.locator('h2.text-5xl.font-bold.text-gray-900.mb-8');
@@ -36,9 +40,4 @@ test('View company details', async ({ page }) => {
     const investButton = page.locator('button.bg-blue-600.text-white.py-3.px-6.text-lg.rounded-lg.hover\\:bg-blue-500.transition-all.block.mx-auto.w-full');
     await expect(investButton).toBeVisible();
     console.log('Checked visibility of Invest button.');
-
-    // Step 8: (Optional) Click the Invest button and verify navigation or action
-    // await investButton.click(); // Simulate clicking the Invest button
-    // console.log('Clicked the Invest button.'); // Log the click action
-    // Add assertions to verify expected outcome after clicking the button, if applicable.
 });

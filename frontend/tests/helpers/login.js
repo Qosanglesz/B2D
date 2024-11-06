@@ -1,36 +1,28 @@
 // tests/helpers/login.js
 
 import { testEnv } from '../config';
+import { expect } from '@playwright/test';
 
 
 export async function login(page) {
-  // Navigate to the home page
-  await page.goto(`${testEnv.HOST}`);
-  
-  // Wait for redirection to /home if user starts at /
-  await page.waitForURL(`${testEnv.HOST}/home`, { timeout: 10000 });
+    // Step 1: Navigate to the home page and then sign in page
+    await page.goto(`${testEnv.HOST}`);
 
-  // Click the "Sign in" link
-  await page.getByRole('link', { name: 'Sign in' }).click();
+    // Click the Sign in Button on Navbar
+    await page.getByRole('link', { name: 'Sign in' }).click();
 
-  // Wait for the Auth0 login page to load
-  await page.waitForURL(/\/u\/login/, { timeout: 10000 });
+    // Step 2: Check if you are on Login page
+    await expect(page.getByRole('heading', { name: 'Welcome' })).toBeVisible();
+    await expect(page.getByLabel('Email address')).toBeVisible();
+    await expect(page.getByLabel('Password')).toBeVisible();
 
-  // Fill in email/username
-  const emailInput = page.locator('#username');
-  await emailInput.waitFor({ state: 'visible', timeout: 10000 });
-  await emailInput.click();
-  await emailInput.fill(testEnv.EMAIL);
+    // Step 3: Fill in an existing account's Email and Password
+    await page.getByLabel('Email address').click();
+    await page.getByLabel('Email address').fill(testEnv.EMAIL);
+    await page.getByLabel('Password').click();
+    await page.getByLabel('Password').fill(testEnv.PASSWORD);
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
 
-  // Fill in password
-  const passwordInput = page.locator('#password');
-  await passwordInput.waitFor({ state: 'visible', timeout: 10000 });
-  await passwordInput.click();
-  await passwordInput.fill(testEnv.PASSWORD);
-
-  // Click "Continue"
-  await page.click('button:has-text("Continue")');
-
-  // Wait for redirection to the home page after login
-  await page.waitForURL(`${testEnv.HOST}/home`, { timeout: 10000 });
+    // Step 4: After continue you should be directed to /home with new 'Logout' button
+    await expect(page.getByRole('link', { name: 'Logout' })).toBeVisible();
 }
