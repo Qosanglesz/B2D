@@ -67,7 +67,7 @@ export default function CampaignPage() {
                 <div className="grid grid-cols-3 gap-4">
                     {filteredCampaigns.length > 0 ? (
                         filteredCampaigns.map((campaign) => (
-                            <CampaignCard key={campaign.id} campaign={campaign}/>
+                            <CampaignCard key={campaign.id as string} campaign={campaign}/>
                         ))
                     ) : (
                         <p>No campaigns found</p>
