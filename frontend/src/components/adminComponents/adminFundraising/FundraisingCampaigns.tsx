@@ -9,7 +9,7 @@ import {LoadingError} from "@/components/homeComponents/LoadingError";
 type SortField = 'id' | 'amountRaised' | 'targetAmount' | 'companyName';
 type SortOrder = 'asc' | 'desc';
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 10;
 
 const FundraisingCampaigns: React.FC = () => {
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
