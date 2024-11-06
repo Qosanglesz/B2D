@@ -12,7 +12,7 @@ export default function CampaignDetails({params}: { params: { id: string } }) {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-    
+
     useEffect(() => {
         const fetchCampaign = async () => {
             try {
@@ -54,54 +54,81 @@ export default function CampaignDetails({params}: { params: { id: string } }) {
         }
     };
 
-    if (isLoading) return <LoadingError loading={isLoading} error={error} />;
+    if (isLoading) return <LoadingError loading={isLoading} error={error}/>;
     if (error) return <div className="flex justify-center items-center h-screen">Error: {error}</div>;
     if (!campaign) return <div className="flex justify-center items-center h-screen">No campaign data found</div>;
 
     return (
-        <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
-            <div className="bg-white shadow-xl rounded-lg p-8 max-w-2xl w-full text-center">
-                <h1 className="text-3xl font-bold mb-6">{campaign.name}</h1>
+        <div>
+            <div>
+                <div className="mx-auto bg-white overflow-hidden p-8 space-y-6">
+                    {/* Campaign Title */}
+                    <h1 className="text-4xl font-extrabold text-gray-900 text-center">{campaign.name}</h1>
 
-                {/* Image */}
-                <div className="mb-8 relative w-64 h-64 mx-auto">
-                    <Image
-                        src={campaign.pictureFiles[0].url as string}
-                        alt={campaign.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-lg shadow-md"
-                    />
-                </div>
+                    {/* Image */}
+                    <div className="relative max-w-4xl h-64 mx-auto mb-6">
+                        <Image
+                            src={campaign.pictureFiles[0].url as string}
+                            alt={campaign.name}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-lg shadow-lg"
+                        />
+                    </div>
 
-                {/* Company information */}
-                <div className="space-y-2 mb-8">
-                    <p><strong>Description:</strong> {campaign.description}</p>
-                    <p><strong>Status:</strong> {campaign.status ? 'Active' : 'Closed'}</p>
-                    <p><strong>Company Name:</strong> {campaign.companyName}</p>
-                    <p><strong>Website:</strong> <a href={campaign.website} target="_blank" rel="noopener noreferrer"
-                                                    className="text-blue-500 hover:underline">{campaign.website}</a></p>
-                    <p><strong>Founder:</strong> {campaign.founderName}</p>
-                    <p><strong>Email:</strong> {campaign.email}</p>
-                    <p><strong>LinkedIn:</strong> <a href={campaign.linkedInProfile} target="_blank"
-                                                     rel="noopener noreferrer"
-                                                     className="text-blue-500 hover:underline">{campaign.linkedInProfile}</a>
-                    </p>
-                    <p><strong>Company Stage:</strong> {campaign.companyStage}</p>
-                    <p><strong>Industry:</strong> {campaign.industry}</p>
-                    <p><strong>Sector:</strong> {campaign.sector}</p>
-                    <p><strong>Amount Raised:</strong> ${campaign.amountRaised.toLocaleString()}</p>
-                    <p><strong>Target Amount:</strong> ${campaign.targetAmount.toLocaleString()}</p>
-                    <p><strong>Team Size:</strong> {campaign.teamSize}</p>
-                    <p><strong>Headquarters:</strong> {campaign.headquartersLocation}</p>
-                    <p><strong>Product Available:</strong> {campaign.productAvailable ? 'Yes' : 'No'}</p>
-                    <p><strong>Location:</strong> {campaign.location}</p>
-                    <p><strong>Incorporation Date:</strong> {new Date(campaign.incorporationDate).toLocaleDateString()}
-                    </p>
-                    <p><strong>Campaign End Date:</strong> {new Date(campaign.endInDate).toLocaleDateString()}</p>
-                    <p><strong>Investors:</strong> {campaign.investors.join(', ')}</p>
-                    <p><strong>Company Number:</strong> {campaign.companyNumber}</p>
-                    <p><strong>Company Vision:</strong> {campaign.companyVision}</p>
+                    {/* Company Information */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 mx-auto max-w-7xl">
+                        <p><span className="font-semibold text-gray-800">Description:</span> {campaign.description}</p>
+                        <p><span className="font-semibold text-gray-800">Status:</span>
+                            <span
+                                className={`ml-2 inline-block px-2 py-1 text-sm rounded-full ${campaign.status ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                {campaign.status ? 'Active' : 'Closed'}
+                            </span>
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Company Name:</span> {campaign.companyName}</p>
+                        <p><span className="font-semibold text-gray-800">Website:</span>
+                            <a href={campaign.website} target="_blank" rel="noopener noreferrer"
+                               className="text-blue-600 hover:underline">
+                                {campaign.website}
+                            </a>
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Founder:</span> {campaign.founderName}</p>
+                        <p><span className="font-semibold text-gray-800">Email:</span> {campaign.email}</p>
+                        <p><span className="font-semibold text-gray-800">LinkedIn:</span>
+                            <a href={campaign.linkedInProfile} target="_blank" rel="noopener noreferrer"
+                               className="text-blue-600 hover:underline">
+                                {campaign.linkedInProfile}
+                            </a>
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Company Stage:</span> {campaign.companyStage}
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Industry:</span> {campaign.industry}</p>
+                        <p><span className="font-semibold text-gray-800">Sector:</span> {campaign.sector}</p>
+                        <p><span
+                            className="font-semibold text-gray-800">Amount Raised:</span> ${campaign.amountRaised.toLocaleString()}
+                        </p>
+                        <p><span
+                            className="font-semibold text-gray-800">Target Amount:</span> ${campaign.targetAmount.toLocaleString()}
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Team Size:</span> {campaign.teamSize}</p>
+                        <p><span
+                            className="font-semibold text-gray-800">Headquarters:</span> {campaign.headquartersLocation}
+                        </p>
+                        <p><span
+                            className="font-semibold text-gray-800">Product Available:</span> {campaign.productAvailable ? 'Yes' : 'No'}
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Location:</span> {campaign.location}</p>
+                        <p><span
+                            className="font-semibold text-gray-800">Incorporation Date:</span> {new Date(campaign.incorporationDate).toLocaleDateString()}
+                        </p>
+                        <p><span
+                            className="font-semibold text-gray-800">Campaign End Date:</span> {new Date(campaign.endInDate).toLocaleDateString()}
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Company Number:</span> {campaign.companyNumber}
+                        </p>
+                        <p><span className="font-semibold text-gray-800">Company Vision:</span> {campaign.companyVision}
+                        </p>
+                    </div>
                 </div>
 
                 {/* Buttons */}

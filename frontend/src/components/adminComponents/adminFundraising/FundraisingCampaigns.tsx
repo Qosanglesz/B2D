@@ -132,7 +132,14 @@ const FundraisingCampaigns: React.FC = () => {
                                     <td className="py-2 px-4 border-b text-center">{campaign.companyName}</td>
                                     <td className="py-2 px-4 border-b text-center">${campaign.targetAmount.toLocaleString()}</td>
                                     <td className="py-2 px-4 border-b text-center">${campaign.amountRaised.toLocaleString()}</td>
-                                    <td className="py-2 px-4 border-b text-center">{campaign.status ? 'Active' : 'Closed'}</td>
+                                    <td className="py-2 px-4 border-b text-center">
+                                        <p><span className="font-semibold text-gray-800"></span>
+                                            <span
+                                                className={`ml-2 inline-block px-2 py-1 text-sm rounded-full ${campaign.status ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                {campaign.status ? 'Active' : 'Closed'}
+                                            </span>
+                                        </p>
+                                    </td>
                                     <td className="py-2 px-4 border-b text-center">
                                         <Link href={`/admin/fundraising/${campaign.id}`}>
                                             <Button color="primary" size="sm">
