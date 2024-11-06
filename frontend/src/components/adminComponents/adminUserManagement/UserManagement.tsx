@@ -15,7 +15,7 @@ interface User {
 
 type SortKey = 'name' | 'email' | 'last_login';
 
-const USERS_PER_PAGE = 5;
+const USERS_PER_PAGE = 10;
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);

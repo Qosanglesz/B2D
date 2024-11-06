@@ -1,151 +1,49 @@
-// src/app/admin/transaction-crypto/page.tsx
-'use client';
+"use client"
 
 import React, { useEffect, useState } from 'react';
-import { FiAlertCircle } from 'react-icons/fi';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import TransactionTable from '@/components/adminComponents/adminCrypto/TransactionTable';
-import { Input, Pagination } from "@nextui-org/react";
-import SearchIcon from "@/components/adminComponents/adminCrypto/SearchIcon";
+import StatementsTable from '@/components/adminComponents/adminStatement/StatementsTable';
+import { User } from "@/types/User";
+import { Statement, StatementWithUser } from "@/types/Statement";
+import {LoadingError} from "@/components/homeComponents/LoadingError";
 
-const TransactionCryptoPage: React.FC = () => {
-    const [transactions, setTransactions] = useState<any[]>([]);
+export default function StatementsPage() {
+    const [statementsWithUser, setStatementsWithUser] = useState<StatementWithUser[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' | null }>({
-        key: 'chargeId',
-        direction: 'asc',
-    });
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const transactionsPerPage = 5;
 
     useEffect(() => {
-        const fetchTransactions = async () => {
+        const fetchData = async () => {
             try {
-                const response = await fetch('/api/payment/coinbase/transaction-crypto');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch transactions');
-                }
-                const data = await response.json();
-                setTransactions(data);
-            } catch (err: any) {
-                setError(err.message);
+                const [statementsRes, usersRes] = await Promise.all([
+                    fetch('/api/statements'),
+                    fetch('/api/users')
+                ]);
+
+                const statements: Statement[] = await statementsRes.json();
+                const users: User[] = await usersRes.json();
+
+                const combinedStatements: StatementWithUser[] = statements.map(statement => {
+                    const user = users.find(u => u.user_id === statement.user_id) || null;
+                    return { ...statement, user };
+                });
+
+                setStatementsWithUser(combinedStatements);
+            } catch (err) {
+                setError('Failed to load data');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchTransactions();
+        fetchData();
     }, []);
 
-    const sortTransactions = (transactions: any[]) => {
-        const sortedTransactions = [...transactions];
-
-        if (sortConfig.key) {
-            sortedTransactions.sort((a, b) => {
-                const aValue = a[sortConfig.key];
-                const bValue = b[sortConfig.key];
-
-                if (typeof aValue === 'string' && typeof bValue === 'string') {
-                    return sortConfig.direction === 'asc'
-                        ? aValue.localeCompare(bValue)
-                        : bValue.localeCompare(aValue);
-                }
-
-                return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
-            });
-        }
-
-        return sortedTransactions;
-    };
-
-    const handleSort = (key: string) => {
-        let direction: 'asc' | 'desc' = 'asc';
-
-        if (sortConfig.key === key && sortConfig.direction === 'asc') {
-            direction = 'desc';
-        }
-
-        setSortConfig({ key, direction });
-    };
-
-    const filteredTransactions = transactions.filter(transaction => {
-        return (
-            transaction.chargeId.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-            transaction.amount.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-            transaction.currency.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-            transaction.status.toString().toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    });
-
-    const sortedTransactions = sortTransactions(filteredTransactions);
-
-    // Pagination logic
-    const totalPages = Math.ceil(sortedTransactions.length / transactionsPerPage);
-    const currentTransactions = sortedTransactions.slice((currentPage - 1) * transactionsPerPage, currentPage * transactionsPerPage);
-
-    console.log("Total Pages:", totalPages);
-    console.log("Current Page:", currentPage);
-    console.log("Current Transactions:", currentTransactions);
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center h-screen bg-gray-50">
-                <div className="text-xl font-semibold text-blue-600 flex items-center gap-2">
-                    <AiOutlineLoading3Quarters className="animate-spin" />
-                    Loading transactions...
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="flex justify-center items-center h-screen bg-gray-50">
-                <div className="flex items-center gap-2 text-red-500 text-lg">
-                    <FiAlertCircle />
-                    Error: {error}
-                </div>
-            </div>
-        );
-    }
+    if (loading) return <LoadingError loading={loading} error={error} />;
+    if (error) return <div>{error}</div>;
 
     return (
-        <div className="p-6 bg-gradient-to-b from-gray-100 to-blue-50 min-h-screen">
-            <div className="flex justify-between mb-4">
-                <h1 className="text-4xl font-bold text-left text-blue-700">
-                    Cryptocurrency Transactions
-                </h1>
-                <Input
-                    classNames={{
-                        base: "max-w-full sm:max-w-[10rem] h-10",
-                        mainWrapper: "h-full",
-                        input: "text-small",
-                        inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-                    }}
-                    placeholder="Type to search..."
-                    size="sm"
-                    startContent={<SearchIcon size={18} />}
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-            </div>
-            <div className="overflow-x-auto">
-                <TransactionTable transactions={currentTransactions} onSort={handleSort} />
-            </div>
-            <div className="flex justify-center mt-4">
-                {totalPages > 1 && (
-                    <Pagination
-                        total={totalPages}
-                        initialPage={1}
-                        onChange={(page) => setCurrentPage(page)}
-                    />
-                )}
-            </div>
+        <div className="container mx-auto p-4">
+            <StatementsTable initialStatements={statementsWithUser} />
         </div>
     );
-};
-
-export default TransactionCryptoPage;
+}

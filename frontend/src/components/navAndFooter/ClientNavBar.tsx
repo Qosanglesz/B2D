@@ -30,14 +30,6 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({name, isAuth, links, user}) 
                     <a href="/home">{name}</a>
                 </div>
 
-                <div className="flex-1 mx-4">
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="bg-gray-700 text-white px-4 py-2 rounded-md w-full focus:outline-none focus:ring focus:border-blue-500"
-                    />
-                </div>
-
                 <div className="hidden md:flex items-center space-x-4">
                     <a href={links.home} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">Home</a>
                     <a href={links.about} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md">About</a>

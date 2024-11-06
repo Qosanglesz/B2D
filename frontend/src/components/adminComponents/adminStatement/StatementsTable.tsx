@@ -20,7 +20,7 @@ interface StatementsTableProps {
 
 type SortableColumns = keyof StatementWithUser | 'userName' | 'userEmail';
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 10;
 
 export default function StatementsTable({ initialStatements }: StatementsTableProps) {
   const [statements] = useState<StatementWithUser[]>(initialStatements);

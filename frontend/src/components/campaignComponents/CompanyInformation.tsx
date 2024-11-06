@@ -18,7 +18,6 @@ const CompanyInformation: React.FC<CampaignDetailProps> = ({ campaign }) => {
           <p><strong>Industry:</strong> {campaign.industry || 'N/A'}</p>
           <p><strong>Location:</strong> {campaign.location || 'N/A'}</p>
           <p><strong>Team Size:</strong> {campaign.teamSize || 'N/A'}</p>
-          <p><strong>Product Available:</strong> {campaign.productAvailable ? 'Yes' : 'No'}</p>
         </div>
         <div className="flex flex-col space-y-4">
           <p><strong>LinkedIn Profile:</strong> {campaign.linkedInProfile ? (
@@ -38,9 +37,6 @@ const CompanyInformation: React.FC<CampaignDetailProps> = ({ campaign }) => {
             {campaign.incorporationDate ? new Date(campaign.incorporationDate).toLocaleDateString() : 'N/A'}
           </p>
           <p><strong>Company Vision:</strong> {campaign.companyVision || 'N/A'}</p>
-          <p><strong>End Date:</strong> 
-            {campaign.endInDate ? new Date(campaign.endInDate).toLocaleDateString() : 'N/A'}
-          </p>
         </div>
       </div>
     </div>

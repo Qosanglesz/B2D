@@ -19,7 +19,7 @@ const TransactionCryptoPage: React.FC = () => {
         direction: 'asc',
     });
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const transactionsPerPage = 5;
+    const transactionsPerPage = 10;
 
     useEffect(() => {
         const fetchTransactions = async () => {
@@ -109,7 +109,7 @@ const TransactionCryptoPage: React.FC = () => {
     }
 
     return (
-        <div className="p-6 bg-gradient-to-b from-gray-100 to-blue-50 min-h-screen">
+        <div className="p-6 min-h-screen">
             <div className="flex justify-between mb-4">
                 <h1 className="text-4xl font-bold text-left text-blue-700">
                     Cryptocurrency Transactions
