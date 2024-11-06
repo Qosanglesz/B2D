@@ -1,5 +1,3 @@
-// src/components/campaignComponents/IntroCarousel.tsx
-
 import React from 'react';
 import { Carousel, Flowbite } from 'flowbite-react';
 import Image from 'next/image';
