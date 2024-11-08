@@ -44,4 +44,37 @@ export class UserController {
             return NextResponse.json({error: 'Failed to patch user'}, {status: 500});
         }
     }
+    // async patchUserData(newData: any, user_id: string): Promise<NextResponse> {
+    //     try {
+    //         // First try to update through Auth0
+    //         const auth0Result = await this.auth0Service.patchUserData(newData, user_id);
+    
+    //         // Always update the MongoDB profile
+    //         await connectToDatabase();
+    //         const updatedProfile = await UserProfile.findOneAndUpdate(
+    //             { auth0Id: user_id },
+    //             {
+    //                 name: newData.name,
+    //                 nickname: newData.nickname,
+    //                 updatedAt: new Date()
+    //             },
+    //             { upsert: true, new: true }
+    //         );
+    
+    //         return NextResponse.json({
+    //             message: "User profile updated successfully",
+    //             auth0Result,
+    //             customProfile: updatedProfile
+    //         });
+    //     } catch (err) {
+    //         console.error(`Cannot patch user: ${err}`);
+    //         return NextResponse.json(
+    //             { 
+    //                 error: 'Failed to update user profile', 
+    //                 details: (err as Error).message 
+    //             },
+    //             { status: 500 }
+    //         );
+    //     }
+    // }
 }

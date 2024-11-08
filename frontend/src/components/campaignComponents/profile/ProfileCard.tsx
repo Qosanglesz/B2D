@@ -43,7 +43,7 @@ export const ProfileCard = ({
                                 Last updated: {new Date(user?.updated_at || '').toLocaleDateString() || 'N/A'}
                             </p>
                             <button
-                                className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 mt-4 rounded transition-colors duration-200"
                                 onClick={toggleEdit}
                             >
                                 Edit

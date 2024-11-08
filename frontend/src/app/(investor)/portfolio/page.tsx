@@ -771,6 +771,10 @@ import { SearchBar } from "@/components/campaignComponents/profile/SearchBar";
 import { InvestmentTable } from "@/components/campaignComponents/profile/InvestmentTable";
 import { CryptoTable } from "@/components/campaignComponents/profile/CryptoTable";
 
+import { UserProfile } from "@/components/campaignComponents/profile/UserProfile";
+
+import Image from 'next/image';
+
 // Import interfaces
 // import { UserStatements, CryptoTransaction } from "@/types/interfaces";
 
@@ -885,6 +889,34 @@ export default function Home() {
         });
     };
 
+    // Fetch user data and statements
+    useEffect(() => {
+        const fetchStatement = async () => {
+            if (!user || userLoading) return;
+
+            setLoading(true);
+            try {
+                const user_id = user.sub;
+                const response = await fetch(`/api/statement/byuserid/${user_id}`);
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch investment statements.");
+                }
+                const data: UserStatements[] = await response.json();
+                setUserStatements(data);
+                setName(user.name || undefined);
+                setNickname(user.nickname || undefined);
+            } catch (err: any) {
+                setError(err.message);
+                console.error('Error fetching statements:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchStatement();
+    }, [user, userLoading]);
+    
     // Event handlers
     const handleSort = (key: string) => {
         setSortConfig((prevConfig) => ({
@@ -901,25 +933,28 @@ export default function Home() {
     const toggleEdit = () => setIsEditing(!isEditing);
 
     const handleSave = async () => {
-        const newData = { name, nickname };
-        const response = await fetch('/api/user/patch', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                user_id: user?.sub,
-                newData,
-            }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to update user data');
-        }
-
-        if (response.ok) {
+        try {
+            const newData = { name, nickname };
+            const response = await fetch('/api/user/patch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: user?.sub,
+                    newData,
+                }),
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to update user data');
+            }
+    
             setIsEditing(false);
             alert('User information saved! Please login again to see changes');
             router.push("/api/auth/logout");
+        } catch (error) {
+            console.error('Error saving user data:', error);
+            alert('Failed to save user information. Please try again.');
         }
     };
 
