@@ -2,6 +2,7 @@ import { Collection, ClientSession } from 'mongodb';
 import clientPromise from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
 import { Transaction } from '@/types/Transaction';
+import { CryptoSummary } from '@/types/cryptoSum';
 
 const DATABASE_NAME = "B2DVentureProject";
 
@@ -113,5 +114,45 @@ export class CoinbaseRepository {
     async getAllCryptoTransactions(): Promise<Transaction[]> {
         const db = await this.getDatabase();
         return db.collection<Transaction>('Transactions').find({ paymentMethod: 'crypto' }).toArray();
+    }
+
+    async getCryptoTransactionsSummary(): Promise<CryptoSummary> {
+        const transactions = await this.getAllCryptoTransactions();
+    
+        const summary: CryptoSummary = {
+            totalTransactions: transactions.length,
+            totalAmount: transactions.reduce((sum, tx) => {
+                const amount = typeof tx.amount === 'number' ? tx.amount : 0;
+                return sum + amount;
+            }, 0),
+            completedTransactions: transactions.filter(tx => tx.status === 'completed').length,
+            pendingTransactions: transactions.filter(tx => tx.status === 'pending').length,
+            failedTransactions: transactions.filter(tx => tx.status === 'failed').length,
+            averageTransactionAmount: 0,
+            cryptoCurrencies: []
+        };
+    
+        // Calculate average transaction amount
+        summary.averageTransactionAmount = 
+            summary.totalTransactions > 0 ? summary.totalAmount / summary.totalTransactions : 0;
+    
+        // Group transactions by cryptocurrency
+        const cryptoGroups = transactions.reduce((groups, tx) => {
+            const currency = tx.currency || 'UNKNOWN';
+            if (!groups[currency]) {
+                groups[currency] = {
+                    currency,
+                    count: 0,
+                    totalAmount: 0,
+                };
+            }
+            groups[currency].count++;
+            groups[currency].totalAmount += typeof tx.amount === 'number' ? tx.amount : 0;
+            return groups;
+        }, {} as Record<string, { currency: string; count: number; totalAmount: number }>);
+    
+        summary.cryptoCurrencies = Object.values(cryptoGroups);
+    
+        return summary;
     }
 }

@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import { User } from '@auth0/nextjs-auth0';
+import { UserProfile } from '@auth0/nextjs-auth0/client';
 
 interface ProfileCardProps {
-    user: User | undefined;
+    user: UserProfile | undefined;
     name: string | undefined;
     nickname: string | undefined;
     isEditing: boolean;

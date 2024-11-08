@@ -1,7 +1,8 @@
 // src/app/api/payment/coinbase/controllers/CoinbaseController.ts
 import { NextResponse } from 'next/server';
 import { CoinbaseService } from '@/controller/coinbaseAPI/coinbaseService';
-import { CreateChargeRequest } from '@/types/payment';  
+import { CreateChargeRequest } from '@/types/payment'; 
+import { CryptoSummary } from '@/types/cryptoSum'; 
 
 export class CoinbaseController {
     private static instance: CoinbaseController;

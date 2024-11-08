@@ -3,6 +3,7 @@ import { Webhook } from 'coinbase-commerce-node';
 import { coinbaseClient, Charge } from '@/lib/coinbase'; // Import the initialized client and Charge resource
 import { CoinbaseRepository } from '@/controller/coinbaseAPI/coinbaseRepository';
 import { CreateChargeRequest, CoinbaseCharge, BaseCharge, ChargeResponse } from '@/types/payment';
+import { CryptoSummary } from '@/types/cryptoSum'; 
 import { CampaignRepository } from '@/controller/campaignAPI/campaignRepository';
 
 import clientPromise from '@/lib/mongodb';
@@ -546,6 +547,26 @@ export class CoinbaseService {
             }
     
             await this.repository.updateTransaction(chargeId, updateData);
+        }
+    }
+
+    async getCryptoSummary(): Promise<{
+        success: boolean;
+        data?: CryptoSummary;
+        error?: string;
+    }> {
+        try {
+            const summary = await this.repository.getCryptoTransactionsSummary();
+            return {
+                success: true,
+                data: summary
+            };
+        } catch (error) {
+            console.error('Error in getCryptoSummary:', error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'An unexpected error occurred'
+            };
         }
     }
 
