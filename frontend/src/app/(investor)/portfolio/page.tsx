@@ -852,41 +852,62 @@ export default function Home() {
         }).replace(',', '');
     };
 
-    const getNestedValue = (obj: any, path: string) => {
-        return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-    };
+    type FilterableItem = UserStatements | CryptoTransaction;
 
-    // Data processing functions
-    const filterData = <T extends any>(data: T[], query: string): T[] => {
+    // Then modify the filterData function
+    const filterData = <T extends FilterableItem>(data: T[], query: string): T[] => {
         if (!query) return data;
-        return data.filter((item) => {
-            return Object.values(item).some((value) => {
-                if (typeof value === 'object' && value !== null) {
-                    return Object.values(value).some((v) => 
-                        String(v).toLowerCase().includes(query.toLowerCase())
-                    );
+        
+        const searchInObject = (obj: any): boolean => {
+            return Object.entries(obj).some(([key, value]) => {
+                // If the value is an object (including arrays), search recursively
+                if (value && typeof value === 'object') {
+                    return searchInObject(value);
                 }
+                // Convert the value to string and search
                 return String(value).toLowerCase().includes(query.toLowerCase());
             });
-        });
+        };
+    
+        return data.filter(item => searchInObject(item));
     };
-
-    const sortData = <T extends any>(data: T[]): T[] => {
+    
+    // Update the sortData function as well
+    const sortData = <T extends FilterableItem>(data: T[]): T[] => {
         if (!sortConfig.key || !sortConfig.direction) return data;
-
+    
         return [...data].sort((a, b) => {
             let aValue = getNestedValue(a, sortConfig.key);
             let bValue = getNestedValue(b, sortConfig.key);
-
-            if (typeof aValue === 'string') {
+    
+            // Handle dates
+            if (sortConfig.key.includes('date') || sortConfig.key.includes('At')) {
+                aValue = new Date(aValue).getTime();
+                bValue = new Date(bValue).getTime();
+            }
+            // Handle strings
+            else if (typeof aValue === 'string' && typeof bValue === 'string') {
                 aValue = aValue.toLowerCase();
                 bValue = bValue.toLowerCase();
             }
-
+    
             if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
             if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
         });
+    };
+    
+    // Update the getNestedValue function to be more type-safe
+    const getNestedValue = (obj: any, path: string): any => {
+        try {
+            return path.split('.').reduce((acc, part) => {
+                if (acc === null || acc === undefined) return '';
+                return acc[part];
+            }, obj);
+        } catch (error) {
+            console.error(`Error getting nested value for path: ${path}`, error);
+            return '';
+        }
     };
 
     // Fetch user data and statements
@@ -916,7 +937,7 @@ export default function Home() {
 
         fetchStatement();
     }, [user, userLoading]);
-    
+
     // Event handlers
     const handleSort = (key: string) => {
         setSortConfig((prevConfig) => ({
@@ -958,48 +979,150 @@ export default function Home() {
         }
     };
 
-    // Data fetching
+    // // Data fetching
+    // useEffect(() => {
+    //     const fetchStatement = async () => {
+    //         if (!user || userLoading) return;
+
+    //         setLoading(true);
+    //         try {
+    //             const response = await fetch(`/api/statement/byuserid/${user.sub}`);
+    //             if (!response.ok) throw new Error("Failed to fetch investment statements.");
+                
+    //             const data: UserStatements[] = await response.json();
+    //             setUserStatements(data);
+    //             setName(user.name || undefined);
+    //             setNickname(user.nickname || undefined);
+    //         } catch (err: any) {
+    //             setError(err.message);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchStatement();
+    // }, [user, userLoading]);
+
+    // useEffect(() => {
+    //     const fetchCryptoTransactions = async () => {
+    //         if (!user || userLoading || selectedTab !== "crypto") return;
+
+    //         try {
+    //             const response = await fetch('/api/payment/coinbase/transaction-crypto');
+    //             if (!response.ok) throw new Error("Failed to fetch crypto transactions.");
+                
+    //             const data = await response.json();
+    //             const userTransactions = data.filter((tx: CryptoTransaction) => tx.userId === user.sub);
+    //             setCryptoTransactions(userTransactions);
+    //         } catch (err: any) {
+    //             setError(err.message);
+    //         }
+    //     };
+
+    //     fetchCryptoTransactions();
+    // }, [selectedTab, user, userLoading]);
+
     useEffect(() => {
-        const fetchStatement = async () => {
+        const fetchAllData = async () => {
             if (!user || userLoading) return;
 
             setLoading(true);
             try {
-                const response = await fetch(`/api/statement/byuserid/${user.sub}`);
-                if (!response.ok) throw new Error("Failed to fetch investment statements.");
-                
-                const data: UserStatements[] = await response.json();
-                setUserStatements(data);
+                // Fetch statements
+                const statementsResponse = await fetch(`/api/statement/byuserid/${user.sub}`);
+                if (!statementsResponse.ok) {
+                    throw new Error("Failed to fetch investment statements.");
+                }
+                const statementsData: UserStatements[] = await statementsResponse.json();
+                setUserStatements(statementsData);
+
+                // Fetch crypto transactions
+                const cryptoResponse = await fetch('/api/payment/coinbase/transaction-crypto');
+                if (!cryptoResponse.ok) {
+                    throw new Error("Failed to fetch crypto transactions.");
+                }
+                const cryptoData = await cryptoResponse.json();
+                const userCryptoTransactions = cryptoData.filter(
+                    (tx: CryptoTransaction) => tx.userId === user.sub
+                );
+                setCryptoTransactions(userCryptoTransactions);
+
+                // Set user profile data
                 setName(user.name || undefined);
                 setNickname(user.nickname || undefined);
             } catch (err: any) {
                 setError(err.message);
+                console.error('Error fetching data:', err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchStatement();
+        fetchAllData();
     }, [user, userLoading]);
 
-    useEffect(() => {
-        const fetchCryptoTransactions = async () => {
-            if (!user || userLoading || selectedTab !== "crypto") return;
+    // Remove the separate useEffect for crypto transactions since we're fetching everything at once
 
-            try {
-                const response = await fetch('/api/payment/coinbase/transaction-crypto');
-                if (!response.ok) throw new Error("Failed to fetch crypto transactions.");
-                
-                const data = await response.json();
-                const userTransactions = data.filter((tx: CryptoTransaction) => tx.userId === user.sub);
-                setCryptoTransactions(userTransactions);
-            } catch (err: any) {
-                setError(err.message);
-            }
+    // Calculate portfolio summary data
+    const completedCryptoTransactions = cryptoTransactions.filter(tx => tx.status === 'completed');
+    const totalCryptoAmount = completedCryptoTransactions.reduce((sum, tx) => sum + tx.amount, 0);
+    const totalTraditionalAmount = userStatements.reduce((sum, item) => sum + item.amount, 0);
+    const totalCombinedAmount = totalTraditionalAmount + totalCryptoAmount;
+
+    const uniqueTraditionalCampaigns = new Set(userStatements.map(item => item.campaignName));
+    const uniqueCryptoCampaigns = new Set(completedCryptoTransactions.map(tx => tx.metadata.campaignName));
+    const totalUniqueCampaigns = new Set([
+        ...Array.from(uniqueTraditionalCampaigns),
+        ...Array.from(uniqueCryptoCampaigns)
+    ]).size;
+
+    const latestTraditionalStatement = userStatements.length > 0 
+        ? userStatements.reduce((latest, current) => 
+            new Date(current.date) > new Date(latest.date) ? current : latest
+        )
+        : null;
+
+    const latestCryptoTransaction = completedCryptoTransactions.length > 0
+        ? completedCryptoTransactions.reduce((latest, current) => 
+            new Date(current.createdAt) > new Date(latest.createdAt) ? current : latest
+        )
+        : null;
+
+    // Get the absolute latest transaction between both types
+    const getLatestTransaction = () => {
+        if (!latestTraditionalStatement && !latestCryptoTransaction) return null;
+        if (!latestTraditionalStatement) return {
+            amount: latestCryptoTransaction!.amount,
+            campaignName: latestCryptoTransaction!.metadata.campaignName,
+            type: 'crypto',
+            date: new Date(latestCryptoTransaction!.createdAt)
+        };
+        if (!latestCryptoTransaction) return {
+            amount: latestTraditionalStatement.amount,
+            campaignName: latestTraditionalStatement.campaignName,
+            type: 'traditional',
+            date: new Date(latestTraditionalStatement.date)
         };
 
-        fetchCryptoTransactions();
-    }, [selectedTab, user, userLoading]);
+        const cryptoDate = new Date(latestCryptoTransaction.createdAt);
+        const traditionalDate = new Date(latestTraditionalStatement.date);
+
+        return cryptoDate > traditionalDate
+            ? {
+                amount: latestCryptoTransaction.amount,
+                campaignName: latestCryptoTransaction.metadata.campaignName,
+                type: 'crypto',
+                date: cryptoDate
+            }
+            : {
+                amount: latestTraditionalStatement.amount,
+                campaignName: latestTraditionalStatement.campaignName,
+                type: 'traditional',
+                date: traditionalDate
+            };
+    };
+
+    const latestOverallTransaction = getLatestTransaction();
 
     // Loading and error states
     if (loading || userLoading) {
@@ -1053,6 +1176,7 @@ export default function Home() {
                 totalAmount={totalAmount}
                 totalInvestedCampaigns={totalInvestedCampaigns}
                 latestStatement={latestStatement}
+                cryptoTransactions={cryptoTransactions}
             />
 
             <div className="mx-3 my-14">
