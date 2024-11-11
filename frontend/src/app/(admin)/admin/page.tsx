@@ -6,11 +6,11 @@ import ReportsAndAnalytics from "@/components/adminComponents/adminMainPage/Repo
 
 export default function Admin() {
     const stats = [
-        { value: "USD", description: "Currency" },
-        { value: "several", description: "Fundraising Campaigns" },
-        { value: "Reliable", description: "Companies around the world" },
-        { value: "150", description: "Countries" },
-        { value: "Secure", description: "user informations" },
+        {value: "USD", description: "Currency"},
+        {value: "several", description: "Fundraising Campaigns"},
+        {value: "Reliable", description: "Companies around the world"},
+        {value: "150", description: "Countries"},
+        {value: "Secure", description: "user informations"},
     ];
 
     return (
@@ -28,8 +28,10 @@ export default function Admin() {
                     <h1 className="text-4xl font-bold mb-6 text-white">Stake your claim</h1>
                     <p className="text-lg text-slate-300 max-w-2xl mx-auto mb-8">
                         At B2D venture, our innovative investment platform connects visionary startups with a network of
-                        trusted investors. By leveraging cutting-edge technology, we provide secure and streamlined access to funding,
-                        facilitating primary issuance, secondary trading, and comprehensive support for businesses looking
+                        trusted investors. By leveraging cutting-edge technology, we provide secure and streamlined
+                        access to funding,
+                        facilitating primary issuance, secondary trading, and comprehensive support for businesses
+                        looking
                         to thrive in the ever-evolving world of finance.
                     </p>
                     <a href={"/admin/dashboard/"}>
