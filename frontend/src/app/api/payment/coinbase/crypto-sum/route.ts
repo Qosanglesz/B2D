@@ -4,7 +4,7 @@ import { CoinbaseService } from '@/controller/coinbaseAPI/coinbaseService';
 
 export async function GET() {
     try {
-        const service = new CoinbaseService();
+        const service = CoinbaseService.getInstance();
         const result = await service.getCryptoSummary();
 
         if (!result.success) {
@@ -40,16 +40,5 @@ export async function GET() {
             },
             { status: 500 }
         );
-    }
-}
-
-// Optional: Add HEAD method for health checks
-export async function HEAD() {
-    try {
-        const controller = new CoinbaseController();
-        await controller.getCryptoSummary();
-        return new NextResponse(null, { status: 200 });
-    } catch (error) {
-        return new NextResponse(null, { status: 500 });
     }
 }
