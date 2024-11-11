@@ -24,43 +24,6 @@ export default withMiddlewareAuthRequired(async (req: NextRequest) => {
         return NextResponse.redirect(new URL('/home', req.url));
     }
 
-    // Protect Common User try to access others account data
-    const userIdFromPath = req.nextUrl.pathname.split('/')[3];
-    const decodedUserIdFromPath = decodeURIComponent(userIdFromPath);
-    if (
-        req.nextUrl.pathname.startsWith('/api/user/') &&
-        !req.nextUrl.pathname.endsWith('/patch') &&
-        decodedUserIdFromPath !== uid &&
-        !roles.includes('Admin B2D')
-    ) {
-        return NextResponse.redirect(new URL('/home', req.url)); // Redirect to an unauthorized page
-    }
-
-    // Protect Common User view Others' Statements
-    const userIdStatement = req.nextUrl.pathname.split('/')[4];
-    const decodedUidToGetStatement = decodeURIComponent(userIdStatement);
-    if (
-        req.nextUrl.pathname.startsWith('/api/statement/byuserid/') &&
-        decodedUidToGetStatement !== uid &&
-        !roles.includes('Admin B2D')
-    ) {
-        return NextResponse.redirect(new URL('/home', req.url));
-    }
-
-    // Protect Common User try to access all Statements
-    if (req.nextUrl.pathname.startsWith('/api/statements') && !roles.includes('Admin B2D')) {
-        return NextResponse.redirect(new URL('/home', req.url));
-    }
-
-    // Protect Common User try to access all Users' data
-    if (req.nextUrl.pathname.startsWith('/api/users') && !roles.includes('Admin B2D')) {
-        return NextResponse.redirect(new URL('/home', req.url));
-    }
-
-    if (session.accessToken) {
-        const userPermissionData: CustomJwtPayload = jwtDecode(session.accessToken);
-    }
-
     return res;
 });
 
@@ -71,11 +34,5 @@ export const config = {
         "/profile/:path*",
         "/portfolio/:path*",
         "/admin/:path*",
-        //APIs Section
-        "/api/users",
-        "/api/user/:path*",
-        "/api/statements",
-        "/api/statement/:path*"
-
     ],
 };
