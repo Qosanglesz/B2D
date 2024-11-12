@@ -11,8 +11,7 @@ export async function POST(request: Request) {
         if (!user_id || !newData) {
             return NextResponse.json({ error: 'No Data to patch' }, { status: 400 });
         }
-
-        // Await the result from the controller method
+    // Await the result from the controller method
         return await userController.patchUserData(newData, user_id);
     } catch (error) {
         console.error('Error in PATCH API:', error);
