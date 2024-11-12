@@ -1,6 +1,7 @@
 import {Collection, InsertOneResult} from 'mongodb';
 import clientPromise from "@/lib/mongodb";
 import {Statement} from "@/types/Statement";
+import { Campaign } from '../../components/campaignComponents/TempCampaignData';
 
 
 const DATABASE_NAME = "B2DVentureProject";
@@ -67,6 +68,11 @@ export class StatementRepository {
     async findByUserId(userId: string): Promise<Statement[]> {
         const collection = await this.getCollection();
         return collection.find({user_id: userId}).toArray();
+    }
+
+    async findByCampaignId(campaignId: string): Promise<Statement[]> {
+        const collection = await this.getCollection();
+        return collection.find({campaign_id: campaignId}).toArray();
     }
 
     async findAll(): Promise<Statement[]> {

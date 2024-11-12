@@ -27,6 +27,20 @@ export class StatementController {
         }
     }
 
+    async getStatementByCampaignId(campaignId: string): Promise<NextResponse> {
+        try {   
+            const statement = await this.repository.findByCampaignId(campaignId);
+            if (!statement) {
+                return NextResponse.json({message: `Statement with campaign_id ${campaignId} not found.`}, {status: 404});  
+            }
+            return NextResponse.json(statement);
+
+        } catch (error: any) {
+            console.error('Error in getStatementByCampaignId:', error);
+            return NextResponse.json({message: error.message}, {status: 500});
+        }
+    }
+    
     async deleteStatement(id: string): Promise<NextResponse> {
         try {
             if (!id) {
