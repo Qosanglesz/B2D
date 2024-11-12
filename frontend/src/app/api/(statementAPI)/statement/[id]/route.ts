@@ -6,7 +6,7 @@ const statementController = new StatementController();
 export async function GET(req: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
     const { id } = params;
 
-    return NextResponse.json({message: "This Endpoint not available"});
+    return statementController.getStatementByStatementId(id);
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {

@@ -69,6 +69,10 @@ export class StatementRepository {
         return collection.find({user_id: userId}).toArray();
     }
 
+    async findByCampaignId(campaignId: string): Promise<Statement[]> {
+        const collection = await this.getCollection();
+        return collection.find({campaign_id: campaignId}).toArray();
+    }
     async findAll(): Promise<Statement[]> {
         const collection = await this.getCollection();
         return collection.find({}).toArray();

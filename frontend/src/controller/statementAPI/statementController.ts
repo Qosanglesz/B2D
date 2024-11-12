@@ -27,6 +27,34 @@ export class StatementController {
         }
     }
 
+    async getStatementByCampaignId(id: string): Promise<NextResponse> {
+        try {
+            const statement = await this.repository.findByCampaignId(id);
+            if (!statement) {
+                return NextResponse.json({message: `Statement with campaign_id ${id} not found.`},{status: 404});
+            } else {
+                return NextResponse.json(statement);
+            }
+        } catch (error: any) {
+            console.error('Error in getStatementByCampaignId:', error);
+            return NextResponse.json({message: error.message}, {status: 500});
+        }
+    }
+
+    async getStatementByStatementId(id: string): Promise<NextResponse> {
+        try {
+            const statement = await this.repository.findStatementById(id);
+            if (!statement) {
+                return NextResponse.json({message: `Statement with id ${id} not found.`},{status: 404});
+            } else {
+                return NextResponse.json(statement);
+            }
+        } catch (error: any) {
+            console.error('Error in getStatementById:', error);
+            return NextResponse.json({message: error.message}, {status: 500});
+        }
+    }
+
     async deleteStatement(id: string): Promise<NextResponse> {
         try {
             if (!id) {
