@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import 'tailwindcss/tailwind.css';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { NextUIProvider } from "@nextui-org/react";
-import { LoadingProvider } from '@/components/providers/loading-provider'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +17,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <UserProvider>
-          <LoadingProvider>
             <NextUIProvider>
               {children}
             </NextUIProvider>
-          </LoadingProvider>
         </UserProvider>
       </body>
     </html>
