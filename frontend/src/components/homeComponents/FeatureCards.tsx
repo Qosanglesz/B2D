@@ -13,29 +13,38 @@ const features: Feature[] = [
 ];
 
 const FeatureCards: React.FC = () => {
-    // Create an interleaved array with the 'separator' placeholders
-    const interleavedFeatures = features.flatMap((feature, index) => [
-        feature,
-        // Add 'separator' between features, but not after the last
-        index < features.length - 1 ? 'separator' : null,
-    ]).filter((item): item is Feature | 'separator' => item !== null);
-
     return (
-        <div className="flex justify-between items-center py-8 w-full">
-            {interleavedFeatures.map((item, index) => (
-                <React.Fragment key={index}>
-                    {item === 'separator' ? (
-                        // Render thin line for 'separator'
-                        <div className="h-16 w-px bg-gray-200 mx-4"></div>
-                    ) : (
-                        // Render feature card
-                        <div className="flex flex-col items-center text-black p-6 flex-grow">
-                            <p className="text-2xl font-bold">{item.value}</p>
-                            <p className="text-sm text-center text-gray-500">{item.label}</p>
+        <div className="w-full py-8 px-4">
+            {/* Container for all features */}
+            <div className="max-w-6xl mx-auto">
+                {/* Grid container */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                    {features.map((feature, index) => (
+                        <div 
+                            key={index}
+                            className="relative flex flex-col items-center text-black p-4 md:p-6"
+                        >
+                            {/* Feature content */}
+                            <p className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">
+                                {feature.value}
+                            </p>
+                            <p className="text-xs md:text-sm text-center text-gray-500">
+                                {feature.label}
+                            </p>
+                            
+                            {/* Vertical separator - only show between items */}
+                            {index < features.length - 1 && (
+                                <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 h-16 w-px bg-gray-200" />
+                            )}
+                            
+                            {/* Horizontal separator for mobile - only show between rows */}
+                            {index < features.length - 2 && (
+                                <div className="md:hidden absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gray-200" />
+                            )}
                         </div>
-                    )}
-                </React.Fragment>
-            ))}
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

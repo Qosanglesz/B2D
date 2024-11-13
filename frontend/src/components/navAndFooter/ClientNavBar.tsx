@@ -1,9 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { UserProfile } from '@auth0/nextjs-auth0/client';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
+import {
+    Navbar,
+    NavbarBrand,
+    NavbarContent,
+    NavbarItem,
+    NavbarMenuToggle,
+    NavbarMenu,
+    NavbarMenuItem,
+    Button,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
+    Avatar,
+} from "@nextui-org/react";
+import Link from 'next/link';
 
 type ClientNavBarProps = {
     name: string;
@@ -22,125 +38,130 @@ type ClientNavBarProps = {
 };
 
 const ClientNavBar: React.FC<ClientNavBarProps> = ({ name, isAuth, links, user }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
+    const menuItems = [
+        { name: "Home", href: links.home },
+        { name: "About", href: links.about },
+        { name: "Campaigns", href: links.campaigns },
+        { name: "Contact", href: links.contact },
+    ];
 
     return (
-        <nav className="bg-gray-800 fixed top-0 w-full z-50 shadow-lg">
-            <div className="max-w-6xl px-4 mx-auto">
-                {/* Main Navigation Bar */}
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo/Brand */}
-                    <div className="flex-shrink-0">
-                        <a href="/home" className="text-white text-lg font-bold">
-                            {name}
-                        </a>
-                    </div>
+        <Navbar 
+            isBordered 
+            isMenuOpen={isMenuOpen} 
+            onMenuOpenChange={setIsMenuOpen}
+            className="bg-gray-800"
+        >
+            {/* Left section with brand */}
+            <NavbarContent justify="start">
+                <NavbarMenuToggle
+                    aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                    className="sm:hidden text-white"
+                />
+                <NavbarBrand>
+                    <Link href="/home" className="text-white text-lg font-bold">
+                        {name}
+                    </Link>
+                </NavbarBrand>
+            </NavbarContent>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden lg:flex items-center space-x-4">
-                        <a href={links.home} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md transition-colors">
-                            Home
-                        </a>
-                        <a href={links.about} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md transition-colors">
-                            About
-                        </a>
-                        <a href={links.campaigns} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md transition-colors">
-                            Campaigns
-                        </a>
-                        <a href={links.contact} className="text-white hover:bg-gray-700 px-3 py-2 rounded-md transition-colors">
-                            Contact
-                        </a>
-                        {isAuth ? (
-                            <>
-                                <a href={links.portfolio} className="flex items-center text-white hover:bg-gray-700 px-3 py-2 rounded-md transition-colors">
-                                    {user && user.picture && (
-                                        <Image
-                                            src={user.picture}
-                                            alt="Profile"
-                                            width={32}
-                                            height={32}
-                                            className="rounded-full mr-2"
-                                        />
-                                    )}
+            {/* Right section with menu items and avatar */}
+            <NavbarContent justify="end" className="gap-4">
+                {/* Menu items */}
+                <div className="hidden sm:flex items-center gap-4">
+                    {menuItems.map((item) => (
+                        <NavbarItem key={item.name}>
+                            <Link 
+                                href={item.href}
+                                className="text-white hover:text-gray-300"
+                            >
+                                {item.name}
+                            </Link>
+                        </NavbarItem>
+                    ))}
+                </div>
+
+                {/* Auth section */}
+                {isAuth ? (
+                    <Dropdown placement="bottom-end">
+                        <DropdownTrigger>
+                            <Avatar
+                                as="button"
+                                className="transition-transform"
+                                src={user?.picture || undefined}
+                                name={user?.name || "User"}
+                                size="sm"
+                            />
+                        </DropdownTrigger>
+                        <DropdownMenu aria-label="Profile Actions">
+                            <DropdownItem key="profile" href={links.portfolio}>
+                                <div className="flex items-center gap-2">
                                     <span>{user?.name || 'Profile'}</span>
-                                </a>
-                                <a href={links.logout} className="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md transition-colors">
-                                    Logout
-                                </a>
-                            </>
-                        ) : (
-                            <a href={links.signIn} className="text-white bg-green-600 hover:bg-green-500 px-3 py-2 rounded-md transition-colors">
-                                Sign in
-                            </a>
-                        )}
-                    </div>
-
-                    {/* Mobile Menu Button */}
-                    <div className="lg:hidden">
-                        <button
-                            onClick={toggleMenu}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-                            aria-expanded={isMenuOpen}
-                            aria-label="Toggle menu"
+                                </div>
+                            </DropdownItem>
+                            <DropdownItem 
+                                key="logout" 
+                                href={links.logout}
+                                className="text-danger"
+                                color="danger"
+                            >
+                                Logout
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                ) : (
+                    <NavbarItem>
+                        <Button
+                            as={Link}
+                            href={links.signIn}
+                            color="success"
+                            variant="flat"
                         >
-                            {isMenuOpen ? (
-                                <X className="block h-6 w-6" aria-hidden="true" />
-                            ) : (
-                                <Menu className="block h-6 w-6" aria-hidden="true" />
-                            )}
-                        </button>
-                    </div>
-                </div>
+                            Sign In
+                        </Button>
+                    </NavbarItem>
+                )}
+            </NavbarContent>
 
-                {/* Mobile Menu Dropdown */}
-                <div 
-                    className={`lg:hidden absolute left-0 right-0 bg-gray-800 shadow-lg ${isMenuOpen ? 'block' : 'hidden'}`}
-                    style={{ top: '64px' }} // Adjust based on your navbar height
-                >
-                    <div className="px-2 py-3 space-y-1 border-t border-gray-700">
-                        <a href={links.home} className="text-white hover:bg-gray-700 block px-3 py-2 rounded-md transition-colors">
-                            Home
-                        </a>
-                        <a href={links.about} className="text-white hover:bg-gray-700 block px-3 py-2 rounded-md transition-colors">
-                            About
-                        </a>
-                        <a href={links.campaigns} className="text-white hover:bg-gray-700 block px-3 py-2 rounded-md transition-colors">
-                            Campaigns
-                        </a>
-                        <a href={links.contact} className="text-white hover:bg-gray-700 block px-3 py-2 rounded-md transition-colors">
-                            Contact
-                        </a>
-                        {isAuth ? (
-                            <>
-                                <a href={links.portfolio} className="flex items-center text-white hover:bg-gray-700 px-3 py-2 rounded-md transition-colors">
-                                    {user && user.picture && (
-                                        <Image
-                                            src={user.picture}
-                                            alt="Profile"
-                                            width={32}
-                                            height={32}
-                                            className="rounded-full mr-2"
-                                        />
-                                    )}
-                                    <span>{user?.name || 'Profile'}</span>
-                                </a>
-                                <a href={links.logout} className="text-white bg-red-600 hover:bg-red-700 block px-3 py-2 rounded-md transition-colors">
-                                    Logout
-                                </a>
-                            </>
-                        ) : (
-                            <a href={links.signIn} className="text-white bg-green-600 hover:bg-green-500 block px-3 py-2 rounded-md transition-colors">
-                                Sign in
-                            </a>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </nav>
+            {/* Mobile menu */}
+            <NavbarMenu className="bg-gray-800">
+                {menuItems.map((item) => (
+                    <NavbarMenuItem key={item.name}>
+                        <Link
+                            href={item.href}
+                            className="text-white hover:text-gray-300 w-full"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            {item.name}
+                        </Link>
+                    </NavbarMenuItem>
+                ))}
+                {isAuth && (
+                    <>
+                        <NavbarMenuItem>
+                            <Link
+                                href={links.portfolio}
+                                className="text-white hover:text-gray-300 w-full"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Profile
+                            </Link>
+                        </NavbarMenuItem>
+                        <NavbarMenuItem>
+                            <Link
+                                href={links.logout}
+                                className="text-red-500 hover:text-red-400 w-full"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Logout
+                            </Link>
+                        </NavbarMenuItem>
+                    </>
+                )}
+            </NavbarMenu>
+        </Navbar>
     );
 };
 

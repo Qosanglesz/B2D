@@ -397,71 +397,80 @@ export default function Home() {
     const latestStatement = userStatements[userStatements.length - 1];
 
     return (
-        <div className="min-h-screen">
-            <ProfileCard
-                user={user}
-                name={name}
-                nickname={nickname}
-                isEditing={isEditing}
-                toggleEdit={toggleEdit}
-                EditForm={
-                    <EditProfileForm
-                        name={name}
-                        nickname={nickname}
-                        setName={setName}
-                        setNickname={setNickname}
-                        handleSave={handleSave}
-                    />
-                }
-            />
+        <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-6 sm:py-8 lg:py-12">
+                <ProfileCard
+                    user={user}
+                    name={name}
+                    nickname={nickname}
+                    isEditing={isEditing}
+                    toggleEdit={toggleEdit}
+                    EditForm={
+                        <EditProfileForm
+                            name={name}
+                            nickname={nickname}
+                            setName={setName}
+                            setNickname={setNickname}
+                            handleSave={handleSave}
+                        />
+                    }
+                />
+            </div>
+            <div className="py-6">
+                <PortfolioSummary
+                    totalAmount={totalAmount}
+                    totalInvestedCampaigns={totalInvestedCampaigns}
+                    latestStatement={latestStatement}
+                    cryptoTransactions={cryptoTransactions}
+                />
+            </div>
 
-            <PortfolioSummary
-                totalAmount={totalAmount}
-                totalInvestedCampaigns={totalInvestedCampaigns}
-                latestStatement={latestStatement}
-                cryptoTransactions={cryptoTransactions}
-            />
 
-            <div className="mx-3 my-14">
-                <div className="flex justify-between items-center mb-6">
-                    <div className="flex-1">
+            {/* Transactions Section */}
+            <div className="py-8">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div className="w-full sm:w-auto">
                         <Tabs 
                             selectedKey={selectedTab}
                             onSelectionChange={(key) => setSelectedTab(key.toString())}
-                            className="w-2/3"
+                            className="max-w-full sm:max-w-md"
                         >
                             <Tab key="statements" title="Investment Statements" />
                             <Tab key="crypto" title="Crypto Transactions" />
                         </Tabs>
                     </div>
                     
-                    <SearchBar
-                        searchQuery={searchQuery}
-                        setSearchQuery={setSearchQuery}
-                    />
+                    <div className="w-full sm:w-auto">
+                        <SearchBar
+                            searchQuery={searchQuery}
+                            setSearchQuery={setSearchQuery}
+                        />
+                    </div>
                 </div>
 
-                {selectedTab === "statements" ? (
-                    <InvestmentTable
-                        statements={currentInvestments}
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                        sortConfig={sortConfig}
-                        onSort={handleSort}
-                        formatDate={formatDate}
-                    />
-                ) : (
-                    <CryptoTable
-                        transactions={currentCryptoTransactions}
-                        currentPage={cryptoCurrentPage}
-                        totalPages={cryptoTotalPages}
-                        onPageChange={handleCryptoPageChange}
-                        sortConfig={sortConfig}
-                        onSort={handleSort}
-                        formatDate={formatDate}
-                    />
-                )}
+                <div className="overflow-x-auto">
+                    {selectedTab === "statements" ? (
+                        <InvestmentTable
+                            statements={currentInvestments}
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                            sortConfig={sortConfig}
+                            onSort={handleSort}
+                            formatDate={formatDate}
+                        />
+                    ) : (
+                        <CryptoTable
+                            transactions={currentCryptoTransactions}
+                            currentPage={cryptoCurrentPage}
+                            totalPages={cryptoTotalPages}
+                            onPageChange={handleCryptoPageChange}
+                            sortConfig={sortConfig}
+                            onSort={handleSort}
+                            formatDate={formatDate}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
