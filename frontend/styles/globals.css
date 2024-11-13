@@ -3,3 +3,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+main {
+  padding-top: 4rem; /* Adjust based on your navbar height */
+}
