@@ -1,6 +1,3 @@
-// /src/app/(investor)/home/page.tsx
-
-// Use client-side rendering for this page
 'use client';
 
 import React, { useEffect, useState } from "react";
@@ -12,13 +9,11 @@ import { ViewAllButton } from '@/components/homeComponents/ViewAllButton'; // Im
 import HeroSectionHome from '@/components/homeComponents/HeroSectionHome'; // Import HeroSectionHome component
 import FeatureCards from '@/components/homeComponents/FeatureCards'; // Import FeatureCards component
 
-
 // Define the links for authentication and viewing all campaigns
 const links = {
     getStarted: "/api/auth/login", // Login link
     viewAll: "/campaign", // Link to view all campaigns
 };
-
 
 export default function Home() {
     // State to hold the fetched campaigns
@@ -32,66 +27,65 @@ export default function Home() {
     useEffect(() => {
         const fetchCampaigns = async () => {
             try {
-                // Fetch campaigns from the API endpoint
+                // Fetch access token
+                const tokenResponse = await fetch("/api/accesstoken", {
+                    method: "GET",
+                    headers: {
+                        accesstokenapikey: process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY // Ensure the correct header key and fallback for missing env variable
+                    }
+                });
+
+                // Parse the token response
+                const tokenData = await tokenResponse.json();
+                if (!tokenResponse.ok || !tokenData.access_token) {
+                    throw new Error("Failed to retrieve access token");
+                }
+                // Fetch campaigns using the retrieved access token
                 const response = await fetch('/api/campaigns', {
                     cache: "no-store",
-                }); // Ensure that this API endpoint exists
+                    headers: {
+                        authorization: `Bearer ${tokenData.access_token}`
+                    }
+                });
+
                 if (!response.ok) {
-                    throw new Error('Failed to fetch campaigns'); // Throw error if fetch fails
+                    throw new Error('Failed to fetch campaigns');
                 }
 
-                // Parse the response data as an array of FundraisingCampaign objects
                 const data: Campaign[] = await response.json();
                 setCampaigns(data); // Update state with fetched campaigns
 
             } catch (err: unknown) {
-                // Handle any errors that occur during the fetch
                 if (err instanceof Error) {
-                    setError(err.message); // Set error message if it's an Error object
+                    setError(err.message);
                 } else {
-                    setError('An unknown error occurred'); // Set a default error message for unknown errors
+                    setError('An unknown error occurred');
                 }
             } finally {
-                // Stop loading after fetching is complete, whether successful or failed
-                setLoading(false);
+                setLoading(false); // Stop loading after fetching is complete
             }
         };
 
-        fetchCampaigns(); // Call the function to fetch campaigns
-
-    }, []); // Only run this effect once on component mount
+        fetchCampaigns();
+    }, []);
 
     // Randomly shuffle the campaigns array and limit to 3 campaigns
     const randomCampaigns = campaigns
         .sort(() => Math.random() - 0.5) // Shuffle the campaigns
-        .slice(0, 4);  // Take the first 3 shuffled campaigns
+        .slice(0, 4);  // Take the first 4 shuffled campaigns
 
     return (
         <>
-            {/* Use LoadingError to show either a spinner or an error message */}
             <LoadingError loading={loading} error={error} />
 
             {/* Only render the content below if not loading and no error */}
             {!loading && !error && (
                 <>
-                    {/* Render the Header with a link to register
-                    <Header registerLink={links.getStarted} /> */}
-
-                    {/* Render the Hero Section with Carousel */}
-                    <HeroSectionHome registerLink={links.getStarted} /> {/* Added HeroSectionHome component */}
-
+                    <HeroSectionHome registerLink={links.getStarted} />
                     <div className="max-w-7xl mx-auto">
-                        {/* Render the FeatureCards component here */}
                         <FeatureCards />
-
-                        <h1 className="text-4xl font-bold py-8">
-                            Fundraising Campaigns
-                        </h1>
-
-                        {/* Render the campaign grid with random campaigns */}
+                        <h1 className="text-4xl font-bold py-8">Fundraising Campaigns</h1>
                         <CampaignGrid campaigns={randomCampaigns} />
-
-                        {/* Render the "View All" button */}
                         <ViewAllButton viewAllLink={links.viewAll} />
                     </div>
                 </>

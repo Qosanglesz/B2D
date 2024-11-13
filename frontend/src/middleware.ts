@@ -1,81 +1,59 @@
-import {NextRequest, NextResponse} from "next/server";
-import {withMiddlewareAuthRequired, getSession, Session} from "@auth0/nextjs-auth0/edge";
-import {jwtDecode, JwtPayload} from "jwt-decode";
+import { NextResponse } from 'next/server';
+ import {decodeJwt, jwtVerify} from 'jose';
 
-interface CustomJwtPayload extends JwtPayload {
-    permissions?: string[];
+export async function middleware(request: Request) {
+    const { pathname } = new URL(request.url);
+
+    // Skip authentication for /api/auth routes
+    if (pathname.startsWith('/api/auth')) {
+        return NextResponse.next(); // Bypass token verification
+    }
+
+    // Check for /api/accesstoken route and validate API key
+    if (pathname.startsWith('/api/accesstoken')) {
+
+        const apiKey = request.headers.get('accesstokenapikey');
+        console.log(apiKey)
+        if (!apiKey || apiKey !== process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY) {
+            return NextResponse.json(
+                { error: 'Unauthorized: Invalid or missing API key' },
+                { status: 401 }
+            );
+        }
+
+        return NextResponse.next(); // Allow access if API key is valid
+    }
+
+    // Apply token verification for other /api/* paths
+    if (pathname.startsWith('/api/')) {
+        const authHeader = request.headers.get('Authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return NextResponse.json(
+                { error: 'Access token is required' },
+                { status: 401 }
+            );
+        }
+
+        // Extract token
+        const token = authHeader.split(' ')[1];
+
+        try {
+            const decoded = decodeJwt(token);
+            console.log(decoded)
+            if (decoded.iss === process.env.AUTH0_ISSUER_BASE_URL) {
+                return NextResponse.next();
+            }
+        } catch (error) {
+            return NextResponse.json(
+                { error: 'Invalid or expired access token' },
+                { status: 403 }
+            );
+        }
+    }
+
+    return NextResponse.next(); // Continue with the request
 }
 
-export default withMiddlewareAuthRequired(async (req: NextRequest) => {
-    const res = NextResponse.next();
-
-    const session: Session | null = (await getSession(req, res)) || null;
-
-    // Check if the user is authenticated
-    if (!session) {
-        return NextResponse.redirect("/api/auth/login");
-    }
-
-    const roles = session.user['https://localhost:3000/roles'] || [];
-    const uid = session.user.sub
-
-    // Check if the user has the 'Admin' role when trying to access the admin path
-    if (req.nextUrl.pathname.startsWith('/admin') && !roles.includes('Admin B2D')) {
-        return NextResponse.redirect(new URL('/home', req.url));
-    }
-
-    // Protect Common User try to access others account data
-    const userIdFromPath = req.nextUrl.pathname.split('/')[3];
-    const decodedUserIdFromPath = decodeURIComponent(userIdFromPath);
-    if (
-        req.nextUrl.pathname.startsWith('/api/user/') &&
-        !req.nextUrl.pathname.endsWith('/patch') &&
-        decodedUserIdFromPath !== uid &&
-        !roles.includes('Admin B2D')
-    ) {
-        return NextResponse.redirect(new URL('/home', req.url)); // Redirect to an unauthorized page
-    }
-
-    // Protect Common User view Others' Statements
-    const userIdStatement = req.nextUrl.pathname.split('/')[4];
-    const decodedUidToGetStatement = decodeURIComponent(userIdStatement);
-    if (
-        req.nextUrl.pathname.startsWith('/api/statement/byuserid/') &&
-        decodedUidToGetStatement !== uid &&
-        !roles.includes('Admin B2D')
-    ) {
-        return NextResponse.redirect(new URL('/home', req.url));
-    }
-
-    // Protect Common User try to access all Statements
-    if (req.nextUrl.pathname.startsWith('/api/statements') && !roles.includes('Admin B2D')) {
-        return NextResponse.redirect(new URL('/home', req.url));
-    }
-
-    // Protect Common User try to access all Users' data
-    if (req.nextUrl.pathname.startsWith('/api/users') && !roles.includes('Admin B2D')) {
-        return NextResponse.redirect(new URL('/home', req.url));
-    }
-
-    if (session.accessToken) {
-        const userPermissionData: CustomJwtPayload = jwtDecode(session.accessToken);
-    }
-
-    return res;
-});
-
 export const config = {
-    matcher: [
-        // Pages Section
-        "/campaign/:path*",
-        "/profile/:path*",
-        "/portfolio/:path*",
-        "/admin/:path*",
-        //APIs Section
-        "/api/users",
-        "/api/user/:path*",
-        "/api/statements",
-        "/api/statement/:path*"
-
-    ],
+    matcher: ['/api/:path*'], // Apply middleware only to API routes
 };
