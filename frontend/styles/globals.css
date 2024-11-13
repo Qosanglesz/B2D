@@ -8,3 +8,10 @@
 main {
   padding-top: 4rem; /* Adjust based on your navbar height */
 }
+
+
+@layer base {
+  :root {
+    --radius: 0.5rem
+  }
+}

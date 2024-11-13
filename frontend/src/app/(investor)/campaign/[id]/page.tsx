@@ -115,58 +115,57 @@ export default function CampaignPage({ params }: CampaignProps) {
     }, [campaignId]);
 
     return (
-        <div className="min-h-screen w-full px-4 sm:px-6 lg:px-8 mx-auto">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-gray-50">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
                 <LoadingError loading={isLoading} error={error} />
 
-                {isLoading || error ? null : (
-                    <div className="w-full">
-                        {/* Main content container */}
-                        <div className="flex flex-col space-y-6">
-                            {/* Header Section */}
-                            <div className="w-full">
-                                <IntroHeader campaign={campaign as Campaign} />
-                            </div>
+                {!isLoading && !error && campaign && (
+                    <div className="flex flex-col space-y-8">
+                        {/* Header Section */}
+                        <section className="w-full bg-white rounded-lg shadow-sm">
+                            <IntroHeader campaign={campaign} />
+                        </section>
 
-                            {/* Main content grid */}
-                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                                {/* Carousel Section - Full width on mobile, 8 cols on desktop */}
-                                <div className="lg:col-span-8 order-1">
-                                    <div className="w-full h-full">
-                                        <IntroCarousel campaign={campaign as Campaign} />
-                                    </div>
+                        {/* Main Content Section */}
+                        <div className="flex flex-col lg:flex-row gap-8">
+                            {/* Left Column - Carousel */}
+                            <section className="w-full lg:w-2/3">
+                                <div className="bg-white rounded-lg shadow-sm p-4">
+                                    <IntroCarousel campaign={campaign} />
                                 </div>
+                            </section>
 
-                                {/* Statistics Section - Full width on mobile, 4 cols on desktop */}
-                                <div className="lg:col-span-4 order-2">
-                                    <div className="sticky top-6">
+                            {/* Right Column - Statistics */}
+                            <section className="w-full lg:w-1/3">
+                                <div className="lg:sticky lg:top-8">
+                                    <div className="bg-white rounded-lg shadow-sm">
                                         <IntroStatistics
-                                            campaign={campaign as Campaign}
+                                            campaign={campaign}
                                             handleInputChange={handleInputChange}
                                             investmentAmountInput={investAmountInput}   
                                             handleInvestButton={handleInvestButton}
                                         />
                                     </div>
                                 </div>
-
-                                {/* Company Information - Full width */}
-                                <div className="lg:col-span-12 order-3">
-                                    <CompanyInformation campaign={campaign as Campaign} />
-                                </div>
-                            </div>
+                            </section>
                         </div>
 
+                        {/* Company Information Section */}
+                        <section className="w-full">
+                            <div className="bg-white rounded-lg shadow-sm">
+                                <CompanyInformation campaign={campaign} />
+                            </div>
+                        </section>
+
                         {/* Payment Modal */}
-                        {campaign && (
-                            <PaymentModal
-                                isOpen={isPaymentModalOpen}
-                                onClose={() => setIsPaymentModalOpen(false)}
-                                campaign={campaign}
-                                investmentAmount={investAmountInput}
-                                onStripePayment={handleStripePayment}
-                                onCryptoPayment={handleCryptoPayment}
-                            />
-                        )}
+                        <PaymentModal
+                            isOpen={isPaymentModalOpen}
+                            onClose={() => setIsPaymentModalOpen(false)}
+                            campaign={campaign}
+                            investmentAmount={investAmountInput}
+                            onStripePayment={handleStripePayment}
+                            onCryptoPayment={handleCryptoPayment}
+                        />
                     </div>
                 )}
             </div>
