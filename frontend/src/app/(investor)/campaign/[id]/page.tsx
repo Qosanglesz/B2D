@@ -115,47 +115,61 @@ export default function CampaignPage({ params }: CampaignProps) {
     }, [campaignId]);
 
     return (
-        <div className="min-h-screen max-w-6xl px-4 mx-auto flex justify-center">
-            <LoadingError loading={isLoading} error={error} />
+        <div className="min-h-screen w-full px-4 sm:px-6 lg:px-8 mx-auto">
+            <div className="max-w-7xl mx-auto">
+                <LoadingError loading={isLoading} error={error} />
 
-            {isLoading || error ? null : (
-                <div className="w-full max-w-screen-xl p-0">
-                    <div className="grid grid-cols-6 gap-x-10">
-                        <div className="col-span-6 px-0 py-2">
-                            <IntroHeader campaign={campaign as Campaign} />
+                {isLoading || error ? null : (
+                    <div className="w-full">
+                        {/* Main content container */}
+                        <div className="flex flex-col space-y-6">
+                            {/* Header Section */}
+                            <div className="w-full">
+                                <IntroHeader campaign={campaign as Campaign} />
+                            </div>
+
+                            {/* Main content grid */}
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                {/* Carousel Section - Full width on mobile, 8 cols on desktop */}
+                                <div className="lg:col-span-8 order-1">
+                                    <div className="w-full h-full">
+                                        <IntroCarousel campaign={campaign as Campaign} />
+                                    </div>
+                                </div>
+
+                                {/* Statistics Section - Full width on mobile, 4 cols on desktop */}
+                                <div className="lg:col-span-4 order-2">
+                                    <div className="sticky top-6">
+                                        <IntroStatistics
+                                            campaign={campaign as Campaign}
+                                            handleInputChange={handleInputChange}
+                                            investmentAmountInput={investAmountInput}   
+                                            handleInvestButton={handleInvestButton}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Company Information - Full width */}
+                                <div className="lg:col-span-12 order-3">
+                                    <CompanyInformation campaign={campaign as Campaign} />
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="col-span-4 row-span-3 px-0 py-3">
-                            <IntroCarousel campaign={campaign as Campaign} />
-                        </div>
-
-                        <div className="col-span-2 row-span-3 px-0 py-10">
-                            <IntroStatistics
-                                campaign={campaign as Campaign}
-                                handleInputChange={handleInputChange}
-                                investmentAmountInput={investAmountInput}   
-                                handleInvestButton={handleInvestButton}
+                        {/* Payment Modal */}
+                        {campaign && (
+                            <PaymentModal
+                                isOpen={isPaymentModalOpen}
+                                onClose={() => setIsPaymentModalOpen(false)}
+                                campaign={campaign}
+                                investmentAmount={investAmountInput}
+                                onStripePayment={handleStripePayment}
+                                onCryptoPayment={handleCryptoPayment}
                             />
-                        </div>
-
-                        <div className="col-span-6 px-0 py-3 mt-6 mb-10 rounded-lg">
-                            <CompanyInformation campaign={campaign as Campaign} />
-                        </div>
+                        )}
                     </div>
-
-                    {/* Payment Modal */}
-                    {campaign && (
-                        <PaymentModal
-                            isOpen={isPaymentModalOpen}
-                            onClose={() => setIsPaymentModalOpen(false)}
-                            campaign={campaign}
-                            investmentAmount={investAmountInput}
-                            onStripePayment={handleStripePayment}
-                            onCryptoPayment={handleCryptoPayment}
-                        />
-                    )}
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }
