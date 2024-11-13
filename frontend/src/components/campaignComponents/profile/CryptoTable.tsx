@@ -6,6 +6,8 @@ import { AiFillDollarCircle } from "react-icons/ai";
 import { FaBitcoin } from "react-icons/fa";
 import { FaCalendarPlus, FaCalendarCheck } from "react-icons/fa";
 import { TablePagination } from './TablePagination';
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle} from "lucide-react";
 
 interface CryptoTransaction {
     chargeId: string;
@@ -157,9 +159,22 @@ export const CryptoTable = ({
                 </div>
 
                 {transactions.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
-                        No crypto transactions found
-                    </div>
+                    <Card className="w-full shadow-sm">
+                    <CardContent className="flex flex-col items-center justify-center py-12">
+                        <div className="rounded-full bg-gray-50 p-3 mb-4">
+                            <AlertCircle className="w-6 h-6 text-gray-400" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            No Crypto Transactions Found
+                        </h3>
+                        <p className="text-sm text-gray-500 text-center max-w-md">
+                            You have not made any traditional investments yet.
+                            <span className="block mt-2">
+                                Check out your statement in the Statment Tab.
+                            </span>
+                        </p>
+                    </CardContent>
+                </Card>
                 ) : (
                     <div className="mt-4">
                         <TablePagination 
