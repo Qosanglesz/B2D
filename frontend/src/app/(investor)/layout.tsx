@@ -15,9 +15,9 @@ export default async function Layout({children}: { children: ReactNode }) {
         isAuth: !!user,
         links: {
             home: '/home',
-            about: 'https://github.com/Qosanglesz/B2D/wiki',
+            about: '/about',
             campaigns: '/campaign',
-            contact: 'https://github.com/Qosanglesz/B2D',
+            contact: 'contact',
             signIn: '/api/auth/login',
             logout: '/api/auth/logout',
             portfolio: '/portfolio',

@@ -40,13 +40,15 @@ export default function Home() {
 
     // Show loading spinner
     return (
-        <div className="flex flex-col justify-center items-center h-screen">
-            <Spinner size="lg" />
-            {/* Loading text */}
-            <span className="mt-4 text-lg text-gray-400">
-                Loading, please wait...
-            </span>
-        </div>
+        // <div className="flex flex-col justify-center items-center h-screen">
+        //     <Spinner size="lg" />
+        //     {/* Loading text */}
+        //     <span className="mt-4 text-lg text-gray-400">
+        //         Loading, please wait...
+        //     </span>
+        // </div>
+        <>
+        </>
     );
 }
 
