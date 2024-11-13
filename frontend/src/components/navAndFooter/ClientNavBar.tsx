@@ -117,7 +117,7 @@ const ClientNavBar: React.FC<ClientNavBarProps> = ({ name, isAuth, links, user }
                             as={Link}
                             href={links.signIn}
                             color="success"
-                            variant="flat"
+                            variant="shadow"
                         >
                             Sign In
                         </Button>
