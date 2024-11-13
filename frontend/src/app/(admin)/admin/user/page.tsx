@@ -1,5 +1,3 @@
-"use client"
-
 
 import UserManagement from "@/components/adminComponents/adminUserManagement/UserManagement";
 

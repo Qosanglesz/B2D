@@ -7,6 +7,7 @@ interface HeroSectionProps {
 
 const HeroSectionHome: React.FC<HeroSectionProps> = ({ registerLink }) => {
     const [currentSlide, setCurrentSlide] = React.useState(0);
+    
     const slides = [
         // First Slide
         {
@@ -124,7 +125,7 @@ const HeroSectionHome: React.FC<HeroSectionProps> = ({ registerLink }) => {
         }, 5000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [slides.length]);
 
     return (
         <div className="relative h-[calc(100vh-64px)] min-h-[500px] overflow-hidden">
