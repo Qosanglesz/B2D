@@ -135,3 +135,6 @@ frontend/test-results
 
 # Ignore test results
 test-results/
+
+# macos metadata temporary
+.DS_Store
