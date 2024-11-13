@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Campaign} from '@/types/Campaign';
-
 
 interface IntroStatisticsProps {
     campaign: Pick<Campaign, 'amountRaised' | 'targetAmount' | 'investors' | 'endInDate' | 'companyName'>;
@@ -9,80 +8,84 @@ interface IntroStatisticsProps {
     handleInvestButton: () => void;
 }
 
-
 const IntroStatistics: React.FC<IntroStatisticsProps> = ({
-                                                             campaign,
-                                                             handleInputChange,
-                                                             investmentAmountInput,
-                                                             handleInvestButton
-                                                         }) => {
-    // Calculate the percentage raised and remaining days
-    const percentageRaised = Math.floor((campaign.amountRaised / campaign.targetAmount) * 100); // No decimals
+    campaign,
+    handleInputChange,
+    investmentAmountInput,
+    handleInvestButton
+}) => {
+    // Existing calculations remain the same
+    const percentageRaised = Math.floor((campaign.amountRaised / campaign.targetAmount) * 100);
     const daysRemaining = Math.max(0, Math.ceil((new Date(campaign.endInDate).getTime() - Date.now()) / (1000 * 3600 * 24)));
+    const isOverGoal = campaign.amountRaised > campaign.targetAmount;
 
-    // Format target amount to M (millions) or K (thousands)
     const formatAmount = (amount: number): string => {
         if (amount >= 1_000_000) {
             const millionValue = amount / 1_000_000;
-            // Show one decimal if not zero
             return millionValue % 1 === 0 ? `${millionValue}M` : `${millionValue.toFixed(1)}M`;
         } else if (amount >= 1_000) {
             const thousandValue = amount / 1_000;
-            // Show one decimal if not zero
             return thousandValue % 1 === 0 ? `${thousandValue}K` : `${thousandValue.toFixed(1)}K`;
         }
-        // Return the amount as is for values less than a thousand
         return `${amount}`;
     };
 
-    // Format the target amount
     const targetAmountFormatted = formatAmount(campaign.targetAmount);
-
-    // Format the amount raised with a thousand separator
-    const amountRaisedFormatted = campaign.amountRaised.toLocaleString(); // Add thousand separator
-
-    // Determine if the progress bar should be red (if amount raised exceeds target)
-    const isOverGoal = campaign.amountRaised > campaign.targetAmount;
+    const amountRaisedFormatted = campaign.amountRaised.toLocaleString();
 
     return (
-        <div className="text-left">
-            <p className="text-5xl font-bold text-gray-800 mb-2">
-                {/* Display formatted raised amount with thousand separator */}
-                ${amountRaisedFormatted}
-            </p>
-
-            {/* Progress Bar */}
-            <p className="text-xl text-gray-500 mb-2">
-                {percentageRaised}% raised of ${targetAmountFormatted} goal
-            </p>
-
-            <div className="w-full bg-gray-300 rounded-full h-2.5 mb-8">
-                <div
-                    // Change color to red if raised amount > goal
-                    className={`h-2.5 rounded-full ${isOverGoal ? 'bg-red-600' : 'bg-blue-600'}`}
-                    // Ensure it doesn't exceed 100%
-                    style={{width: `${Math.min(percentageRaised, 100)}%`}}
-                />
+        <div className="text-left p-4 sm:p-6 bg-white rounded-lg shadow-sm">
+            {/* Amount Raised Section */}
+            <div className="mb-4 sm:mb-6">
+                <p className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-2">
+                    ${amountRaisedFormatted}
+                </p>
+                <p className="text-base sm:text-lg md:text-xl text-gray-500 mb-2">
+                    {percentageRaised}% raised of ${targetAmountFormatted} goal
+                </p>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-300 rounded-full h-2 sm:h-2.5 mb-4 sm:mb-8">
+                    <div
+                        className={`h-full rounded-full transition-all duration-300 ${isOverGoal ? 'bg-red-600' : 'bg-blue-600'}`}
+                        style={{width: `${Math.min(percentageRaised, 100)}%`}}
+                    />
+                </div>
             </div>
 
-            {/* Gray line separator */}
-            <hr className="border-gray-300 mb-5"/>
+            <hr className="border-gray-200 my-4 sm:my-5"/>
 
-            {/* Number of investors */}
-            <p className="text-5xl font-bold text-gray-800 mb-2">{campaign.investors.length}</p>
-            {/* "Investors" label */}
-            <p className="text-xl text-gray-500 mb-6">Investors</p>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
+                {/* Investors Count */}
+                <div>
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-1">
+                        {campaign.investors.length}
+                    </p>
+                    <p className="text-sm sm:text-base md:text-lg text-gray-500">
+                        Investors
+                    </p>
+                </div>
 
-            {/* Gray line separator */}
-            <hr className="border-gray-300 mb-5"/>
+                {/* Days Remaining */}
+                <div>
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-1">
+                        {daysRemaining} days
+                    </p>
+                    <p className="text-sm sm:text-base md:text-lg text-gray-500">
+                        Left to invest
+                    </p>
+                </div>
+            </div>
 
-            {/* Days remaining */}
-            <p className="text-5xl font-bold text-gray-800 mb-1">{daysRemaining} days</p>
-            {/* "Left to invest" label */}
-            <p className="text-xl text-gray-500 mb-5">Left to invest</p>
+            <hr className="border-gray-200 my-4 sm:my-5"/>
 
-            <div className="max-w-sm mx-auto py-4">
-                <label htmlFor="investmentAmountInput" className="block text-lg font-medium text-gray-700 mb-2 ">
+            {/* Investment Input Section */}
+            <div className="space-y-4">
+                <label 
+                    htmlFor="investmentAmountInput" 
+                    className="block text-base sm:text-lg font-medium text-gray-700"
+                >
                     How much money do you want to invest?
                 </label>
                 <input
@@ -93,22 +96,28 @@ const IntroStatistics: React.FC<IntroStatisticsProps> = ({
                     min="0"
                     max={campaign.targetAmount}
                     step="1"
-                    className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full px-3 py-2 sm:px-4 sm:py-3 border border-gray-300 rounded-md shadow-sm 
+                             focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                             text-sm sm:text-base"
                 />
-                <p className="mt-2 text-sm text-gray-500">Current value: {investmentAmountInput} U.S. dollar</p>
+                <p className="text-xs sm:text-sm text-gray-500">
+                    Current value: {investmentAmountInput} U.S. dollar
+                </p>
             </div>
 
-            {/* Adjusted button styling */}
+            {/* Investment Button */}
             <button
-                className="bg-blue-600 text-white py-3 px-6 text-lg rounded-lg hover:bg-blue-500 transition-all block mx-auto w-full"
+                className="mt-6 w-full bg-blue-600 text-white py-2.5 sm:py-3 px-4 sm:px-6 
+                         text-base sm:text-lg rounded-lg hover:bg-blue-700 
+                         transition-colors duration-200 ease-in-out
+                         focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                         disabled:bg-gray-400 disabled:cursor-not-allowed"
                 onClick={handleInvestButton}
             >
-                Invest in {campaign.companyName} {/* Updated button text */}
+                Invest in {campaign.companyName}
             </button>
         </div>
     );
 };
 
-
 export default IntroStatistics;
-

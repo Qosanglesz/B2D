@@ -66,15 +66,15 @@ export const PortfolioSummary = ({
     ]).size;
 
     return (
-        <div>
-            <h1 className="text-3xl font-bold my-4 mx-3">Investment Portfolio Summary</h1>
-            <div className="grid grid-cols-3 gap-4 mx-3 my-3">
+        <div className="px-4 sm:px-6">
+            <h1 className="text-2xl sm:text-3xl font-bold my-4">Investment Portfolio Summary</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Total Investments */}
-                <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">Total Investments</h2>
+                <div className="bg-white p-4 sm:p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Total Investments</h2>
                     <div className="space-y-2">
-                        <p className="text-2xl font-bold text-blue-600">${totalInvestmentAmount.toFixed(2)}</p>
-                        <div className="text-sm text-gray-600">
+                        <p className="text-xl sm:text-2xl font-bold text-blue-600">${totalInvestmentAmount.toFixed(2)}</p>
+                        <div className="text-xs sm:text-sm text-gray-600">
                             <p>Traditional: ${totalAmount.toFixed(2)}</p>
                             <p>Crypto: ${totalCryptoAmount.toFixed(2)}</p>
                         </div>
@@ -82,11 +82,11 @@ export const PortfolioSummary = ({
                 </div>
 
                 {/* Campaign Statistics */}
-                <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">Campaign Statistics</h2>
+                <div className="bg-white p-4 sm:p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Campaign Statistics</h2>
                     <div className="space-y-2">
-                        <p className="text-2xl font-bold text-green-600">{totalCampaigns}</p>
-                        <div className="text-sm text-gray-600">
+                        <p className="text-xl sm:text-2xl font-bold text-green-600">{totalCampaigns}</p>
+                        <div className="text-xs sm:text-sm text-gray-600">
                             <p>Traditional: {totalInvestedCampaigns}</p>
                             <p>Crypto: {uniqueCryptoCampaigns.size}</p>
                         </div>
@@ -94,21 +94,21 @@ export const PortfolioSummary = ({
                 </div>
 
                 {/* Latest Investments */}
-                <div className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">Latest Investments</h2>
+                <div className="bg-white p-4 sm:p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2">Latest Investments</h2>
                     <div className="space-y-3">
                         {latestStatement && (
                             <div className="border-b pb-2">
-                                <p className="font-semibold">Traditional</p>
-                                <p className="text-sm text-gray-600">
+                                <p className="text-xl sm:text-2xl font-semibold">Traditional</p>
+                                <p className="text-xs sm:text-sm text-gray-600">
                                     ${latestStatement.amount} in {latestStatement.campaignName}
                                 </p>
                             </div>
                         )}
                         {latestCryptoTransaction && (
                             <div>
-                                <p className="font-semibold">Crypto</p>
-                                <p className="text-sm text-gray-600">
+                                <p className="text-xl sm:text-2xl font-semibold">Crypto</p>
+                                <p className="text-xs sm:text-sm text-gray-600">
                                     ${latestCryptoTransaction.amount} in {latestCryptoTransaction.metadata.campaignName}
                                 </p>
                             </div>

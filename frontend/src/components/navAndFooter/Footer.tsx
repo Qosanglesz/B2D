@@ -27,12 +27,12 @@ const Footer: React.FC<FooterProps> = () => {
                             <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
                                 Contact
                             </Link>
-                            <Link href="/privacy" className="text-gray-300 hover:text-white transition-colors">
+                            {/* <Link href="/privacy" className="text-gray-300 hover:text-white transition-colors">
                                 Privacy Policy
                             </Link>
                             <Link href="/terms" className="text-gray-300 hover:text-white transition-colors">
                                 Terms of Service
-                            </Link>
+                            </Link> */}
                         </nav>
                     </div>
 
@@ -74,7 +74,7 @@ const Footer: React.FC<FooterProps> = () => {
                         <p className="text-gray-300 text-sm text-center md:text-left">
                             &copy; {new Date().getFullYear()} B2DVenture. All rights reserved.
                         </p>
-                        <div className="mt-4 md:mt-0 flex space-x-4">
+                        {/* <div className="mt-4 md:mt-0 flex space-x-4">
                             <Link href="/privacy" className="text-gray-300 hover:text-white text-sm transition-colors">
                                 Privacy
                             </Link>
@@ -84,7 +84,7 @@ const Footer: React.FC<FooterProps> = () => {
                             <Link href="/cookies" className="text-gray-300 hover:text-white text-sm transition-colors">
                                 Cookies
                             </Link>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
