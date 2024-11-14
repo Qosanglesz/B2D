@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server';
- import {decodeJwt, jwtVerify} from 'jose';
+import {decodeJwt} from 'jose';
+import {getSession} from "@auth0/nextjs-auth0";
 
 export async function middleware(request: Request) {
     const { pathname } = new URL(request.url);
 
     // Skip authentication for /api/auth routes
     if (pathname.startsWith('/api/auth')) {
-        return NextResponse.next(); // Bypass token verification
+        return NextResponse.next();
     }
 
-    // Check for /api/accesstoken route and validate API key
+    // Check for /api/access_token route and validate API key
     if (pathname.startsWith('/api/accesstoken')) {
 
         const apiKey = request.headers.get('accesstokenapikey');
@@ -20,7 +21,7 @@ export async function middleware(request: Request) {
             );
         }
 
-        return NextResponse.next(); // Allow access if API key is valid
+        return NextResponse.next();
     }
 
     // Apply token verification for other /api/* paths
@@ -33,12 +34,11 @@ export async function middleware(request: Request) {
             );
         }
 
-        // Extract token
+        // Validate access_token
         const token = authHeader.split(' ')[1];
 
         try {
             const decoded = decodeJwt(token);
-            console.log(decoded)
             if (decoded.iss === process.env.AUTH0_ISSUER_BASE_URL) {
                 return NextResponse.next();
             }
@@ -50,9 +50,9 @@ export async function middleware(request: Request) {
         }
     }
 
-    return NextResponse.next(); // Continue with the request
+    return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/api/:path*'], // Apply middleware only to API routes
+    matcher: ['/api/:path*'],
 };
