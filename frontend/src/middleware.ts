@@ -13,7 +13,6 @@ export async function middleware(request: Request) {
     if (pathname.startsWith('/api/accesstoken')) {
 
         const apiKey = request.headers.get('accesstokenapikey');
-        console.log(apiKey)
         if (!apiKey || apiKey !== process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY) {
             return NextResponse.json(
                 { error: 'Unauthorized: Invalid or missing API key' },
