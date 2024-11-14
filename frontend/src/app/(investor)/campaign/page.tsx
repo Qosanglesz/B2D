@@ -1,6 +1,6 @@
 import React from "react";
 import CampaignList from "@/components/campaignComponents/CampaignList";
-import { Campaign } from '@/types/Campaign';
+import {Campaign} from '@/types/Campaign';
 
 
 async function fetchCampaigns(): Promise<Campaign[]> {
@@ -44,8 +44,8 @@ export default async function CampaignPage() {
             <h1 className="text-2xl sm:text-3xl font-bold w-full sm:w-auto text-center sm:text-left mb-6">
                 Live Opportunities
             </h1>
-            {/* ส่งข้อมูลแคมเปญและ error ไปยัง Client Component */}
-            <CampaignList campaigns={campaigns} error={error} />
+
+            <CampaignList campaigns={campaigns} error={error}/>
         </div>
     );
 }

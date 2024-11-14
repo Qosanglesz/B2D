@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import { Campaign } from "@/types/Campaign";
+import React, {useState} from "react";
+import {Campaign} from "@/types/Campaign";
 import CampaignCard from "@/components/campaignComponents/CampaignCard";
-import { Search } from "lucide-react";
-import { Pagination, Input } from "@nextui-org/react";
+import {Search} from "lucide-react";
+import {Pagination, Input} from "@nextui-org/react";
 
 interface CampaignListProps {
     campaigns: Campaign[];
@@ -13,7 +13,7 @@ interface CampaignListProps {
 
 const ITEMS_PER_PAGE = 9;
 
-export default function CampaignList({ campaigns, error }: CampaignListProps) {
+export default function CampaignList({campaigns, error}: CampaignListProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -37,7 +37,7 @@ export default function CampaignList({ campaigns, error }: CampaignListProps) {
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    startContent={<Search className="text-default-400 w-4 h-4" />}
+                    startContent={<Search className="text-default-400 w-4 h-4"/>}
                     size="sm"
                     classNames={{
                         base: "w-full sm:max-w-[180px]",
@@ -59,7 +59,7 @@ export default function CampaignList({ campaigns, error }: CampaignListProps) {
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
                         {currentCampaigns.map((campaign) => (
-                            <CampaignCard key={campaign.id as string} campaign={campaign} />
+                            <CampaignCard key={campaign.id as string} campaign={campaign}/>
                         ))}
                     </div>
 
