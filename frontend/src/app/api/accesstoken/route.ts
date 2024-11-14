@@ -54,6 +54,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json(data);
     } catch (error) {
         // Handle any errors that occurred during the request
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error }, { status: 500 });
     }
 }

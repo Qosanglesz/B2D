@@ -23,10 +23,23 @@ const Success: React.FC<SuccessProps> = ({ params }) => {
             try {
                 let response;
 
+                const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/accesstoken`, {
+                    method: "GET",
+                    headers: {
+                        accesstokenapikey: process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY || "",
+                    }
+                })
+                const tokenData = await tokenResponse.json()
+
                 // Check payment status based on provider
                 if (provider === 'coinbase') {
                     response = await axios.get(
-                        `/api/payment/coinbase?chargeId=${statementId}`
+                        `/api/payment/coinbase?chargeId=${statementId}`,
+                        {
+                            headers: {
+                                authorization: `Bearer ${tokenData.access_token}`,
+                            }
+                        }
                     );
 
                     if (response.data.status !== "COMPLETED") {
@@ -36,7 +49,12 @@ const Success: React.FC<SuccessProps> = ({ params }) => {
                 } else {
                     // Assuming this is your existing Stripe check
                     response = await axios.get(
-                        `/api/payment/statement/${statementId}`
+                        `/api/payment/statement/${statementId}`,
+                        {
+                            headers: {
+                                authorization: `Bearer ${tokenData.access_token}`,
+                            }
+                        }
                     );
 
                     if (response.data.status !== "complete") {

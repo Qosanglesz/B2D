@@ -40,9 +40,22 @@ export default function CampaignContent({campaign, error}: CampaignContentProps)
     // Handle Stripe payment
     const handleStripePayment = async () => {
         try {
+            const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/accesstoken`, {
+                method: "GET",
+                headers: {
+                    accesstokenapikey: process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY || "",
+                }
+            })
+            const tokenData = await tokenResponse.json()
+
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/checkout`,
-                {user, campaign, amount: investAmountInput}
+                {user, campaign, amount: investAmountInput},
+                {
+                    headers: {
+                        authorization: `Bearer ${tokenData.access_token}`
+                    }
+                }
             );
             const sessionUrl = response.data.sessionUrl;
             router.push(sessionUrl);
@@ -55,9 +68,22 @@ export default function CampaignContent({campaign, error}: CampaignContentProps)
     // Handle Crypto payment
     const handleCryptoPayment = async () => {
         try {
+            const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/accesstoken`, {
+                method: "GET",
+                headers: {
+                    accesstokenapikey: process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY || "",
+                }
+            })
+            const tokenData = await tokenResponse.json()
+
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/coinbase`,
-                {user, campaign, amount: investAmountInput}
+                {user, campaign, amount: investAmountInput},
+                {
+                    headers: {
+                        authorization: `Bearer ${tokenData.access_token}`
+                    }
+                }
             );
             const hostedUrl = response.data.hostedUrl;
             router.push(hostedUrl);
