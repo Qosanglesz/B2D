@@ -5,6 +5,9 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/navigation";
 import { Spinner, Tabs, Tab } from "@nextui-org/react";
 import { ObjectId } from "mongodb";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { AlertCircle, ArrowRight, Wallet } from "lucide-react";
 
 // Import components
 import { ProfileCard } from "@/components/campaignComponents/profile/ProfileCard";
@@ -13,13 +16,6 @@ import { PortfolioSummary } from "@/components/campaignComponents/profile/Portfo
 import { SearchBar } from "@/components/campaignComponents/profile/SearchBar";
 import { InvestmentTable } from "@/components/campaignComponents/profile/InvestmentTable";
 import { CryptoTable } from "@/components/campaignComponents/profile/CryptoTable";
-
-import { UserProfile } from "@/components/campaignComponents/profile/UserProfile";
-
-import Image from 'next/image';
-
-// Import interfaces
-// import { UserStatements, CryptoTransaction } from "@/types/interfaces";
 
 export interface UserStatements {
     _id?: ObjectId;
@@ -82,6 +78,8 @@ export default function Home() {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState<string | undefined>(undefined);
     const [nickname, setNickname] = useState<string | undefined>(undefined);
+
+    const [hasStatements, setHasStatements] = useState<boolean>(false);
 
     // Utility functions
     const formatDate = (isoDate: string) => {
@@ -222,63 +220,68 @@ export default function Home() {
         }
     };
 
-    // // Data fetching
     // useEffect(() => {
-    //     const fetchStatement = async () => {
+    //     const fetchAllData = async () => {
     //         if (!user || userLoading) return;
 
     //         setLoading(true);
     //         try {
-    //             const response = await fetch(`/api/statement/byuserid/${user.sub}`);
-    //             if (!response.ok) throw new Error("Failed to fetch investment statements.");
-                
-    //             const data: UserStatements[] = await response.json();
-    //             setUserStatements(data);
+    //             // Fetch statements
+    //             const statementsResponse = await fetch(`/api/statement/byuserid/${user.sub}`);
+    //             if (!statementsResponse.ok) {
+    //                 throw new Error("Failed to fetch investment statements.");
+    //             }
+    //             const statementsData: UserStatements[] = await statementsResponse.json();
+    //             setUserStatements(statementsData);
+    //             setHasStatements(statementsData.length > 0);
+
+    //             // Fetch crypto transactions
+    //             const cryptoResponse = await fetch('/api/payment/coinbase/transaction-crypto');
+    //             if (!cryptoResponse.ok) {
+    //                 throw new Error("Failed to fetch crypto transactions.");
+    //             }
+    //             const cryptoData = await cryptoResponse.json();
+    //             const userCryptoTransactions = cryptoData.filter(
+    //                 (tx: CryptoTransaction) => tx.userId === user.sub
+    //             );
+    //             setCryptoTransactions(userCryptoTransactions);
+
+    //             // Set user profile data
     //             setName(user.name || undefined);
     //             setNickname(user.nickname || undefined);
     //         } catch (err: any) {
     //             setError(err.message);
+    //             console.error('Error fetching data:', err);
     //         } finally {
     //             setLoading(false);
     //         }
     //     };
 
-    //     fetchStatement();
+    //     fetchAllData();
     // }, [user, userLoading]);
-
-    // useEffect(() => {
-    //     const fetchCryptoTransactions = async () => {
-    //         if (!user || userLoading || selectedTab !== "crypto") return;
-
-    //         try {
-    //             const response = await fetch('/api/payment/coinbase/transaction-crypto');
-    //             if (!response.ok) throw new Error("Failed to fetch crypto transactions.");
-                
-    //             const data = await response.json();
-    //             const userTransactions = data.filter((tx: CryptoTransaction) => tx.userId === user.sub);
-    //             setCryptoTransactions(userTransactions);
-    //         } catch (err: any) {
-    //             setError(err.message);
-    //         }
-    //     };
-
-    //     fetchCryptoTransactions();
-    // }, [selectedTab, user, userLoading]);
 
     useEffect(() => {
         const fetchAllData = async () => {
             if (!user || userLoading) return;
-
+    
             setLoading(true);
             try {
                 // Fetch statements
                 const statementsResponse = await fetch(`/api/statement/byuserid/${user.sub}`);
-                if (!statementsResponse.ok) {
+                let statementsData: UserStatements[] = [];
+                
+                if (statementsResponse.status === 404) {
+                    // Handle case where user has no statements
+                    statementsData = [];
+                } else if (statementsResponse.ok) {
+                    statementsData = await statementsResponse.json();
+                } else {
                     throw new Error("Failed to fetch investment statements.");
                 }
-                const statementsData: UserStatements[] = await statementsResponse.json();
+                
                 setUserStatements(statementsData);
-
+                setHasStatements(statementsData.length > 0);
+    
                 // Fetch crypto transactions
                 const cryptoResponse = await fetch('/api/payment/coinbase/transaction-crypto');
                 if (!cryptoResponse.ok) {
@@ -289,7 +292,7 @@ export default function Home() {
                     (tx: CryptoTransaction) => tx.userId === user.sub
                 );
                 setCryptoTransactions(userCryptoTransactions);
-
+    
                 // Set user profile data
                 setName(user.name || undefined);
                 setNickname(user.nickname || undefined);
@@ -300,7 +303,7 @@ export default function Home() {
                 setLoading(false);
             }
         };
-
+    
         fetchAllData();
     }, [user, userLoading]);
 
@@ -371,7 +374,7 @@ export default function Home() {
     if (loading || userLoading) {
         return <div className="flex justify-center items-center h-screen"><Spinner size="lg" /></div>;
     }
-    if (error) return <p>Error: {error}</p>;
+    // if (error) return <p>Error: {error}</p>;
 
     // Processed data
     const filteredAndSortedInvestments = sortData(filterData(userStatements, searchQuery));
@@ -397,72 +400,144 @@ export default function Home() {
     const latestStatement = userStatements[userStatements.length - 1];
 
     return (
-        <div className="min-h-screen">
-            <ProfileCard
-                user={user}
-                name={name}
-                nickname={nickname}
-                isEditing={isEditing}
-                toggleEdit={toggleEdit}
-                EditForm={
-                    <EditProfileForm
-                        name={name}
-                        nickname={nickname}
-                        setName={setName}
-                        setNickname={setNickname}
-                        handleSave={handleSave}
-                    />
-                }
-            />
-
-            <PortfolioSummary
-                totalAmount={totalAmount}
-                totalInvestedCampaigns={totalInvestedCampaigns}
-                latestStatement={latestStatement}
-                cryptoTransactions={cryptoTransactions}
-            />
-
-            <div className="mx-3 my-14">
-                <div className="flex justify-between items-center mb-6">
-                    <div className="flex-1">
-                        <Tabs 
-                            selectedKey={selectedTab}
-                            onSelectionChange={(key) => setSelectedTab(key.toString())}
-                            className="w-2/3"
-                        >
-                            <Tab key="statements" title="Investment Statements" />
-                            <Tab key="crypto" title="Crypto Transactions" />
-                        </Tabs>
-                    </div>
-                    
-                    <SearchBar
-                        searchQuery={searchQuery}
-                        setSearchQuery={setSearchQuery}
-                    />
-                </div>
-
-                {selectedTab === "statements" ? (
-                    <InvestmentTable
-                        statements={currentInvestments}
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={handlePageChange}
-                        sortConfig={sortConfig}
-                        onSort={handleSort}
-                        formatDate={formatDate}
-                    />
-                ) : (
-                    <CryptoTable
-                        transactions={currentCryptoTransactions}
-                        currentPage={cryptoCurrentPage}
-                        totalPages={cryptoTotalPages}
-                        onPageChange={handleCryptoPageChange}
-                        sortConfig={sortConfig}
-                        onSort={handleSort}
-                        formatDate={formatDate}
-                    />
-                )}
+        <div className="min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="py-6 sm:py-8 lg:py-12">
+                <ProfileCard
+                    user={user}
+                    name={name}
+                    nickname={nickname}
+                    isEditing={isEditing}
+                    toggleEdit={toggleEdit}
+                    EditForm={
+                        <EditProfileForm
+                            name={name}
+                            nickname={nickname}
+                            setName={setName}
+                            setNickname={setNickname}
+                            handleSave={handleSave}
+                        />
+                    }
+                />
             </div>
+    
+            {cryptoTransactions.length === 0 && !hasStatements ? (
+                // Case 3: No statements and no crypto transactions
+                <div className="w-full px-4 md:px-6 py-6 md:py-12">
+                    <Card className="max-w-2xl mx-auto shadow-lg">
+                        <CardHeader className="text-center space-y-2">
+                            <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center mb-4">
+                                <Wallet className="w-6 h-6 text-blue-500" />
+                            </div>
+                            <CardTitle className="text-2xl font-bold tracking-tight">
+                                No Investment Statements and Crypto Transactions Yet
+                            </CardTitle>
+                            <CardDescription className="text-base text-muted-foreground">
+                                You have not made any investments yet.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="space-y-4">
+                                <p className="flex justify-center text-sm text-muted-foreground leading-relaxed">
+                                    Start investing in campaigns to see your investment history here.
+                                </p>
+                            </div>
+                            <div className="flex justify-center pt-4">
+                                <Button
+                                    onClick={() => router.push('/campaign')}
+                                    className="w-full sm:w-auto"
+                                    size="lg"
+                                >
+                                    <span className="flex items-center gap-2">
+                                        Browse Campaigns
+                                        <ArrowRight className="w-4 h-4" />
+                                    </span>
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            ) : (
+                <>
+                    <div className="py-6">
+                        <PortfolioSummary
+                            totalAmount={totalAmount}
+                            totalInvestedCampaigns={totalInvestedCampaigns}
+                            latestStatement={latestStatement}
+                            cryptoTransactions={cryptoTransactions}
+                        />
+                    </div>
+    
+                    {/* Transactions Section */}
+                    <div className="py-8">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                            <div className="w-full sm:w-auto">
+                                <Tabs 
+                                    selectedKey={selectedTab}
+                                    onSelectionChange={(key) => setSelectedTab(key.toString())}
+                                    className="max-w-full sm:max-w-md"
+                                >
+                                    <Tab key="statements" title="Investment Statements" />
+                                    <Tab key="crypto" title="Crypto Transactions" />
+                                </Tabs>
+                            </div>
+                            
+                            <div className="w-full sm:w-auto">
+                                <SearchBar
+                                    searchQuery={searchQuery}
+                                    setSearchQuery={setSearchQuery}
+                                />
+                            </div>
+                        </div>
+    
+                        <div className="overflow-x-auto">
+                            {selectedTab === "statements" ? (
+                                !hasStatements ? (
+                                    // Case 1: No statements (might have crypto)
+                                    <Card className="w-full shadow-sm">
+                                        <CardContent className="flex flex-col items-center justify-center py-12">
+                                            <div className="rounded-full bg-gray-50 p-3 mb-4">
+                                                <AlertCircle className="w-6 h-6 text-gray-400" />
+                                            </div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                                No Statement Found
+                                            </h3>
+                                            <p className="text-sm text-gray-500 text-center max-w-md">
+                                                You have not made any traditional investments yet.
+                                                {cryptoTransactions.length > 0 && (
+                                                    <span className="block mt-2">
+                                                        Check out your crypto transactions in the Crypto tab.
+                                                    </span>
+                                                )}
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                ) : (
+                                    <InvestmentTable
+                                        statements={currentInvestments}
+                                        currentPage={currentPage}
+                                        totalPages={totalPages}
+                                        onPageChange={handlePageChange}
+                                        sortConfig={sortConfig}
+                                        onSort={handleSort}
+                                        formatDate={formatDate}
+                                    />
+                                )
+                            ) : (
+                                // Crypto tab content
+                                <CryptoTable
+                                    transactions={currentCryptoTransactions}
+                                    currentPage={cryptoCurrentPage}
+                                    totalPages={cryptoTotalPages}
+                                    onPageChange={handleCryptoPageChange}
+                                    sortConfig={sortConfig}
+                                    onSort={handleSort}
+                                    formatDate={formatDate}
+                                />
+                            )}
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }

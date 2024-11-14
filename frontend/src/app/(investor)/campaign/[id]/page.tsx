@@ -115,36 +115,49 @@ export default function CampaignPage({ params }: CampaignProps) {
     }, [campaignId]);
 
     return (
-        <div className="min-h-screen max-w-6xl px-4 mx-auto flex justify-center">
-            <LoadingError loading={isLoading} error={error} />
+        <div className="min-h-screen bg-gray-50">
+            <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+                <LoadingError loading={isLoading} error={error} />
 
-            {isLoading || error ? null : (
-                <div className="w-full max-w-screen-xl p-0">
-                    <div className="grid grid-cols-6 gap-x-10">
-                        <div className="col-span-6 px-0 py-2">
-                            <IntroHeader campaign={campaign as Campaign} />
+                {!isLoading && !error && campaign && (
+                    <div className="flex flex-col space-y-8">
+                        {/* Header Section */}
+                        <section className="w-full bg-white rounded-lg shadow-sm">
+                            <IntroHeader campaign={campaign} />
+                        </section>
+
+                        {/* Main Content Section */}
+                        <div className="flex flex-col lg:flex-row gap-8">
+                            {/* Left Column - Carousel */}
+                            <section className="w-full lg:w-2/3">
+                                <div className="bg-white rounded-lg shadow-sm p-4">
+                                    <IntroCarousel campaign={campaign} />
+                                </div>
+                            </section>
+
+                            {/* Right Column - Statistics */}
+                            <section className="w-full lg:w-1/3">
+                                <div className="lg:sticky lg:top-8">
+                                    <div className="bg-white rounded-lg shadow-sm">
+                                        <IntroStatistics
+                                            campaign={campaign}
+                                            handleInputChange={handleInputChange}
+                                            investmentAmountInput={investAmountInput}   
+                                            handleInvestButton={handleInvestButton}
+                                        />
+                                    </div>
+                                </div>
+                            </section>
                         </div>
 
-                        <div className="col-span-4 row-span-3 px-0 py-3">
-                            <IntroCarousel campaign={campaign as Campaign} />
-                        </div>
+                        {/* Company Information Section */}
+                        <section className="w-full">
+                            <div className="bg-white rounded-lg shadow-sm">
+                                <CompanyInformation campaign={campaign} />
+                            </div>
+                        </section>
 
-                        <div className="col-span-2 row-span-3 px-0 py-10">
-                            <IntroStatistics
-                                campaign={campaign as Campaign}
-                                handleInputChange={handleInputChange}
-                                investmentAmountInput={investAmountInput}   
-                                handleInvestButton={handleInvestButton}
-                            />
-                        </div>
-
-                        <div className="col-span-6 px-0 py-3 mt-6 mb-10 rounded-lg">
-                            <CompanyInformation campaign={campaign as Campaign} />
-                        </div>
-                    </div>
-
-                    {/* Payment Modal */}
-                    {campaign && (
+                        {/* Payment Modal */}
                         <PaymentModal
                             isOpen={isPaymentModalOpen}
                             onClose={() => setIsPaymentModalOpen(false)}
@@ -153,9 +166,9 @@ export default function CampaignPage({ params }: CampaignProps) {
                             onStripePayment={handleStripePayment}
                             onCryptoPayment={handleCryptoPayment}
                         />
-                    )}
-                </div>
-            )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

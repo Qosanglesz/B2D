@@ -1,11 +1,21 @@
-// src/app/page.tsx (หรือโฟลเดอร์ที่คุณเก็บหน้า home)
-import React from "react";
-import { Campaign } from "@/types/Campaign";
-import { LoadingError } from "@/components/homeComponents/LoadingError";
-import { CampaignGrid } from "@/components/homeComponents/CampaignGrid";
-import { ViewAllButton } from "@/components/homeComponents/ViewAllButton";
-import HeroSectionHome from "@/components/homeComponents/HeroSectionHome";
-import FeatureCards from "@/components/homeComponents/FeatureCards";
+
+// /src/app/(investor)/home/page.tsx
+
+// Use client-side rendering for this page
+'use client';
+
+import React, { useEffect, useState } from "react";
+import { Campaign } from '@/types/Campaign';
+import Header from "@/components/homeComponents/Header";
+import { LoadingError } from '@/components/homeComponents/LoadingError'; // Import the LoadingError component
+import { CampaignGrid } from '@/components/homeComponents/CampaignGrid'; // Import the CampaignGrid component
+import { ViewAllButton } from '@/components/homeComponents/ViewAllButton'; // Import the ViewAllButton component
+import HeroSectionHome from '@/components/homeComponents/HeroSectionHome'; // Import HeroSectionHome component
+import FeatureCards from '@/components/homeComponents/FeatureCards'; // Import FeatureCards component
+import { cn } from "@/lib/utils";
+import { FaDollarSign } from "react-icons/fa";
+import { HiUserGroup } from "react-icons/hi";
+import { BiTime } from "react-icons/bi";
 
 // Define the links for authentication and viewing all campaigns
 const links = {
@@ -67,7 +77,30 @@ export default async function Home() {
                     <HeroSectionHome registerLink={links.getStarted} />
                     <div className="max-w-7xl mx-auto">
                         <FeatureCards />
+
                         <h1 className="text-4xl font-bold py-8">Fundraising Campaigns</h1>
+
+
+                        {/* <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold py-4 md:py-8 text-center">
+                            Fundraising Campaigns
+                        </h1> */}
+
+                        <div className="space-y-2 md:space-y-4">
+                        {/* Heading */}
+                            <h1 
+                                className={cn(
+                                "text-2xl sm:text-3xl md:text-4xl font-bold",
+                                "py-4 md:py-8",
+                                "text-center md:text-left",
+                                "bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
+                                )}
+                            >
+                                Fundraising Campaigns
+                            </h1>
+                        </div>
+
+                        {/* Render the campaign grid with random campaigns */}
+
                         <CampaignGrid campaigns={randomCampaigns} />
                         <ViewAllButton viewAllLink={links.viewAll} />
                     </div>
