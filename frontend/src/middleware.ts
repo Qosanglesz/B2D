@@ -36,7 +36,7 @@ export async function middleware(request: Request) {
             // Retrieve userRoles
             // const user = decodeJwt(session.idToken as string);
             // const userRoles = user["https://localhost:3000/roles"] || [];
-            
+
             const roles = session.user['https://localhost:3000/roles'] || [];
 
             // Restrict access to "/admin" paths to users with the "Admin B2D" role
