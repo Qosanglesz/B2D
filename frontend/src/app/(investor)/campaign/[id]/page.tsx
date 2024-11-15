@@ -17,6 +17,7 @@ async function fetchCampaign(campaignId: string): Promise<Campaign> {
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/campaign/${campaignId}`, {
         method: "GET",
+        cache: "no-store",
         headers: {
             authorization: `Bearer ${tokenData.access_token}`,
         },
