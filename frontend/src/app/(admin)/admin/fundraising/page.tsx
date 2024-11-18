@@ -3,6 +3,7 @@ import FundraisingCampaigns from "@/components/adminComponents/adminFundraising/
 import { LoadingError } from "@/components/homeComponents/LoadingError";
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 async function getAccessToken() {
     const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/accesstoken`, {
