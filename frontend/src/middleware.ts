@@ -32,11 +32,6 @@ export async function middleware(request: Request) {
             if (!session) {
                 return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`));
             }
-
-            // Retrieve userRoles
-            // const user = decodeJwt(session.idToken as string);
-            // const userRoles = user["https://localhost:3000/roles"] || [];
-
             const roles = session.user['https://localhost:3000/roles'] || [];
 
             // Restrict access to "/admin" paths to users with the "Admin B2D" role
