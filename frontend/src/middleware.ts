@@ -7,7 +7,7 @@ export async function middleware(request: Request) {
 
     // Define allowed paths and static resource patterns
     const allowedPages = ["/", "/home", "/campaign", "/about", "/contact"];
-    const allowedAPIs = ["/api/payment/webhook", "api/payment/coinbase/webhook"]
+    const allowedAPIs = ["/api/payment/webhook", "/api/payment/coinbase/webhook", "/api/uploadthing"]
     const isStaticResource = pathname.startsWith('/_next') ||
         pathname.startsWith('/images') ||
         pathname.startsWith('/videos') ||
