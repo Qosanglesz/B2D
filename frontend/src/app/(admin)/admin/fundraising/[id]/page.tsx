@@ -170,12 +170,12 @@ export default async function CampaignDetails({params,}: {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex justify-center space-x-4">
-                    <Link href={`/admin/fundraising/${campaign.id}/edit`}>
+                <div className="flex justify-center space-x-4 my-4">
+                    <a href={`/admin/fundraising/${campaign.id}/edit`}>
                         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                             Edit
                         </button>
-                    </Link>
+                    </a>
                     <DeleteCampaignButton campaignId={campaign.id as string}/>
                 </div>
             </div>
