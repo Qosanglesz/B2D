@@ -2,6 +2,9 @@ import { Suspense } from 'react';
 import UserManagement from "@/components/adminComponents/adminUserManagement/UserManagement";
 import {LoadingError} from "@/components/homeComponents/LoadingError";
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 async function fetchUsers() {
     try {
         const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/accesstoken`, {
@@ -13,7 +16,7 @@ async function fetchUsers() {
         });
         const tokenData = await tokenResponse.json();
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users?_t=${Date.now()}`, {
             cache: 'no-store',
             headers: {
                 'Cache-Control': 'no-cache',
