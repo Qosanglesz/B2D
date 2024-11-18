@@ -16,8 +16,8 @@ export const ProfileCard = ({
     const router = useRouter();
 
     const [isEditing, setIsEditing] = useState(false);
-    const [name, setName] = useState<string | undefined>(user?.name);
-    const [nickname, setNickname] = useState<string | undefined>(user?.nickname);
+    const [name, setName] = useState<string>(user?.name as string);
+    const [nickname, setNickname] = useState<string>(user?.nickname as string);
     const toggleEdit = () => setIsEditing(!isEditing);
 
     const handleSave = async () => {
