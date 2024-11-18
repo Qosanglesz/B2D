@@ -31,7 +31,7 @@ export default async function Layout({children}: { children: ReactNode }) {
 
         <NavBar {...navBarProps} />
             {/* Add offset to fixed Navbar */}
-            <div style={{ paddingTop: '36px' }}>
+            <div>
                 {children}
             </div>
         <Footer/>

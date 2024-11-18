@@ -1,95 +1,72 @@
-// "use client"
-
-// import React, {useEffect} from "react";
-// import axios from "axios";
-
-
-// interface SuccessProps {
-//     params: { id: string };
-// }
-
-// const Success: React.FC<SuccessProps> = ({params}) => {
-//     const {id: statementId} = params;
-
-//     useEffect(() => {
-//         const deleteOpenStatus = async () => {
-//             try {
-//                 const response = await axios.delete(
-//                     `${process.env.NEXT_PUBLIC_BASE_URL}/api/statement/${statementId}`
-//                 );
-
-//             } catch (error) {
-//                 console.error("Failed to fetch payment status:", error);
-
-//             }
-//         };
-
-//         deleteOpenStatus();
-//     }, [statementId]);
-
-//     return (
-//         <div className="min-h-screen flex justify-center items-center">
-//             <div className="text-center">
-//                 <h1 className="text-5xl font-bold text-red-600 mb-4">
-//                     Payment fail!
-//                 </h1>
-//                 <p className="text-lg text-gray-700 mb-2">
-//                     Try to re create payment request.
-//                 </p>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Success;
-// src/app/payment/cancel/[id]/page.tsx
-'use client';
-
-import React, { useEffect } from "react";
-import axios from "axios";
-import { useSearchParams } from "next/navigation";
+import React from "react";
+import { headers } from "next/headers";
+import {ExclamationTriangleIcon} from "@heroicons/react/16/solid";
 
 interface CancelProps {
     params: { id: string };
+    searchParams: { provider: string | null };
 }
 
-const Cancel: React.FC<CancelProps> = ({ params }) => {
+const Cancel = async ({ params, searchParams }: CancelProps) => {
     const { id: statementId } = params;
-    const searchParams = useSearchParams();
-    const provider = searchParams.get('provider'); // 'stripe' or 'coinbase'
+    const provider = searchParams.provider;
 
-    useEffect(() => {
-        const handleCancelledPayment = async () => {
-            try {
-                if (provider === 'coinbase') {
-                    // Handle Coinbase cancellation
-                    await axios.post(
-                        `/api/payment/coinbase/cancel`,
-                        { chargeId: statementId }
-                    );
-                } else {
-                    // Your existing Stripe cancellation logic
-                    await axios.delete(
-                        `/api/statement/${statementId}`
-                    );
-                }
-            } catch (error) {
-                console.error("Failed to handle cancelled payment:", error);
-            }
-        };
+    try {
+        const headersInstance = headers();
+        const accesstokenapikey = process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY || "";
 
-        handleCancelledPayment();
-    }, [statementId, provider]);
+        // Fetch the access token from the API
+        const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/accesstoken`, {
+            method: "GET",
+            headers: {
+                accesstokenapikey,
+            },
+        });
+
+        const tokenData = await tokenResponse.json();
+
+        if (provider === "coinbase") {
+            // Handle Coinbase cancellation
+            await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payment/coinbase/cancel`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${tokenData.access_token}`,
+                },
+                body: JSON.stringify({ chargeId: statementId }),
+            });
+        } else {
+            // Handle Stripe cancellation
+            await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/statement/${statementId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${tokenData.access_token}`,
+                },
+            });
+        }
+    } catch (error) {
+        console.error("Failed to handle cancelled payment:", error);
+    }
 
     return (
-        <div className="min-h-screen flex justify-center items-center">
-            <div className="text-center">
-                <h1 className="text-5xl font-bold text-red-600 mb-4">
-                    Payment Failed!
-                </h1>
-                <p className="text-lg text-gray-700 mb-2">
-                    Try to recreate payment request.
+        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-6 text-center">
+                <ExclamationTriangleIcon className="w-20 h-20 text-red-600 mx-auto"/>
+                <h1 className="text-4xl font-bold text-red-600">Payment Failed!</h1>
+                <p className="text-gray-700 text-lg">
+                    We encountered an issue while processing your payment.
                 </p>
+                <p className="text-gray-500 text-md">
+                    Please try again or contact support if the issue persists.
+                </p>
+                <div className="mt-8 space-y-4">
+                    <a
+                        className="w-full py-3 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-150"
+                        href="/home"
+                    >
+                        Go Back
+                    </a>
+                </div>
             </div>
         </div>
     );

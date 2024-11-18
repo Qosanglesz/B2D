@@ -2,60 +2,45 @@
 
 import Link from 'next/link';
 import React, {useState, useEffect, useCallback} from 'react';
-import {Input, Button} from '@nextui-org/react';
-import {Campaign} from '@/types/Campaign';
-import {LoadingError} from "@/components/homeComponents/LoadingError";
+import { Input, Button } from '@nextui-org/react';
+import { Campaign } from '@/types/Campaign';
+import { LoadingError } from "@/components/homeComponents/LoadingError";
 
 type SortField = 'id' | 'amountRaised' | 'targetAmount' | 'companyName';
 type SortOrder = 'asc' | 'desc';
 
+interface FundraisingCampaignsProps {
+    initialCampaigns: Campaign[];
+}
+
 const ITEMS_PER_PAGE = 10;
 
-const FundraisingCampaigns: React.FC = () => {
-    const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-    const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+const FundraisingCampaigns: React.FC<FundraisingCampaignsProps> = ({
+                                                                       initialCampaigns,
+                                                                   }) => {
+    const [campaigns, setCampaigns] = useState<Campaign[]>(initialCampaigns);
+    const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>(initialCampaigns);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [sortField, setSortField] = useState<SortField>('id');
     const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
 
-    const fetchCampaigns = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetch('/api/campaigns');
-            if (!response.ok) {
-                throw new Error('Failed to fetch campaigns');
-            }
-            const data = await response.json();
-            setCampaigns(data);
-            setFilteredCampaigns(data);
-        } catch (err) {
-            setError('Error fetching campaigns. Please try again later.');
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }, []);
-
+    // Filter campaigns based on search term
     const filterCampaigns = useCallback(() => {
         const filtered = campaigns.filter(campaign =>
-            campaign.companyName.toLowerCase().startsWith(searchTerm.toLowerCase())
+            campaign.companyName.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredCampaigns(filtered);
-        setCurrentPage(1); // Reset to first page when filtering
+        setCurrentPage(1);
     }, [campaigns, searchTerm]);
-
-    useEffect(() => {
-        fetchCampaigns();
-    }, [fetchCampaigns]);
 
     useEffect(() => {
         filterCampaigns();
     }, [filterCampaigns]);
 
-    const sortCampaigns = useCallback((field: SortField) => {
+    const sortCampaigns = (field: SortField) => {
         const newSortOrder = field === sortField && sortOrder === 'asc' ? 'desc' : 'asc';
         setSortField(field);
         setSortOrder(newSortOrder);
@@ -67,7 +52,7 @@ const FundraisingCampaigns: React.FC = () => {
         });
 
         setFilteredCampaigns(sortedCampaigns);
-    }, [filteredCampaigns, sortField, sortOrder]);
+    };
 
     const getSortIcon = (field: SortField) => {
         if (sortField !== field) return '↕️';

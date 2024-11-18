@@ -1,6 +1,3 @@
-// app/admin/layout.tsx
-"use client"
-
 import React from "react";
 import AdminNavBar from "@/components/adminComponents/adminNavAndFooter/NavBar";
 import AdminFooter from "@/components/adminComponents/adminNavAndFooter/Footer";

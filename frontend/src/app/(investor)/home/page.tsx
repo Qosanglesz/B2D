@@ -1,115 +1,81 @@
-// /src/app/(investor)/home/page.tsx
+import {Campaign} from '@/types/Campaign';
+import {LoadingError} from '@/components/homeComponents/LoadingError';
+import {CampaignGrid} from '@/components/homeComponents/CampaignGrid';
+import {ViewAllButton} from '@/components/homeComponents/ViewAllButton';
+import HeroSectionHome from '@/components/homeComponents/HeroSectionHome';
+import FeatureCards from '@/components/homeComponents/FeatureCards';
+import {cn} from "@/lib/utils";
 
-// Use client-side rendering for this page
-'use client';
-
-import React, { useEffect, useState } from "react";
-import { Campaign } from '@/types/Campaign';
-import Header from "@/components/homeComponents/Header";
-import { LoadingError } from '@/components/homeComponents/LoadingError'; // Import the LoadingError component
-import { CampaignGrid } from '@/components/homeComponents/CampaignGrid'; // Import the CampaignGrid component
-import { ViewAllButton } from '@/components/homeComponents/ViewAllButton'; // Import the ViewAllButton component
-import HeroSectionHome from '@/components/homeComponents/HeroSectionHome'; // Import HeroSectionHome component
-import FeatureCards from '@/components/homeComponents/FeatureCards'; // Import FeatureCards component
-import { cn } from "@/lib/utils";
-import { FaDollarSign } from "react-icons/fa";
-import { HiUserGroup } from "react-icons/hi";
-import { BiTime } from "react-icons/bi";
-
-// Define the links for authentication and viewing all campaigns
 const links = {
-    getStarted: "/api/auth/login", // Login link
-    viewAll: "/campaign", // Link to view all campaigns
+    getStarted: "/api/auth/login",
+    viewAll: "/campaign",
 };
 
 
-export default function Home() {
-    // State to hold the fetched campaigns
-    const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-    
-    // State to manage loading and error status
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export default async function Home() {
+    let campaigns: Campaign[] = [];
+    let error: string | null = null;
 
-    // Fetch the campaigns when the component mounts
-    useEffect(() => {
-        const fetchCampaigns = async () => {
-            try {
-                // Fetch campaigns from the API endpoint
-                const response = await fetch('/api/campaigns', {
-                    cache: "no-store",
-                }); // Ensure that this API endpoint exists
-                if (!response.ok) {
-                    throw new Error('Failed to fetch campaigns'); // Throw error if fetch fails
-                }
-
-                // Parse the response data as an array of FundraisingCampaign objects
-                const data: Campaign[] = await response.json();
-                setCampaigns(data); // Update state with fetched campaigns
-
-            } catch (err: unknown) {
-                // Handle any errors that occur during the fetch
-                if (err instanceof Error) {
-                    setError(err.message); // Set error message if it's an Error object
-                } else {
-                    setError('An unknown error occurred'); // Set a default error message for unknown errors
-                }
-            } finally {
-                // Stop loading after fetching is complete, whether successful or failed
-                setLoading(false);
+    try {
+        const tokenResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/accesstoken`, {
+            method: "GET",
+            headers: {
+                accesstokenapikey: process.env.NEXT_PUBLIC_ACCESS_TOKEN_API_KEY || ""
             }
-        };
+        });
 
-        fetchCampaigns(); // Call the function to fetch campaigns
+        const tokenData = await tokenResponse.json();
+        if (!tokenResponse.ok || !tokenData.access_token) {
+            throw new Error("Failed to retrieve access token");
+        }
 
-    }, []); // Only run this effect once on component mount
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/campaigns`, {
+            headers: {
+                authorization: `Bearer ${tokenData.access_token}`
+            },
+            cache: "no-store"
+        });
 
-    // Randomly shuffle the campaigns array and limit to 3 campaigns
+        if (!response.ok) {
+            throw new Error("Failed to fetch campaigns");
+        }
+
+        campaigns = await response.json();
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            error = err.message;
+        } else {
+            error = "An unknown error occurred";
+        }
+    }
+
     const randomCampaigns = campaigns
-        .sort(() => Math.random() - 0.5) // Shuffle the campaigns
-        .slice(0, 4);  // Take the first 3 shuffled campaigns
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 4);
 
     return (
         <>
-            {/* Use LoadingError to show either a spinner or an error message */}
-            <LoadingError loading={loading} error={error} />
-
-            {/* Only render the content below if not loading and no error */}
-            {!loading && !error && (
+            <LoadingError loading={false} error={error}/>
+            {!error && (
                 <>
-                    {/* Render the Header with a link to register
-                    <Header registerLink={links.getStarted} /> */}
-
-                    {/* Render the Hero Section with Carousel */}
-                    <HeroSectionHome registerLink={links.getStarted} /> {/* Added HeroSectionHome component */}
-
+                    <HeroSectionHome registerLink={links.getStarted}/>
                     <div className="max-w-7xl mx-auto">
-                        {/* Render the FeatureCards component here */}
-                        <FeatureCards />
-
-                        {/* <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold py-4 md:py-8 text-center">
-                            Fundraising Campaigns
-                        </h1> */}
-
+                        <FeatureCards/>
                         <div className="space-y-2 md:space-y-4">
-                        {/* Heading */}
-                            <h1 
+
+                            <h1
                                 className={cn(
-                                "text-2xl sm:text-3xl md:text-4xl font-bold",
-                                "py-4 md:py-8",
-                                "text-center md:text-left",
-                                "bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
+                                    "text-2xl sm:text-3xl md:text-4xl font-bold",
+                                    "py-4 md:py-8",
+                                    "text-center md:text-left",
+                                    "bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent"
                                 )}
                             >
                                 Fundraising Campaigns
                             </h1>
                         </div>
-
-                        {/* Render the campaign grid with random campaigns */}
-                        <CampaignGrid campaigns={randomCampaigns} />
-
-                        {/* Render the "View All" button */}
-                        <ViewAllButton viewAllLink={links.viewAll} />
+                        <CampaignGrid campaigns={randomCampaigns}/>
+                        <ViewAllButton viewAllLink={links.viewAll}/>
                     </div>
                 </>
             )}
