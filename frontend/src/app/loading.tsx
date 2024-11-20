@@ -7,18 +7,7 @@ const RootLoading = () => {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-background/95 z-[9999]">
             <div className="relative flex flex-col items-center justify-center gap-8 w-full max-h-screen py-8">
-                <div className="w-[600px] h-[600px] sm:w-[700px] sm:h-[700px] md:w-[800px] md:h-[800px]">
-                    <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover rounded-full"
-                    >
-                        <source src="/videos/loading.mp4" type="video/mp4"/>
-                    </video>
-                </div>
-
+                
                 <Card className="bg-background/40 backdrop-blur-sm w-full max-w-md mx-auto">
                     <div className="flex flex-col items-center gap-4 p-6">
                         <motion.div
