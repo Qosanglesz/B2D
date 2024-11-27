@@ -52,126 +52,140 @@ import { Label } from "@/components/ui/label";
 import { toast } from "react-toastify";
 import { FileText, Eye, Image as ImageIcon } from "lucide-react";
 import Image from 'next/image';
+import { ClientUploadedFileData } from 'uploadthing/types';
 
 interface AdditionalInformationProps {
-    formData: Partial<Campaign>;
-    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    handleInvestorsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleUploadFile: (response: UploadThingPictureFile[]) => void;
+  formData: Partial<Campaign>;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleInvestorsChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleUploadFile: (response: UploadThingPictureFile[]) => void;
 }
 
 const AdditionalInformation: React.FC<AdditionalInformationProps> = ({
-    formData,
-    handleChange,
-    handleInvestorsChange,
-    handleUploadFile
+  formData,
+  handleChange,
+  handleInvestorsChange,
+  handleUploadFile
 }) => {
-    const onUploadComplete = (res: UploadThingPictureFile[]) => {
-        // First handle the file upload
-        handleUploadFile(res);
-        
-        // Then show success message
-        toast.success("Upload completed successfully", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-        });
-    };
+  const onUploadComplete = (res: ClientUploadedFileData<any>[]) => {
+      // Convert the ClientUploadedFileData to UploadThingPictureFile
+      const convertedFiles: UploadThingPictureFile[] = res.map(file => ({
+          name: String(file.name),
+          size: file.size,
+          key: String(file.key),
+          lastModified: file.lastModified || Date.now(),
+          serverData: null,
+          url: String(file.url),
+          appUrl: String(file.url), // Using the same URL as appUrl
+          customId: null,
+          type: String(file.type || 'image/*'),
+          fileHash: String(file.key) // Using key as fileHash, adjust if needed
+      }));
 
-    const onUploadError = (error: Error) => {
-        toast.error(`Upload failed: ${error.message}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-        });
-    };
+      // Handle the file upload
+      handleUploadFile(convertedFiles);
 
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <FileText className="w-5 h-5" />
-                    Additional Information
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-6">
-                    <div className="space-y-2">
-                        <Label htmlFor="description" className="flex items-center gap-2">
-                            <FileText className="w-4 h-4" />
-                            Description
-                        </Label>
-                        <Textarea
-                            id="description"
-                            name="description"
-                            value={formData.description || ''}
-                            onChange={handleChange}
-                            className="min-h-[96px] resize-y"
-                            placeholder="Enter campaign description..."
-                        />
-                    </div>
+      // Show success message
+      toast.success("Upload completed successfully", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+      });
+  };
 
-                    <div className="space-y-2">
-                        <Label htmlFor="companyVision" className="flex items-center gap-2">
-                            <Eye className="w-4 h-4" />
-                            Company Vision
-                        </Label>
-                        <Textarea
-                            id="companyVision"
-                            name="companyVision"
-                            value={formData.companyVision || ''}
-                            onChange={handleChange}
-                            className="min-h-[96px] resize-y"
-                            placeholder="Enter company vision..."
-                        />
-                    </div>
+  const onUploadError = (error: Error) => {
+      toast.error(`Upload failed: ${error.message}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+      });
+  };
 
-                    <div className="space-y-2">
-                        <Label className="flex items-center gap-2">
-                            <ImageIcon className="w-4 h-4" />
-                            Campaign Pictures
-                        </Label>
-                        <div className="border rounded-lg p-4 bg-gray-50">
-                            <UploadDropzone
-                                endpoint="imageUploader"
-                                onClientUploadComplete={onUploadComplete}
-                                onUploadError={onUploadError}
-                            />
-                        </div>
-                    </div>
+  return (
+      <Card>
+          <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Additional Information
+              </CardTitle>
+          </CardHeader>
+          <CardContent>
+              <div className="space-y-6">
+                  <div className="space-y-2">
+                      <Label htmlFor="description" className="flex items-center gap-2">
+                          <FileText className="w-4 h-4" />
+                          Description
+                      </Label>
+                      <Textarea
+                          id="description"
+                          name="description"
+                          value={formData.description || ''}
+                          onChange={handleChange}
+                          className="min-h-[96px] resize-y"
+                          placeholder="Enter campaign description..."
+                      />
+                  </div>
 
-                    {/* Display uploaded images */}
-                    {formData.pictureFiles && formData.pictureFiles.length > 0 && (
-                        <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                                <ImageIcon className="w-4 h-4" />
-                                Uploaded Images
-                            </Label>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                {formData.pictureFiles.map((file, index) => (
-                                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
-                                        <Image 
-                                            src={file.url.toString()}
-                                            alt={`Uploaded image ${index + 1}`}
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 50vw, 33vw"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </CardContent>
-        </Card>
-    );
+                  <div className="space-y-2">
+                      <Label htmlFor="companyVision" className="flex items-center gap-2">
+                          <Eye className="w-4 h-4" />
+                          Company Vision
+                      </Label>
+                      <Textarea
+                          id="companyVision"
+                          name="companyVision"
+                          value={formData.companyVision || ''}
+                          onChange={handleChange}
+                          className="min-h-[96px] resize-y"
+                          placeholder="Enter company vision..."
+                      />
+                  </div>
+
+                  <div className="space-y-2">
+                      <Label className="flex items-center gap-2">
+                          <ImageIcon className="w-4 h-4" />
+                          Campaign Pictures
+                      </Label>
+                      <div className="border rounded-lg p-4 bg-gray-50">
+                          <UploadDropzone
+                              endpoint="imageUploader"
+                              onClientUploadComplete={onUploadComplete}
+                              onUploadError={onUploadError}
+                          />
+                      </div>
+                  </div>
+
+                  {formData.pictureFiles && formData.pictureFiles.length > 0 && (
+                      <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                              <ImageIcon className="w-4 h-4" />
+                              Uploaded Images
+                          </Label>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                              {formData.pictureFiles.map((file, index) => (
+                                  <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
+                                      <Image 
+                                          src={file.url.toString()}
+                                          alt={`Uploaded image ${index + 1}`}
+                                          fill
+                                          className="object-cover"
+                                          sizes="(max-width: 768px) 50vw, 33vw"
+                                      />
+                                  </div>
+                              ))}
+                          </div>
+                      </div>
+                  )}
+              </div>
+          </CardContent>
+      </Card>
+  );
 };
 
 export default AdditionalInformation;

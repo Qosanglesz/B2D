@@ -365,7 +365,7 @@ export default async function CampaignDetails({
                     <div className="flex justify-center gap-4 pt-6">
                         <Link href={`/admin/fundraising/${campaign.id}/edit`}>
                             <Button 
-                                variant="default"
+                                variant="solid"
                                 className="font-semibold"
                                 color="primary"
                             >
