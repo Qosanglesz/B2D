@@ -77,14 +77,6 @@ export class CampaignController {
                 }
             }
 
-            // Generate a new numeric id
-            // const newId = await this.repository.getNextId();
-
-            // Calculate end date (10 years from now)
-            // const endDate = new Date();
-            // endDate.setFullYear(endDate.getFullYear() + 10);
-
-            // Prepare campaign data
             const campaignData: Campaign = <Campaign>{
                 id: formData.id,
                 name: formData.companyName || '',
