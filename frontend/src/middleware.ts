@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { decodeJwt } from 'jose';
 import { getSession } from '@auth0/nextjs-auth0/edge';
+import path from 'path';
 
 export async function middleware(request: Request) {
   const { pathname } = new URL(request.url);
@@ -14,7 +15,12 @@ export async function middleware(request: Request) {
     pathname.startsWith('/images') ||
     pathname.startsWith('/videos') ||
     pathname.endsWith('.css') ||
-    pathname.endsWith('.js');
+    pathname.endsWith('.js') ||
+    pathname.endsWith('._darcs') ||
+    pathname.endsWith('.hg') ||
+    pathname.endsWith('.bzr') ||
+    pathname.startsWith('/BitKeeper') ||
+    pathname.startsWith('/latest/meta-data/');
 
   // Allow requests to static resources
   if (isStaticResource) {
