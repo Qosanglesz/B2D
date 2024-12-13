@@ -57,8 +57,11 @@ Start MongoDB with Docker:
 ```bash
 docker compose up -d
 ```
+### 4. Create MongoDB collection like this
+![image](https://github.com/user-attachments/assets/86a35887-c445-471b-afe7-52205f1bbba0)
 
-### 4. Set Environment Variables
+
+### 5. Set Environment Variables
 
 Create local.env inside ./frontend
 
@@ -97,7 +100,7 @@ COINBASE_COMMERCE_API_KEY=
 COINBASE_COMMERCE_WEBHOOK_SECRET=
 ```
 
-### 5. Run Development Server
+### 6. Run Development Server
 
 ```bash
 npm run dev
