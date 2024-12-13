@@ -15,7 +15,7 @@ export class CampaignController {
             return NextResponse.json({error: 'Invalid ID'}, {status: 400});
         }
 
-        const campaign = await this.repository.findById(id);
+        const campaign = await this.repository.findById(id as string);
 
         if (!campaign) {
             return NextResponse.json({error: 'Campaign not found'}, {status: 404});
@@ -30,7 +30,7 @@ export class CampaignController {
             delete updatedData._id;
             delete updatedData.id;
 
-            const result = await this.repository.update(id, updatedData);
+            const result = await this.repository.update(id as string, updatedData);
 
             if (!result) {
                 return NextResponse.json({error: 'Campaign not found'}, {status: 404});
@@ -49,7 +49,7 @@ export class CampaignController {
                 return NextResponse.json({error: 'Invalid ID'}, {status: 400});
             }
 
-            const result = await this.repository.delete(id);
+            const result = await this.repository.delete(id as string);
 
             if (!result) {
                 return NextResponse.json({error: 'Campaign not found'}, {status: 404});
@@ -77,14 +77,6 @@ export class CampaignController {
                 }
             }
 
-            // Generate a new numeric id
-            // const newId = await this.repository.getNextId();
-
-            // Calculate end date (10 years from now)
-            // const endDate = new Date();
-            // endDate.setFullYear(endDate.getFullYear() + 10);
-
-            // Prepare campaign data
             const campaignData: Campaign = <Campaign>{
                 id: formData.id,
                 name: formData.companyName || '',

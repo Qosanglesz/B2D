@@ -1,22 +1,10 @@
 import {Collection, InsertOneResult} from 'mongodb';
-import clientPromise from "@/lib/mongodb";
-import {Statement} from "@/types/Statement";
 
+import {Statement} from "@/types/Statement";
+import clientPromise from "@/lib/mongodb";
 
 const DATABASE_NAME = "B2DVentureProject";
 const COLLECTION_NAME = "Statements";
-
-// export interface StatementData {
-//     statement_id: string;
-//     user_id: string;
-//     campaign_id: number;
-//     campaignName: string;
-//     amount: number;
-//     session_id: string;
-//     date: string;
-//     successAt: string | null;
-//     status: string;
-// }
 
 export class StatementRepository {
     private collectionPromise: Promise<Collection<Statement>>;
