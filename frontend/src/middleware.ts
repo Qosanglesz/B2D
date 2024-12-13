@@ -48,7 +48,7 @@ export async function middleware(request: Request) {
       }
 
     } catch (error) {
-      console.error(`[${timestamp}] Error retrieving session or decoding JWT: ${error.message}`);
+      console.error(`[${timestamp}] Error retrieving session or decoding JWT`);
       return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`));
     }
 
